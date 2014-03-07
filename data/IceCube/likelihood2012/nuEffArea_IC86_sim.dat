@@ -1,0 +1,76 @@
+#This file contains the following simulated instrument response data for IceCube-86:
+# 1. Neutrino/anti-neutrino effective areas, for a point-source search 
+#    towards the Sun, averaged over one austral winter.
+# 2. Statistical and systematic errors in each energy bin at the 1 sigma 
+#    level, as a percentage of the effective area in that bin.  
+# 3. Mean angular error within each energy bin, given as the 39.3% 
+#    (equivalent 1 sigma) containment radius.
+#
+#The file has the following column content:
+#B [Bin number]
+#E [E_nu; lower bound]  [E_nu; upper bound]
+#A [Aeff(nu)]   [Aeff(nu_bar)]
+#err [systematic error]   [statistical error]
+#MAR [angular error]
+#
+####
+B     0
+E     25   36.1531
+A     1.6708E-005   1.2704E-005
+err   26   2.8104971366
+MAR   12.287733010026974
+####
+B     1
+E     36.1531   52.282
+A     6.8740E-005   5.3620E-005
+err   26   1.8738292225
+MAR   6.702482439498922
+####
+B     2
+E     52.282   75.6063
+A     3.5980E-004   2.9840E-004
+err   26   1.0979733646
+MAR   4.7625889815510725
+####
+B     3
+E     75.6063   109.336
+A     1.8340E-003   1.4644E-003
+err   23   0.688493654
+MAR   3.6753041992583566
+####
+B     4
+E     109.336   158.114
+A     6.7100E-003   5.0260E-003
+err   19   0.4935579248
+MAR   2.955869181888384
+####
+B     5
+E     158.114   228.653
+A     1.6648E-002   1.1554E-002
+err   19   0.4471420585
+MAR   2.4205331579488427
+####
+B     6
+E     228.653   330.66
+A     3.0640E-002   2.1060E-002
+err   19   0.5197839395
+MAR   2.106776698486443
+####
+B     7
+E     330.66   478.176
+A     5.3620E-002   3.4980E-002
+err   19   0.7095054165
+MAR   1.945354597123702
+####
+B     8
+E     478.176   691.503
+A     8.4300E-002   5.4920E-002
+err   19   1.1676157402
+MAR   1.788119652236381
+####
+B     9
+E     691.503   1000
+A     1.2584E-001   8.8120E-002
+err   19   2.3044900641
+MAR   1.6759582152903452
+####

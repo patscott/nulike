@@ -1,0 +1,916 @@
+#This file contains the following real data for IceCube-22:
+# 0. The version of the event-level IceCube likelihood that this file is to be used with
+# 1. Exposure: total live time (seconds)
+# 2. Events: individual event information
+#
+#The event section has the following column content:
+#[En]         event number
+#[E]          Nchan of event
+#[cos(phi)]   reconstructed cosine (angle of incoming neutrino relative to Sun)
+#[phi uncert] paraboloid sigma in degrees
+#
+###--Likelihood--
+[v]  2012
+###--Exposure--
+[t]  9008064.0
+###--Events--
+[En]  1
+[E]  11
+[cos(phi)]  0.990481
+[phi uncert]  2.95177
+###
+[En]  2
+[E]  14
+[cos(phi)]  0.986347
+[phi uncert]  4.5905
+###
+[En]  3
+[E]  11
+[cos(phi)]  0.990911
+[phi uncert]  4.75806
+###
+[En]  4
+[E]  10
+[cos(phi)]  0.999677
+[phi uncert]  4.12561
+###
+[En]  5
+[E]  16
+[cos(phi)]  0.994044
+[phi uncert]  2.81717
+###
+[En]  6
+[E]  15
+[cos(phi)]  0.999861
+[phi uncert]  2.6122
+###
+[En]  7
+[E]  15
+[cos(phi)]  0.987311
+[phi uncert]  3.03158
+###
+[En]  8
+[E]  13
+[cos(phi)]  0.99464
+[phi uncert]  4.30809
+###
+[En]  9
+[E]  13
+[cos(phi)]  0.989595
+[phi uncert]  3.48696
+###
+[En]  10
+[E]  10
+[cos(phi)]  0.998372
+[phi uncert]  3.28183
+###
+[En]  11
+[E]  10
+[cos(phi)]  0.996013
+[phi uncert]  5.85388
+###
+[En]  12
+[E]  12
+[cos(phi)]  0.998494
+[phi uncert]  2.77857
+###
+[En]  13
+[E]  10
+[cos(phi)]  0.997523
+[phi uncert]  4.39098
+###
+[En]  14
+[E]  10
+[cos(phi)]  0.994429
+[phi uncert]  5.98814
+###
+[En]  15
+[E]  10
+[cos(phi)]  0.992391
+[phi uncert]  3.87819
+###
+[En]  16
+[E]  13
+[cos(phi)]  0.998539
+[phi uncert]  8.65925
+###
+[En]  17
+[E]  11
+[cos(phi)]  0.99158
+[phi uncert]  4.55677
+###
+[En]  18
+[E]  11
+[cos(phi)]  0.99843
+[phi uncert]  3.36419
+###
+[En]  19
+[E]  13
+[cos(phi)]  0.994626
+[phi uncert]  2.79503
+###
+[En]  20
+[E]  12
+[cos(phi)]  0.99738
+[phi uncert]  4.1575
+###
+[En]  21
+[E]  23
+[cos(phi)]  0.988078
+[phi uncert]  3.65091
+###
+[En]  22
+[E]  18
+[cos(phi)]  0.989338
+[phi uncert]  2.96165
+###
+[En]  23
+[E]  10
+[cos(phi)]  0.996142
+[phi uncert]  3.01735
+###
+[En]  24
+[E]  11
+[cos(phi)]  0.990533
+[phi uncert]  3.90738
+###
+[En]  25
+[E]  10
+[cos(phi)]  0.995116
+[phi uncert]  3.6887
+###
+[En]  26
+[E]  10
+[cos(phi)]  0.987378
+[phi uncert]  3.13776
+###
+[En]  27
+[E]  20
+[cos(phi)]  0.991508
+[phi uncert]  3.45041
+###
+[En]  28
+[E]  10
+[cos(phi)]  0.993002
+[phi uncert]  5.24574
+###
+[En]  29
+[E]  10
+[cos(phi)]  0.990665
+[phi uncert]  5.35575
+###
+[En]  30
+[E]  10
+[cos(phi)]  0.985014
+[phi uncert]  3.27921
+###
+[En]  31
+[E]  11
+[cos(phi)]  0.991206
+[phi uncert]  4.9482
+###
+[En]  32
+[E]  13
+[cos(phi)]  0.990423
+[phi uncert]  5.56218
+###
+[En]  33
+[E]  18
+[cos(phi)]  0.985904
+[phi uncert]  3.98995
+###
+[En]  34
+[E]  12
+[cos(phi)]  0.994134
+[phi uncert]  3.12791
+###
+[En]  35
+[E]  16
+[cos(phi)]  0.987405
+[phi uncert]  3.82733
+###
+[En]  36
+[E]  19
+[cos(phi)]  0.998914
+[phi uncert]  3.91596
+###
+[En]  37
+[E]  16
+[cos(phi)]  0.999345
+[phi uncert]  3.00473
+###
+[En]  38
+[E]  11
+[cos(phi)]  0.990769
+[phi uncert]  4.66837
+###
+[En]  39
+[E]  13
+[cos(phi)]  0.99083
+[phi uncert]  4.00401
+###
+[En]  40
+[E]  14
+[cos(phi)]  0.990676
+[phi uncert]  2.35481
+###
+[En]  41
+[E]  10
+[cos(phi)]  0.993519
+[phi uncert]  3.21367
+###
+[En]  42
+[E]  10
+[cos(phi)]  0.985636
+[phi uncert]  3.85861
+###
+[En]  43
+[E]  11
+[cos(phi)]  0.989294
+[phi uncert]  4.62376
+###
+[En]  44
+[E]  11
+[cos(phi)]  0.996394
+[phi uncert]  3.19104
+###
+[En]  45
+[E]  11
+[cos(phi)]  0.997698
+[phi uncert]  2.85543
+###
+[En]  46
+[E]  11
+[cos(phi)]  0.997302
+[phi uncert]  3.4173
+###
+[En]  47
+[E]  16
+[cos(phi)]  0.986845
+[phi uncert]  3.74071
+###
+[En]  48
+[E]  18
+[cos(phi)]  0.990765
+[phi uncert]  2.3786
+###
+[En]  49
+[E]  10
+[cos(phi)]  0.997744
+[phi uncert]  3.43207
+###
+[En]  50
+[E]  10
+[cos(phi)]  0.999102
+[phi uncert]  4.72865
+###
+[En]  51
+[E]  18
+[cos(phi)]  0.992372
+[phi uncert]  3.93684
+###
+[En]  52
+[E]  10
+[cos(phi)]  0.990176
+[phi uncert]  7.50779
+###
+[En]  53
+[E]  10
+[cos(phi)]  0.987302
+[phi uncert]  2.98243
+###
+[En]  54
+[E]  11
+[cos(phi)]  0.99468
+[phi uncert]  3.13656
+###
+[En]  55
+[E]  14
+[cos(phi)]  0.997165
+[phi uncert]  2.37985
+###
+[En]  56
+[E]  19
+[cos(phi)]  0.996914
+[phi uncert]  2.71764
+###
+[En]  57
+[E]  10
+[cos(phi)]  0.999372
+[phi uncert]  2.59503
+###
+[En]  58
+[E]  13
+[cos(phi)]  0.997788
+[phi uncert]  3.59318
+###
+[En]  59
+[E]  18
+[cos(phi)]  0.995277
+[phi uncert]  2.70063
+###
+[En]  60
+[E]  18
+[cos(phi)]  0.996472
+[phi uncert]  2.43812
+###
+[En]  61
+[E]  13
+[cos(phi)]  0.997165
+[phi uncert]  3.15245
+###
+[En]  62
+[E]  10
+[cos(phi)]  0.990853
+[phi uncert]  2.75975
+###
+[En]  63
+[E]  11
+[cos(phi)]  0.995523
+[phi uncert]  3.48861
+###
+[En]  64
+[E]  17
+[cos(phi)]  0.996996
+[phi uncert]  2.81854
+###
+[En]  65
+[E]  16
+[cos(phi)]  0.99816
+[phi uncert]  3.64236
+###
+[En]  66
+[E]  10
+[cos(phi)]  0.986064
+[phi uncert]  4.30694
+###
+[En]  67
+[E]  18
+[cos(phi)]  0.994869
+[phi uncert]  3.55746
+###
+[En]  68
+[E]  11
+[cos(phi)]  0.994322
+[phi uncert]  3.86175
+###
+[En]  69
+[E]  17
+[cos(phi)]  0.996619
+[phi uncert]  2.93329
+###
+[En]  70
+[E]  12
+[cos(phi)]  0.994918
+[phi uncert]  2.92787
+###
+[En]  71
+[E]  12
+[cos(phi)]  0.999044
+[phi uncert]  3.90463
+###
+[En]  72
+[E]  15
+[cos(phi)]  0.986204
+[phi uncert]  3.60579
+###
+[En]  73
+[E]  18
+[cos(phi)]  0.99579
+[phi uncert]  2.95871
+###
+[En]  74
+[E]  11
+[cos(phi)]  0.990952
+[phi uncert]  3.45407
+###
+[En]  75
+[E]  24
+[cos(phi)]  0.998853
+[phi uncert]  1.93723
+###
+[En]  76
+[E]  19
+[cos(phi)]  0.986424
+[phi uncert]  5.82986
+###
+[En]  77
+[E]  15
+[cos(phi)]  0.994866
+[phi uncert]  3.01717
+###
+[En]  78
+[E]  10
+[cos(phi)]  0.996549
+[phi uncert]  4.63619
+###
+[En]  79
+[E]  23
+[cos(phi)]  0.993201
+[phi uncert]  3.43464
+###
+[En]  80
+[E]  16
+[cos(phi)]  0.98624
+[phi uncert]  3.96709
+###
+[En]  81
+[E]  12
+[cos(phi)]  0.987974
+[phi uncert]  5.38293
+###
+[En]  82
+[E]  12
+[cos(phi)]  0.991709
+[phi uncert]  3.75722
+###
+[En]  83
+[E]  17
+[cos(phi)]  0.985689
+[phi uncert]  2.67383
+###
+[En]  84
+[E]  11
+[cos(phi)]  0.993158
+[phi uncert]  4.4825
+###
+[En]  85
+[E]  18
+[cos(phi)]  0.985064
+[phi uncert]  2.66496
+###
+[En]  86
+[E]  10
+[cos(phi)]  0.989884
+[phi uncert]  3.42397
+###
+[En]  87
+[E]  13
+[cos(phi)]  0.990609
+[phi uncert]  4.50345
+###
+[En]  88
+[E]  18
+[cos(phi)]  0.991602
+[phi uncert]  2.96615
+###
+[En]  89
+[E]  11
+[cos(phi)]  0.997043
+[phi uncert]  3.83607
+###
+[En]  90
+[E]  18
+[cos(phi)]  0.994604
+[phi uncert]  2.69207
+###
+[En]  91
+[E]  12
+[cos(phi)]  0.993167
+[phi uncert]  5.27616
+###
+[En]  92
+[E]  22
+[cos(phi)]  0.986488
+[phi uncert]  2.75066
+###
+[En]  93
+[E]  11
+[cos(phi)]  0.986819
+[phi uncert]  5.20006
+###
+[En]  94
+[E]  14
+[cos(phi)]  0.988338
+[phi uncert]  4.24594
+###
+[En]  95
+[E]  10
+[cos(phi)]  0.992947
+[phi uncert]  6.46351
+###
+[En]  96
+[E]  10
+[cos(phi)]  0.9927
+[phi uncert]  3.34892
+###
+[En]  97
+[E]  17
+[cos(phi)]  0.996894
+[phi uncert]  2.56467
+###
+[En]  98
+[E]  20
+[cos(phi)]  0.994836
+[phi uncert]  3.94471
+###
+[En]  99
+[E]  12
+[cos(phi)]  0.98725
+[phi uncert]  3.38367
+###
+[En]  100
+[E]  13
+[cos(phi)]  0.992582
+[phi uncert]  4.22133
+###
+[En]  101
+[E]  11
+[cos(phi)]  0.987638
+[phi uncert]  4.36175
+###
+[En]  102
+[E]  20
+[cos(phi)]  0.997713
+[phi uncert]  3.72278
+###
+[En]  103
+[E]  18
+[cos(phi)]  0.994767
+[phi uncert]  5.52182
+###
+[En]  104
+[E]  11
+[cos(phi)]  0.996003
+[phi uncert]  2.9855
+###
+[En]  105
+[E]  10
+[cos(phi)]  0.986889
+[phi uncert]  6.21157
+###
+[En]  106
+[E]  13
+[cos(phi)]  0.989817
+[phi uncert]  4.13341
+###
+[En]  107
+[E]  11
+[cos(phi)]  0.993317
+[phi uncert]  5.54342
+###
+[En]  108
+[E]  10
+[cos(phi)]  0.991609
+[phi uncert]  3.69102
+###
+[En]  109
+[E]  13
+[cos(phi)]  0.992768
+[phi uncert]  3.35982
+###
+[En]  110
+[E]  12
+[cos(phi)]  0.989087
+[phi uncert]  3.15449
+###
+[En]  111
+[E]  11
+[cos(phi)]  0.999947
+[phi uncert]  4.09313
+###
+[En]  112
+[E]  17
+[cos(phi)]  0.996194
+[phi uncert]  2.98003
+###
+[En]  113
+[E]  12
+[cos(phi)]  0.994421
+[phi uncert]  4.93701
+###
+[En]  114
+[E]  11
+[cos(phi)]  0.988833
+[phi uncert]  3.24849
+###
+[En]  115
+[E]  13
+[cos(phi)]  0.992575
+[phi uncert]  3.67123
+###
+[En]  116
+[E]  11
+[cos(phi)]  0.988383
+[phi uncert]  5.92654
+###
+[En]  117
+[E]  20
+[cos(phi)]  0.986064
+[phi uncert]  2.34295
+###
+[En]  118
+[E]  12
+[cos(phi)]  0.997045
+[phi uncert]  3.36033
+###
+[En]  119
+[E]  10
+[cos(phi)]  0.991076
+[phi uncert]  6.74206
+###
+[En]  120
+[E]  12
+[cos(phi)]  0.992023
+[phi uncert]  4.07258
+###
+[En]  121
+[E]  14
+[cos(phi)]  0.993387
+[phi uncert]  3.94374
+###
+[En]  122
+[E]  12
+[cos(phi)]  0.999905
+[phi uncert]  2.73772
+###
+[En]  123
+[E]  13
+[cos(phi)]  0.989969
+[phi uncert]  4.12882
+###
+[En]  124
+[E]  10
+[cos(phi)]  0.985205
+[phi uncert]  5.21402
+###
+[En]  125
+[E]  12
+[cos(phi)]  0.991413
+[phi uncert]  2.8597
+###
+[En]  126
+[E]  13
+[cos(phi)]  0.996426
+[phi uncert]  2.68018
+###
+[En]  127
+[E]  17
+[cos(phi)]  0.99043
+[phi uncert]  3.39185
+###
+[En]  128
+[E]  13
+[cos(phi)]  0.995952
+[phi uncert]  4.7713
+###
+[En]  129
+[E]  20
+[cos(phi)]  0.997764
+[phi uncert]  2.70049
+###
+[En]  130
+[E]  18
+[cos(phi)]  0.997351
+[phi uncert]  2.31747
+###
+[En]  131
+[E]  10
+[cos(phi)]  0.999309
+[phi uncert]  2.93839
+###
+[En]  132
+[E]  10
+[cos(phi)]  0.992767
+[phi uncert]  4.56468
+###
+[En]  133
+[E]  10
+[cos(phi)]  0.999004
+[phi uncert]  3.23329
+###
+[En]  134
+[E]  14
+[cos(phi)]  0.992881
+[phi uncert]  3.58481
+###
+[En]  135
+[E]  11
+[cos(phi)]  0.985704
+[phi uncert]  3.31396
+###
+[En]  136
+[E]  10
+[cos(phi)]  0.992391
+[phi uncert]  4.1173
+###
+[En]  137
+[E]  10
+[cos(phi)]  0.986229
+[phi uncert]  4.48959
+###
+[En]  138
+[E]  12
+[cos(phi)]  0.986598
+[phi uncert]  4.87327
+###
+[En]  139
+[E]  21
+[cos(phi)]  0.993935
+[phi uncert]  2.24487
+###
+[En]  140
+[E]  14
+[cos(phi)]  0.991074
+[phi uncert]  4.17192
+###
+[En]  141
+[E]  17
+[cos(phi)]  0.993843
+[phi uncert]  2.95563
+###
+[En]  142
+[E]  15
+[cos(phi)]  0.999903
+[phi uncert]  2.84157
+###
+[En]  143
+[E]  13
+[cos(phi)]  0.988504
+[phi uncert]  3.37164
+###
+[En]  144
+[E]  13
+[cos(phi)]  0.989344
+[phi uncert]  5.58281
+###
+[En]  145
+[E]  10
+[cos(phi)]  0.986546
+[phi uncert]  4.16476
+###
+[En]  146
+[E]  15
+[cos(phi)]  0.987737
+[phi uncert]  2.47593
+###
+[En]  147
+[E]  13
+[cos(phi)]  0.991543
+[phi uncert]  5.73297
+###
+[En]  148
+[E]  10
+[cos(phi)]  0.989028
+[phi uncert]  2.67632
+###
+[En]  149
+[E]  10
+[cos(phi)]  0.99827
+[phi uncert]  8.88569
+###
+[En]  150
+[E]  20
+[cos(phi)]  0.992306
+[phi uncert]  2.87793
+###
+[En]  151
+[E]  21
+[cos(phi)]  0.990371
+[phi uncert]  2.58715
+###
+[En]  152
+[E]  14
+[cos(phi)]  0.995599
+[phi uncert]  7.35329
+###
+[En]  153
+[E]  10
+[cos(phi)]  0.992071
+[phi uncert]  5.05416
+###
+[En]  154
+[E]  25
+[cos(phi)]  0.994634
+[phi uncert]  2.14835
+###
+[En]  155
+[E]  14
+[cos(phi)]  0.988395
+[phi uncert]  3.31565
+###
+[En]  156
+[E]  12
+[cos(phi)]  0.987858
+[phi uncert]  4.01609
+###
+[En]  157
+[E]  13
+[cos(phi)]  0.985366
+[phi uncert]  7.03841
+###
+[En]  158
+[E]  16
+[cos(phi)]  0.992405
+[phi uncert]  3.81125
+###
+[En]  159
+[E]  12
+[cos(phi)]  0.991292
+[phi uncert]  3.17576
+###
+[En]  160
+[E]  15
+[cos(phi)]  0.995789
+[phi uncert]  4.1413
+###
+[En]  161
+[E]  10
+[cos(phi)]  0.986314
+[phi uncert]  6.71513
+###
+[En]  162
+[E]  13
+[cos(phi)]  0.99185
+[phi uncert]  3.77615
+###
+[En]  163
+[E]  15
+[cos(phi)]  0.997339
+[phi uncert]  5.98772
+###
+[En]  164
+[E]  14
+[cos(phi)]  0.995409
+[phi uncert]  3.21914
+###
+[En]  165
+[E]  10
+[cos(phi)]  0.991722
+[phi uncert]  3.1909
+###
+[En]  166
+[E]  12
+[cos(phi)]  0.989138
+[phi uncert]  3.73482
+###
+[En]  167
+[E]  11
+[cos(phi)]  0.993847
+[phi uncert]  9.60433
+###
+[En]  168
+[E]  15
+[cos(phi)]  0.997847
+[phi uncert]  4.65001
+###
+[En]  169
+[E]  11
+[cos(phi)]  0.988139
+[phi uncert]  3.74692
+###
+[En]  170
+[E]  11
+[cos(phi)]  0.994566
+[phi uncert]  3.39854
+###
+[En]  171
+[E]  12
+[cos(phi)]  0.996773
+[phi uncert]  2.24006
+###
+[En]  172
+[E]  13
+[cos(phi)]  0.996375
+[phi uncert]  2.68196
+###
+[En]  173
+[E]  12
+[cos(phi)]  0.989066
+[phi uncert]  2.14025
+###
+[En]  174
+[E]  18
+[cos(phi)]  0.992971
+[phi uncert]  5.08667
+###
+[En]  175
+[E]  13
+[cos(phi)]  0.988405
+[phi uncert]  3.99458
+###
+[En]  176
+[E]  12
+[cos(phi)]  0.986151
+[phi uncert]  5.45316
+###
+[En]  177
+[E]  10
+[cos(phi)]  0.986318
+[phi uncert]  2.98336
+###
+[En]  178
+[E]  23
+[cos(phi)]  0.987354
+[phi uncert]  2.16422
+###
+[En]  179
+[E]  11
+[cos(phi)]  0.985248
+[phi uncert]  2.78334
+###
+[En]  180
+[E]  11
+[cos(phi)]  0.985059
+[phi uncert]  6.33171
+###
