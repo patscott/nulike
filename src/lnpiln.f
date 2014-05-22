@@ -708,6 +708,7 @@
         y0     = -lambertw(alpha)
         sigmau = sigma / SQRT(1-y0)
         g0     = y0*(1-0.5d0*y0)/sigma2 - thetab  - lngamma(n+1d0)
+        RETURN
       END IF
       
       ! ---------------------------------------
@@ -717,6 +718,7 @@
         sigmau = sigma / SQRT(1+alpha/(1+r))
         g0     = n*LOG(thetab+thetas) - (thetab+thetas)
      &            - lngamma(n+1d0)
+        RETURN
       END IF
       
       ! ---------------------------------------
