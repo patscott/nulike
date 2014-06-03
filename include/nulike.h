@@ -65,7 +65,6 @@
       real*8  hist_prob(max_nHistograms, max_nnchan)
       real*8  hist_derivs(max_nHistograms, max_nnchan)
       real*8  hist_sigma(max_nHistograms, max_nnchan)
-      real*8  relProb(max_nnchan,max_nBinsEA)
       integer nchan_hist2BGoffset
       real*8  edisp_prob(max_nHistograms)
       real*8  edisp_derivs(max_nHistograms)
@@ -83,8 +82,7 @@
       logical pvalBGPoisComputed, sysErrDist_logNorm
 
       common /nulike_comm/ events_nchan,events_cosphi,events_cosphiErr,
-     & effArea_logE,effArea_nu,relProb,theta_BG,
-     & theta_S, BGnchandist_prob,
+     & effArea_logE,effArea_nu,theta_BG, theta_S, BGnchandist_prob,
      & effArea_logEcentres, effArea_nuderivs, effArea_nubarderivs,
      & effArea_AngResderivs, effArea_nusigma, effArea_nubarsigma,
      & effArea_AngRessigma, BGangdist_derivs, BGangdist_sigma,

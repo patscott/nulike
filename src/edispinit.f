@@ -22,13 +22,10 @@
 
       character (len=*) filename
       character (len=20) instring
-      integer nbins_Ein, nbins_nchan(nbins_Ein), dummyint, i, j, k, l
+      integer nbins_Ein, nbins_nchan(nbins_Ein), dummyint, i, j, k
       integer hist_nchan_temp(max_nHistograms, max_nnchan)
-      integer Eindex(2,max_nBinsEA), IER
+      integer IER
       real*8  hist_prob_temp(max_nHistograms, max_nnchan)
-      real*8  localdiff, normFactor
-      real*8  energydiff(nHistograms)
-      real*8  bestRelProb, tempRelProb
       real*8  working(2*nHistograms-2)
 
       !Read in nchan response distribution for each incoming neutrino energy band
@@ -76,95 +73,7 @@
         endif
       enddo
 
-
-      !Work out the most likely energy bin (in terms of the 'superbins' over which the 
-      !systematic error on the efective area is deemed to vary) that events with
-      !each nchan are expected to have originated from.  This calculation effectively
-      !estimates the integral of P(E|nchan) over each such bin, i.e. the probability 
-      !of an event originating from that bin given an observed value of nchan.  To 
-      !do this requires an assumption about the source shape; here we just assume 
-      !a power law spectral model and allow the user to set the index 1.2d0.  Note
-      !that this assumption *only* enters in classification of events (and background)
-      !into different effective area systematic error bins - it does not enter into 
-      !the unbinned likelihood calculation within each bin.  These probabilities are
-      !also saved for estimating what fraction of observed background events should
-      !be expected in each superbin.
-
-      !Set up the bounds that say which histograms are to be included in full in the
-      !count for which bins in effective area. 
-      i = 1
-      do while (hist_logE(1,i) .lt. effArea_logE(1,1))
-        i = i + 1
-      enddo
-      Eindex(1,1) = i
-      do while (hist_logE(2,i) .lt. effArea_logE(2,nBinsEA))
-        i = i + 1
-      enddo
-      Eindex(2,1) = i - 1
-
-      !Set up the spectral weighting factors for each histogram
-      do k = 1, nHistograms
-        energyDiff(k) = dexp(hist_logE(2,k)*(1.d0-1.2d0)) - 
-     &                  dexp(hist_logE(1,k)*(1.d0-1.2d0))
-      enddo
-
-      !For each nchan, work out the relative probability of each 
-      !effective area error bin and identify the bin in which the
-      !probability is highest.
-      do i = 1, nnchan_total
-
-        bestRelProb = 0.d0
-        normFactor = 0.d0
-
-        !Add on the integral over the first partial histogram
-        l = Eindex(1,1)-1
-        if (l .eq. 0) then
-          tempRelProb = 0.d0
-        else
-          localdiff = dexp(hist_logE(2,l)*(1.d0-1.2d0)) -
-     &                dexp(effArea_logE(1,1)*(1.d0-1.2d0))
-          tempRelProb = hist_prob(l,i) * localdiff
-        endif
-
-        !Add on the integrals over all the internal full histograms
-        if (Eindex(1,1) .le. Eindex(2,1)) then
-          do k = Eindex(1,1), Eindex(2,1)
-            tempRelProb = tempRelProb + hist_prob(k,i) * energyDiff(k)
-          enddo
-        endif
-
-        !Add on the integral over the final partial histogram
-        l = Eindex(2,1)+1
-        if (l .le. nHistograms) then
-          localdiff = effArea_logE(2,nBinsEA)**(1.d0-1.2d0) -
-     &                hist_logE(1,l)**(1.d0-1.2d0)
-          tempRelProb = tempRelProb + hist_prob(l,i) * localdiff
-        endif
-
-        !Save relative probabilities, update normalisation factor
-        !(abs is just because the neglected constant factor in the absolute 
-        !probability goes -ve when tempRelProb also goes -ve)
-        relProb(i,1) = abs(tempRelProb)
-        normFactor = normFactor + relProb(i,1)
-
-        !If relative probability of current bin is the best so far, save it
-        if (abs(tempRelProb) .gt. bestRelProb) then
-          bestRelProb = relProb(i,1)
-        endif
-
-        !Make relative probabilities unitary
-        if (normFactor .gt. 0.d0) then
-          relProb(i,1) = relProb(i,1) / normFactor
-        else !For nchans with no events in modelled histograms, make 
-             !each bin just as likely as the next.
-          relProb(i,1) = 1.d0
-        endif
-        
-      enddo
-
-
       !Set up interpolation in energy histograms for use as energy dispersion estimator
-
       do i = 1, nnchan_total
 
         do j = 1, nHistograms
@@ -186,6 +95,7 @@
         enddo
 
       enddo 
+
       !Indicate which nchan data are currently loaded for
       nchansaved = nnchan_total + nchan_min - 1
 
