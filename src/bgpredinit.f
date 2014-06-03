@@ -1,10 +1,10 @@
 ***********************************************************************
 *** nulike_bgpredinit calculates the expected number of background 
-*** counts in each superbin, based on the superbinning defined in
-*** nulike_eainit and the background spectrum defined in nulike_bginit.
+*** counts, based on the background spectrum defined in nulike_bginit.
 ***        
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
 *** Date: April 8, 2011
+*** Modified: Jun 3, 2014
 ***********************************************************************
 
       subroutine nulike_bgpredinit
@@ -12,7 +12,7 @@
       implicit none
       include 'nulike.h'
 
-      integer i, j, IER
+      integer i, IER
       real*8 normFactor, TSINTL
 
       !Work out the fraction of BG events expected to fall into each superbin
@@ -21,13 +21,11 @@
       !and the probability that an event with that nchan would fall into each superbin (relProb).
       theta_BG = 0.d0
       normFactor = 0.d0
-      do j = 1, nBinsEAError
-        do i = 1, nBinsBGE
-          theta_BG(j) = theta_BG(j) + 
-     &       relProb(i+nchan_hist2BGoffset,j) * BGnchandist_prob(i)
-        enddo
-        normFactor = normFactor + theta_BG(j)
+      do i = 1, nBinsBGE
+        theta_BG(1) = theta_BG(1) + 
+     &     relProb(i+nchan_hist2BGoffset,1) * BGnchandist_prob(i)
       enddo
+      normFactor = normFactor + theta_BG(1)
 
       !Make sure the final fractions are properly normalised 
       theta_BG = theta_BG / normFactor

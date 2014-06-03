@@ -54,6 +54,7 @@
 *** Date: Mar 20, 2011
 *** Updated: Jul 21, 2011
 ***          Mar 6, 2014
+***          Jun 3, 2014
 ***********************************************************************
 
 
@@ -64,13 +65,13 @@
       implicit none
       include 'nulike.h'
 
-      integer Ntotal_observed, liketype, i, j, k, l
+      integer Ntotal_observed, liketype, j
       integer counted1, counted2, countrate
-      real*8 Nsignal_predicted, NBG_predicted, NBG_expected, nulike_pval
+      real*8 Nsignal_predicted, NBG_expected, nulike_pval
       real*8 lnlike, pvalue, referenceLike, dof, DGAMIC, DGAMMA, muonyield
-      real*8 nLikelihood, angularLikelihood, spectralLikelihood, scaling
+      real*8 nLikelihood, angularLikelihood, spectralLikelihood
       real*8 theta_tot, f_S, nulike_anglike, nulike_speclike, nulike_nlike
-      real*8 erval1, erval2, BGpvalChi2, deltalnlike, mwimp, ann_rate
+      real*8 deltalnlike, mwimp, ann_rate
       logical pvalFromRef, nulike_speclike_reset, doProfiling
       character (len=*) pref,f1,f2,f3,f4
       external muonyield
@@ -119,50 +120,47 @@
       lnlike = 0.d0
       Nsignal_predicted = 0.d0
       NBG_expected = 0.d0
-      !Step through the superbins
-      do i = 1, nBinsEAError
-        angularLikelihood = 0.d0
-        spectralLikelihood = 0.d0
-        theta_tot = theta_BG(i) + theta_S(i)
-        f_S = theta_S(i) / theta_tot
-        if (liketype .ne. 1) then
-          !Reset the saved spectral likelihoods next time nulike_speclike is run
-          nulike_speclike_reset = .true.
-          !Step through the events in each superbin
-          do j = 1, nEvents_inEAErrBins(i)
-            !Add in angular likelihood for this event
-            if (liketype .eq. 2 .or. liketype .eq. 4) 
-     &       angularLikelihood = angularLikelihood + nulike_anglike(
-     &        events_cosphi(i,j),events_cosphiErr(i,j),f_S)
-            !Add in spectral likelihood for this event
-            if (liketype .eq. 3 .or. liketype .eq. 4) 
-     &       spectralLikelihood = spectralLikelihood + nulike_speclike(
-     &        events_nchan(i,j),theta_S(i),f_S,nulike_speclike_reset,
-     &        EAlogE_inEAErrBins(1,i),EAlogE_inEAErrBins(2,i),
-     &        muonyield)
-          enddo
-        endif
+      angularLikelihood = 0.d0
+      spectralLikelihood = 0.d0
+      theta_tot = theta_BG(1) + theta_S(1)
+      f_S = theta_S(1) / theta_tot
+      if (liketype .ne. 1) then
+        !Reset the saved spectral likelihoods next time nulike_speclike is run
+        nulike_speclike_reset = .true.
+        !Step through the individual events
+        do j = 1, nEvents_inEAErrBins(1)
+          !Add in angular likelihood for this event
+          if (liketype .eq. 2 .or. liketype .eq. 4) 
+     &     angularLikelihood = angularLikelihood + nulike_anglike(
+     &      events_cosphi(1,j),events_cosphiErr(1,j),f_S)
+          !Add in spectral likelihood for this event
+          if (liketype .eq. 3 .or. liketype .eq. 4) 
+     &     spectralLikelihood = spectralLikelihood + nulike_speclike(
+     &      events_nchan(1,j),theta_S(1),f_S,nulike_speclike_reset,
+     &      EAlogE_inEAErrBins(1,1),EAlogE_inEAErrBins(2,1),
+     &      muonyield)
+        enddo
+      endif
 
-        if (doProfiling) then
-          call system_clock(counted2,countrate)
-          write(*,*) 'Elapsed time on ang/spec likelihood calc (s): ', 
-     &     real(counted2 - counted1)/real(countrate)
-        endif  
+      if (doProfiling) then
+        call system_clock(counted2,countrate)
+        write(*,*) 'Elapsed time on ang/spec likelihood calc (s): ', 
+     &   real(counted2 - counted1)/real(countrate)
+      endif  
 
-        !Calculate the number likelihood for this superbin
-        nLikelihood = nulike_nlike(nEvents_inEAErrBins(i),
-     &   theta_tot,theta_S(i),EAErr_inEAErrBins(i),theoryErr)
+      !Calculate the number likelihood
+      nLikelihood = nulike_nlike(nEvents_inEAErrBins(1),
+     & theta_tot,theta_S(1),EAErr_inEAErrBins(1),theoryErr)
 
-        if (doProfiling) then
-          call system_clock(counted1,countrate)
-          write(*,*) 'Elapsed time on number likelihood calc (s): ', 
-     &     real(counted1 - counted2)/real(countrate)
-        endif  
+      if (doProfiling) then
+        call system_clock(counted1,countrate)
+        write(*,*) 'Elapsed time on number likelihood calc (s): ', 
+     &   real(counted1 - counted2)/real(countrate)
+      endif  
 
-        !Put together the number, angular and spectral likelihoods
-        lnlike = lnlike + nLikelihood + angularLikelihood + 
-     &   spectralLikelihood
-      enddo 
+      !Put together the number, angular and spectral likelihoods
+      lnlike = lnlike + nLikelihood + angularLikelihood + 
+     & spectralLikelihood
 
       !Work out total counts
       NBG_expected = sum(theta_BG)

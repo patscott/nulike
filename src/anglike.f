@@ -9,13 +9,14 @@
 ***                    dimension of a 2D Gaussian PDF (i.e. 39,3% C.L.,
 ***                    not 68%). (degrees)
 ***         f_S        signal fraction; percentage of predicted counts
-***                    within analysis window (cut cone and superbin)
+***                    within analysis cut cone and energy range.
 ***                    expected to be due to signal rather than back-
 ***                    ground.
 *** output:            ln(Likelihood / degrees^-1)
 ***       
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
 *** Date: May 6, 2011
+*** Modified: Jun 3, 2014
 ***********************************************************************
 
       double precision function nulike_anglike(cosphi,

@@ -33,34 +33,9 @@
 ***                      p-value for each model when nulike_bounds is called
 ***                      with pvalFromRef = F.     
 ***        
-*** Hidden options (hard-coded to be turned off):
-***   doSuperBinning    T => Perform the likelihood calculations
-***                          in multiple 'superbins', where unbinned
-***                          likelihoods are calculated within a small
-***                          number of energy superbins, so that the error
-***                          on the effective area is allowed to very
-***                          with energy.
-***                     F => Perform the entire calculation using a
-***                          constant systematic error on the effective
-***                          area, given by the largest value of the 
-***                          error at any energy.
-***   superbinWid       Sets the target range over which the systematic
-***                      error on the effective area is allowed to vary
-***                      over the width of each superbin. A percentage 
-***                      of the effective area, i.e. if = 0.01, the super-
-***                      bins will be chosen such that the fractional error
-***                      on the effective area varies by 0.01 over the
-***                      width of the superbins.  Ignored if doSuperBinning
-***                      = false.
-***   pLawIndx          Spectral index of model spectrum for Bayesian
-***                      unfolding, used for sorting of events into 
-***                      superbins. Ignored if doSuperBinning = false.
-*** Note that superbinning only applies to the likelihood calculation; the p 
-*** value is always calculated over the entire sample, without any superbinning. 
-***
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
 *** Date: Mar 20, 2011
-*** Modified: Mar 5, 2014
+*** Modified: Mar 5, Jun 3 2014
 ***********************************************************************
 
 
@@ -76,14 +51,8 @@
       character (len=30) instring, instring2
       integer IFAIL, i, nBinsRunning, nnchan(max_nHistograms), nchan
       integer BGfirst, BGsecond, BGcurrent, altind(2)
-      real*8 superBinWid, pLawIndx, phi_cut
-      real*8 theoryError
-      logical doSuperBinning, BGLikePrecompute, uselogNorm
-
-      !Hard-coded superbinning options
-      parameter (doSuperBinning = .false.)
-      parameter (superBinWid = 0.01d0)
-      parameter (pLawIndx = 3.4d0)
+      real*8 phi_cut, theoryError
+      logical BGLikePrecompute, uselogNorm
 
       if (.not. nulike_init_called) nulike_init_called = .true.
 
@@ -358,23 +327,23 @@
         stop
       endif
       
-      !Read in the actual effective area/volume data, and create the effective area/volume superbins 
-      call nulike_eainit(effareafile,nBinsEA,doSuperBinning,superBinWid)
+      !Read in the actual effective area/volume data. 
+      call nulike_eainit(effareafile,nBinsEA)
 
       !Read in the actual background data
       call nulike_bginit(BGfile, nBinsBGAng, nBinsBGE, BGfirst, BGsecond)
 
       !Read in the actual nchan response histograms and rearrange them into energy dispersion estimators
-      call nulike_edispinit(nchandistfile, nHistograms, nnchan, pLawIndx)
+      call nulike_edispinit(nchandistfile, nHistograms, nnchan)
 
-      !Read in the actual detail of all events, and sort them into the superbins determined from the errors on the effective area/volume
+      !Read in the actual details of all events.
       call nulike_eventinit(eventfile, nEvents)
 
-      !Calculate the expected background counts in each superbin
+      !Calculate the expected background count.
       call nulike_bgpredinit
 
-      !Precompute the background p-value (confidence level) for the Poissonian likelihood if requested.  This is used for calculation of 
-      !the final p-value for each model if nulike_bounds is called with pvalFromRef = F.
+      !Precompute the background p-value (confidence level) for the Poissonian likelihood if requested.  
+      !This is used for calculation of the final p-value for each model if nulike_bounds is called with pvalFromRef = F.
       pvalBGPoisComputed = .false.
       if (BGLikePrecompute) call nulike_bglikeprecomp
 

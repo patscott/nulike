@@ -1,24 +1,21 @@
 ***********************************************************************
 *** nulike_edispinit initialises the IceCube energy dispersion function.
 *** This entails reading in the nchan response distributions for neutrinos
-*** with energies in certain bands.  When superbinning is employed,
-*** these are also converted to distributions of incoming energies for 
-*** each nchan, using a Bayesian unfolding technique.
+*** with energies in certain bands.
 ***
 *** input:  filename     name of file containig energy dispersion data
 ***         nbins_Ein    number of histograms corresponding to responses
 ***                       to neutrinos with energies in certain bands
 ***         nbins_nchan  array of size nbins_Ein, indicating how many
 ***                       values of nchan are included in each histogram
-***         gamma        power law index of spectral model used as a 
-***                       prior for the Bayesian unfolding        
 ***        
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
 *** Date: April 8, 2011
+*** Modified: Jun 3, 2014
 ***********************************************************************
 
       subroutine nulike_edispinit(filename, nbins_Ein, 
-     & nbins_nchan, gamma)
+     & nbins_nchan)
 
       implicit none
       include 'nulike.h'
@@ -29,8 +26,8 @@
       integer hist_nchan_temp(max_nHistograms, max_nnchan)
       integer Eindex(2,max_nBinsEA), IER
       real*8  hist_prob_temp(max_nHistograms, max_nnchan)
-      real*8  tempfloat, localdiff, normFactor
-      real*8  energydiff(nHistograms), gamma
+      real*8  localdiff, normFactor
+      real*8  energydiff(nHistograms)
       real*8  bestRelProb, tempRelProb
       real*8  working(2*nHistograms-2)
 
@@ -86,7 +83,7 @@
       !estimates the integral of P(E|nchan) over each such bin, i.e. the probability 
       !of an event originating from that bin given an observed value of nchan.  To 
       !do this requires an assumption about the source shape; here we just assume 
-      !a power law spectral model and allow the user to set the index gamma.  Note
+      !a power law spectral model and allow the user to set the index 1.2d0.  Note
       !that this assumption *only* enters in classification of events (and background)
       !into different effective area systematic error bins - it does not enter into 
       !the unbinned likelihood calculation within each bin.  These probabilities are
@@ -95,20 +92,18 @@
 
       !Set up the bounds that say which histograms are to be included in full in the
       !count for which bins in effective area. 
-      do j = 1, nBinsEAError
-        i = 1
-        do k = 1,2
-          do while (hist_logE(k,i) .lt. EAlogE_inEAErrBins(k,j))
-            i = i + 1
-          enddo
-          Eindex(k,j) = i - k + 1
+      i = 1
+      do k = 1,2
+        do while (hist_logE(k,i) .lt. EAlogE_inEAErrBins(k,1))
+          i = i + 1
         enddo
+        Eindex(k,1) = i - k + 1
       enddo
 
       !Set up the spectral weighting factors for each histogram
       do k = 1, nHistograms
-        energyDiff(k) = dexp(hist_logE(2,k)*(1.d0-gamma)) - 
-     &                  dexp(hist_logE(1,k)*(1.d0-gamma))
+        energyDiff(k) = dexp(hist_logE(2,k)*(1.d0-1.2d0)) - 
+     &                  dexp(hist_logE(1,k)*(1.d0-1.2d0))
       enddo
 
       !For each nchan, work out the relative probability of each 
@@ -116,61 +111,55 @@
       !probability is highest.
       do i = 1, nnchan_total
 
-        BestGuessBin(i) = maxEAErrIndex
+        BestGuessBin(i) = 1
         bestRelProb = 0.d0
         normFactor = 0.d0
 
-        do j = 1, nBinsEAError
+        !Add on the integral over the first partial histogram
+        l = Eindex(1,1)-1
+        if (l .eq. 0) then
+          tempRelProb = 0.d0
+        else
+          localdiff = dexp(hist_logE(2,l)*(1.d0-1.2d0)) -
+     &                dexp(EAlogE_inEAErrBins(1,1)*(1.d0-1.2d0))
+          tempRelProb = hist_prob(l,i) * localdiff
+        endif
 
-          !Add on the integral over the first partial histogram
-          l = Eindex(1,j)-1
-          if (l .eq. 0) then
-            tempRelProb = 0.d0
-          else
-            localdiff = dexp(hist_logE(2,l)*(1.d0-gamma)) -
-     &                  dexp(EAlogE_inEAErrBins(1,j)*(1.d0-gamma))
-            tempRelProb = hist_prob(l,i) * localdiff
-          endif
+        !Add on the integrals over all the internal full histograms
+        if (Eindex(1,1) .le. Eindex(2,1)) then
+          do k = Eindex(1,1), Eindex(2,1)
+            tempRelProb = tempRelProb + hist_prob(k,i) * energyDiff(k)
+          enddo
+        endif
 
-          !Add on the integrals over all the internal full histograms
-          if (Eindex(1,j) .le. Eindex(2,j)) then
-            do k = Eindex(1,j), Eindex(2,j)
-              tempRelProb = tempRelProb + hist_prob(k,i) * energyDiff(k)
-            enddo
-          endif
+        !Add on the integral over the final partial histogram
+        l = Eindex(2,1)+1
+        if (l .le. nHistograms) then
+          localdiff = EAlogE_inEAErrBins(2,1)**(1.d0-1.2d0) -
+     &                hist_logE(1,l)**(1.d0-1.2d0)
+          tempRelProb = tempRelProb + hist_prob(l,i) * localdiff
+        endif
 
-          !Add on the integral over the final partial histogram
-          l = Eindex(2,j)+1
-          if (l .le. nHistograms) then
-            localdiff = EAlogE_inEAErrBins(2,j)**(1.d0-gamma) -
-     &                  hist_logE(1,l)**(1.d0-gamma)
-            tempRelProb = tempRelProb + hist_prob(l,i) * localdiff
-          endif
+        !Save relative probabilities, update normalisation factor
+        !(abs is just because the neglected constant factor in the absolute 
+        !probability goes -ve when tempRelProb also goes -ve)
+        relProb(i,1) = abs(tempRelProb)
+        normFactor = normFactor + relProb(i,1)
 
-          !Save relative probabilities, update normalisation factor
-          !(abs is just because the neglected constant factor in the absolute 
-          !probability goes -ve when tempRelProb also goes -ve)
-          relProb(i,j) = abs(tempRelProb)
-          normFactor = normFactor + relProb(i,j)
-
-          !If relative probability of current bin is the best so far, save it
-          if (abs(tempRelProb) .gt. bestRelProb) then
-            bestRelProb = relProb(i,j)
-            bestGuessBin(i) = j
-          endif
-
-        enddo
+        !If relative probability of current bin is the best so far, save it
+        if (abs(tempRelProb) .gt. bestRelProb) then
+          bestRelProb = relProb(i,1)
+          bestGuessBin(i) = 1
+        endif
 
         !Make relative probabilities unitary
-        do j = 1, nBinsEAError
-          if (normFactor .gt. 0.d0) then
-            relProb(i,j) = relProb(i,j) / normFactor
-          else !For nchans with no events in modelled histograms, make 
-               !each bin just as likely as the next.
-            relProb(i,j) = 1.d0/dble(nBinsEAError)
-          endif
-        enddo
-
+        if (normFactor .gt. 0.d0) then
+          relProb(i,1) = relProb(i,1) / normFactor
+        else !For nchans with no events in modelled histograms, make 
+             !each bin just as likely as the next.
+          relProb(i,1) = 1.d0
+        endif
+        
       enddo
 
 

@@ -10,10 +10,8 @@
       implicit none
       real*8 oh2,xf,dsrdomega                                 ! relic density
       real*8 sigsip,sigsin,sigsdp,sigsdn                      ! nuclear scattering
-      real*8 dsntcapsun, dsntcapsunnum, dsntcapsuntab, ca     ! capture rate 
+      real*8 dsntcapsuntab, ca                                ! capture rate 
       real*8 tt_sun, annrate, nuyield                         ! capture rate
-      real*8 eth,thmax,rateea,ratesu,energy,theta             ! neutrino telescopes
-      integer rtype,ptype                                     ! neutrino telescopes
       real*8 sigpred, bgpred, lnLike, pval, refLike, dof      ! neutrino likelihood
       real*8 theoryError,phi_cut                              ! neutrino likelihood
       integer totobs, likechoice                              ! neutrino likelihood
@@ -21,7 +19,7 @@
       logical BGLikePrecompute                                ! neutrino likelihood
       character (len=256) iclike2012, iclike2014, experiment  ! neutrino likelihood
       character (len=256) eventf, edispf, BGf, efaorvf        ! neutrino likelihood
-      integer unphys,hwarning,iend,ierr,istat,iwar,nfc        ! bookkeeping
+      integer unphys,hwarning,iend,ierr,iwar,nfc              ! bookkeeping
       external nuyield
 
       include 'dsio.h'
@@ -216,7 +214,6 @@
       integer nmodel,lunit,iend,ierr
       real*8 at,ab,mqtild
       integer i
-      character*40 message
  2000 format (1x,a12,7(1x,e14.8))
       ierr=0
       ! When nmodel<0, skip -nmodel lines

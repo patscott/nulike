@@ -1,6 +1,6 @@
 ***********************************************************************
 *** nulike_signal computes the predicted number of neutrino events due
-*** to neutralino annihilation in each superbin, saving global variables
+*** to neutralino annihilation, saving global variables
 *** for later access by likelihood codes.
 ***        
 *** Input:      muonyield       external double function that returns
@@ -10,6 +10,7 @@
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
 *** Date: Apr 22, 2011
 *** Modified: March 6 2014
+*** Modified: Jun 3, 2014
 ***********************************************************************
 
 
@@ -20,42 +21,37 @@
 
       real*8 integral, eps, nulike_simpson, nulike_sigintegrand
       real*8 muonyield, upperLimit
-      integer i
       parameter (eps = 1.d-3)
       external nulike_sigintegrand, muonyield
  
       theta_S = 0.d0
       
-      do i = 1,nBinsEAError
+      if (log10mwimp .lt. EAlogE_inEAErrBins(1,1)) then
 
-        if (log10mwimp .lt. EAlogE_inEAErrBins(1,i)) then
-
-          theta_Snu(i) = 0.d0
-          theta_Snubar(i) = 0.d0
+        theta_Snu(1) = 0.d0
+        theta_Snubar(1) = 0.d0
  
+      else
+
+        if (log10mwimp .lt. EAlogE_inEAErrBins(2,1)) then
+          upperLimit = log10mwimp
         else
-
-          if (log10mwimp .lt. EAlogE_inEAErrBins(2,i)) then
-            upperLimit = log10mwimp
-          else
-            upperLimit = EAlogE_inEAErrBins(2,i)
-          endif
-
-          ptypeshare = 1
-          integral = nulike_simpson(nulike_sigintegrand,muonyield,
-     &     EAlogE_inEAErrBins(1,i),upperLimit,eps)
-          theta_Snu(i) = integral * dlog(10.d0) * exp_time * annrate
-
-          ptypeshare = 2
-          integral = nulike_simpson(nulike_sigintegrand,muonyield,
-     &     EAlogE_inEAErrBins(1,i),upperLimit,eps)
-          theta_Snubar(i) = integral * dlog(10.d0) * exp_time *annrate
-
+          upperLimit = EAlogE_inEAErrBins(2,1)
         endif
 
-        theta_S(i) = theta_Snu(i) + theta_Snubar(i) 
+        ptypeshare = 1
+        integral = nulike_simpson(nulike_sigintegrand,muonyield,
+     &   EAlogE_inEAErrBins(1,1),upperLimit,eps)
+        theta_Snu(1) = integral * dlog(10.d0) * exp_time * annrate
 
-      enddo
+        ptypeshare = 2
+        integral = nulike_simpson(nulike_sigintegrand,muonyield,
+     &   EAlogE_inEAErrBins(1,1),upperLimit,eps)
+        theta_Snubar(1) = integral * dlog(10.d0) * exp_time *annrate
+
+      endif
+
+      theta_S(1) = theta_Snu(1) + theta_Snubar(1) 
 
       theta_S_total = sum(theta_S)
 

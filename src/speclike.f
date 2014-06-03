@@ -5,14 +5,14 @@
 ***
 *** input:  nchan      observed number of hit DOMs for this event
 ***         theta_S_input total predicted number of signal events
-***                     within analysis window (cut cone and superbin)
+***                     within analysis window (cut cone)
 ***         f_S        signal fraction; percentage of predicted counts
 ***                     expected to be due to signal rather than back-
 ***                     ground.
 ***         logEmin    log10(Emin/GeV), where Emin is the lower energy
-***                     boundary of the analysis window (i.e. superbin)  
+***                     boundary of the analysis energy range  
 ***         logEmax    log10(Emax/GeV), where Emax is the upper energy
-***                     boundary of the analysis window (i.e. superbin)
+***                     boundary of the analysis energy range
 ***         muonyield  external double function that returns
 ***                     the differential muon/neutrino flux
 ***                     at the detector in units of m^-2 GeV^-1
@@ -21,6 +21,7 @@
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
 *** Date: Apr 22, 2011
 *** Modified: March 6, 2014
+*** Modified: Jun 3, 2014
 ***********************************************************************
 
       double precision function nulike_speclike(nchan,theta_S_input,
