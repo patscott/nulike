@@ -51,9 +51,6 @@
       real*8 effArea_nubarsigma(max_nBinsEA)
       real*8 effArea_AngRessigma(max_nBinsEA)
 
-      real*8 EAlogE_inEAErrBins(2) !deleteme
-      real*8 EAErr
-
       real*8  BGangdist_phi(max_nBinsBGAng)
       real*8  BGangdist_prob(max_nBinsBGAng)
       real*8  BGangdist_derivs(max_nBinsBGAng)
@@ -80,25 +77,25 @@
 
       real*8  theta_BG,theta_S,theta_Snu,theta_Snubar
       real*8  phi_max_rad, phi_max_deg, exp_time
-      real*8  Eshare, thetashare, log10mwimp, theoryErr
+      real*8  Eshare, thetashare, log10mwimp, theoryErr, EAErr
       real*8  BGpvalPoissonian, annrate, BGangdist_conenorm
       integer FullSkyBG, ptypeshare, nchanshare, nchansaved
       logical pvalBGPoisComputed, sysErrDist_logNorm
 
       common /nulike_comm/ events_nchan,events_cosphi,events_cosphiErr,
-     & effArea_logE,EAlogE_inEAErrBins,effArea_nu,relProb,theta_BG,
-     & theta_S,EAErr,nEvents_in_file, BGnchandist_prob,
+     & effArea_logE,effArea_nu,relProb,theta_BG,
+     & theta_S, BGnchandist_prob,
      & effArea_logEcentres, effArea_nuderivs, effArea_nubarderivs,
      & effArea_AngResderivs, effArea_nusigma, effArea_nubarsigma,
      & effArea_AngRessigma, BGangdist_derivs, BGangdist_sigma,
      & BGangdist_phi, BGangdist_prob, BGnchandist_nchan, phi_max_rad,
-     & phi_max_deg, log10mwimp, theoryErr, BGpvalPoissonian,
+     & phi_max_deg, log10mwimp, theoryErr, EAErr, BGpvalPoissonian,
      & BGangdist_norm, effArea_AngRes, exp_time, Eshare, thetashare, 
      & theta_Snu, theta_Snubar, annrate, 
      & BGangdist_conenorm, hist_LogE, hist_logEcentres, hist_nchan,
      & hist_prob, hist_derivs, hist_sigma, edisp_prob, edisp_derivs,
      & edisp_sigma, effArea_nubar,effArea_syserr,effArea_staterr,
-     & nBinsEA, nBinsBGAng, nBinsBGE, nEvents,
+     & nBinsEA, nBinsBGAng, nBinsBGE, nEvents, nEvents_in_file,
      & nHistograms, nnchan_total, nchan_min, nchan_max,
      & nchan_hist2BGoffset, FullSkyBG, ptypeshare, nchanshare,
      & nchansaved, pvalBGPoisComputed, sysErrDist_logNorm, nulike_version

@@ -62,9 +62,6 @@
      & effArea_staterr*effArea_staterr) * 0.01d0      
       EAErr = maxval(totalSystematic)
 
-      EAlogE_inEAErrBins(1) = effArea_logE(1,1)
-      EAlogE_inEAErrBins(2) = effArea_logE(2,nbins)     
-      
 
       !Now need to init the interpolators in effective area and angular resolution.
 

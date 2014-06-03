@@ -135,7 +135,7 @@
           if (liketype .eq. 3 .or. liketype .eq. 4) 
      &     spectralLikelihood = spectralLikelihood + nulike_speclike(
      &      events_nchan(j),theta_S,f_S,nulike_speclike_reset,
-     &      EAlogE_inEAErrBins(1),EAlogE_inEAErrBins(2),
+     &      effArea_logE(1,1),effArea_logE(2,nBinsEA),
      &      muonyield)
         enddo
       endif

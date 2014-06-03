@@ -93,12 +93,14 @@
       !Set up the bounds that say which histograms are to be included in full in the
       !count for which bins in effective area. 
       i = 1
-      do k = 1,2
-        do while (hist_logE(k,i) .lt. EAlogE_inEAErrBins(k))
-          i = i + 1
-        enddo
-        Eindex(k,1) = i - k + 1
+      do while (hist_logE(1,i) .lt. effArea_logE(1,1))
+        i = i + 1
       enddo
+      Eindex(1,1) = i
+      do while (hist_logE(2,i) .lt. effArea_logE(2,nBinsEA))
+        i = i + 1
+      enddo
+      Eindex(2,1) = i - 1
 
       !Set up the spectral weighting factors for each histogram
       do k = 1, nHistograms
@@ -120,7 +122,7 @@
           tempRelProb = 0.d0
         else
           localdiff = dexp(hist_logE(2,l)*(1.d0-1.2d0)) -
-     &                dexp(EAlogE_inEAErrBins(1)*(1.d0-1.2d0))
+     &                dexp(effArea_logE(1,1)*(1.d0-1.2d0))
           tempRelProb = hist_prob(l,i) * localdiff
         endif
 
@@ -134,7 +136,7 @@
         !Add on the integral over the final partial histogram
         l = Eindex(2,1)+1
         if (l .le. nHistograms) then
-          localdiff = EAlogE_inEAErrBins(2)**(1.d0-1.2d0) -
+          localdiff = effArea_logE(2,nBinsEA)**(1.d0-1.2d0) -
      &                hist_logE(1,l)**(1.d0-1.2d0)
           tempRelProb = tempRelProb + hist_prob(l,i) * localdiff
         endif

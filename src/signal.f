@@ -24,27 +24,27 @@
       parameter (eps = 1.d-3)
       external nulike_sigintegrand, muonyield
  
-      if (log10mwimp .lt. EAlogE_inEAErrBins(1)) then
+      if (log10mwimp .lt. effArea_logE(1,1)) then
 
         theta_Snu = 0.d0
         theta_Snubar = 0.d0
  
       else
 
-        if (log10mwimp .lt. EAlogE_inEAErrBins(2)) then
+        if (log10mwimp .lt. effArea_logE(2,nBinsEA)) then
           upperLimit = log10mwimp
         else
-          upperLimit = EAlogE_inEAErrBins(2)
+          upperLimit = effArea_logE(2,nBinsEA)
         endif
 
         ptypeshare = 1
         integral = nulike_simpson(nulike_sigintegrand,muonyield,
-     &   EAlogE_inEAErrBins(1),upperLimit,eps)
+     &   effArea_logE(1,1),upperLimit,eps)
         theta_Snu = integral * dlog(10.d0) * exp_time * annrate
 
         ptypeshare = 2
         integral = nulike_simpson(nulike_sigintegrand,muonyield,
-     &   EAlogE_inEAErrBins(1),upperLimit,eps)
+     &   effArea_logE(1,1),upperLimit,eps)
         theta_Snubar = integral * dlog(10.d0) * exp_time *annrate
 
       endif
