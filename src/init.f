@@ -232,7 +232,7 @@
 
       do
         read(lun, fmt=*, IOSTAT=IFAIL, END=30) instring
-        read(lun, fmt=*, IOSTAT=IFAIL, END=30) instring, nEvents
+        read(lun, fmt=*, IOSTAT=IFAIL, END=30) instring, nEvents_in_file
         if (IFAIL .ne. 0) then
          write(*,*) 'Bad format in IC event file.',eventfile,'.'
          write(*,*) 'Quitting...'
@@ -245,7 +245,7 @@
 
 30    close(lun)
       
-      if (nEvents .gt. max_nEvents) then
+      if (nEvents_in_file .gt. max_nEvents) then
         write(*,*) 'IC event file contains more bins than'
         write(*,*) 'DarkSUSY has been configured to handle.'
         write(*,*) 'Increase max_nEffAreaBins in nulike.h and' 
@@ -337,7 +337,7 @@
       call nulike_edispinit(nchandistfile, nHistograms, nnchan)
 
       !Read in the actual details of all events.
-      call nulike_eventinit(eventfile, nEvents)
+      call nulike_eventinit(eventfile, nEvents_in_file)
 
       !Calculate the expected background count.
       call nulike_bgpredinit

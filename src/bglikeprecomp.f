@@ -3,7 +3,8 @@
 *** background in IceCube calculations based on Poissonian statistics.
 ***        
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
-*** Date: May, July 2011
+*** Date: May, Jul, 2011
+*** Modified: Jun 3, 2014 
 ***********************************************************************
 
       subroutine nulike_bglikeprecomp
@@ -13,7 +14,7 @@
 
       real*8 nulike_pval
 
-      BGpvalPoissonian = nulike_pval(sum(nEvents_inEAErrBins),sum(theta_BG),0.d0)
+      BGpvalPoissonian = nulike_pval(nEvents,theta_BG,0.d0)
       pvalBGPoisComputed = .true.
 
       end subroutine nulike_bglikeprecomp

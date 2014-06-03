@@ -7,7 +7,7 @@
 !***                           nulike.h                               ***
 !***         this piece of code is needed as a separate file          ***
 !----------------------------------------------------------------------c
-!  author: Pat Scott (patscott@physics.mcgill.ca), March 26 2011
+!  author: Pat Scott (patscott@physics.mcgill.ca), March 26 2011, June 3 2014
 
       integer lun, ridiculousNumberOfChannels
       integer max_nBinsEA,max_nBinsBGAng,max_nBinsBGE,max_nEvents
@@ -33,8 +33,8 @@
       parameter (pi=3.141592653589793238d0)
       parameter(bigBadLike = -50.d0)
 
-      integer nBinsEA,nBinsEAError,nBinsBGAng,nBinsBGE,nEvents
-      integer nHistograms
+      integer nEvents,nEvents_in_file
+      integer nBinsEA,nBinsBGAng,nBinsBGE,nHistograms
       integer nchan_min, nchan_max, nnchan_total
 
       real*8 effArea_logE(2,max_nBinsEA)
@@ -51,10 +51,8 @@
       real*8 effArea_nubarsigma(max_nBinsEA)
       real*8 effArea_AngRessigma(max_nBinsEA)
 
-      real*8 EAlogE_inEAErrBins(2,max_nBinsEA)
-      real*8 EAErr_inEAErrBins(max_nBinsEA)
-      integer nEvents_inEAErrBins(max_nBinsEA)
-      integer maxEAErrIndex
+      real*8 EAlogE_inEAErrBins(2) !deleteme
+      real*8 EAErr
 
       real*8  BGangdist_phi(max_nBinsBGAng)
       real*8  BGangdist_prob(max_nBinsBGAng)
@@ -70,42 +68,38 @@
       real*8  hist_prob(max_nHistograms, max_nnchan)
       real*8  hist_derivs(max_nHistograms, max_nnchan)
       real*8  hist_sigma(max_nHistograms, max_nnchan)
-      integer bestGuessBin(max_nnchan)
       real*8  relProb(max_nnchan,max_nBinsEA)
       integer nchan_hist2BGoffset
       real*8  edisp_prob(max_nHistograms)
       real*8  edisp_derivs(max_nHistograms)
       real*8  edisp_sigma(max_nHistograms)
 
-      integer events_nchan(max_nBinsEA,max_nEvents)
-      real*8  events_cosphi(max_nBinsEA,max_nEvents)
-      real*8  events_cosphiErr(max_nBinsEA,max_nEvents)
+      integer events_nchan(max_nEvents)
+      real*8  events_cosphi(max_nEvents)
+      real*8  events_cosphiErr(max_nEvents)
 
-      real*8  theta_BG(max_nBinsEA)
-      real*8  theta_S(max_nBinsEA)
-      real*8  theta_Snu(max_nBinsEA)
-      real*8  theta_Snubar(max_nBinsEA)
-      real*8  phi_max_rad, phi_max_deg, exp_time, theta_S_total
-      real*8  Eshare, thetashare, log10mwimp, theoryErr, EAErr_max
+      real*8  theta_BG,theta_S,theta_Snu,theta_Snubar
+      real*8  phi_max_rad, phi_max_deg, exp_time
+      real*8  Eshare, thetashare, log10mwimp, theoryErr
       real*8  BGpvalPoissonian, annrate, BGangdist_conenorm
       integer FullSkyBG, ptypeshare, nchanshare, nchansaved
       logical pvalBGPoisComputed, sysErrDist_logNorm
 
       common /nulike_comm/ events_nchan,events_cosphi,events_cosphiErr,
      & effArea_logE,EAlogE_inEAErrBins,effArea_nu,relProb,theta_BG,
-     & theta_S,EAErr_inEAErrBins,nEvents_inEAErrBins, BGnchandist_prob,
+     & theta_S,EAErr,nEvents_in_file, BGnchandist_prob,
      & effArea_logEcentres, effArea_nuderivs, effArea_nubarderivs,
      & effArea_AngResderivs, effArea_nusigma, effArea_nubarsigma,
      & effArea_AngRessigma, BGangdist_derivs, BGangdist_sigma,
      & BGangdist_phi, BGangdist_prob, BGnchandist_nchan, phi_max_rad,
-     & phi_max_deg, log10mwimp, theoryErr, EAErr_max, BGpvalPoissonian,
+     & phi_max_deg, log10mwimp, theoryErr, BGpvalPoissonian,
      & BGangdist_norm, effArea_AngRes, exp_time, Eshare, thetashare, 
-     & theta_Snu, theta_Snubar, theta_S_total, annrate, 
+     & theta_Snu, theta_Snubar, annrate, 
      & BGangdist_conenorm, hist_LogE, hist_logEcentres, hist_nchan,
      & hist_prob, hist_derivs, hist_sigma, edisp_prob, edisp_derivs,
      & edisp_sigma, effArea_nubar,effArea_syserr,effArea_staterr,
-     & bestGuessBin, nBinsEA, nBinsEAError, nBinsBGAng,nBinsBGE,nEvents,
-     & nHistograms, nnchan_total, nchan_min, nchan_max, maxEAErrIndex,
+     & nBinsEA, nBinsBGAng, nBinsBGE, nEvents,
+     & nHistograms, nnchan_total, nchan_min, nchan_max,
      & nchan_hist2BGoffset, FullSkyBG, ptypeshare, nchanshare,
      & nchansaved, pvalBGPoisComputed, sysErrDist_logNorm, nulike_version
       save /nulike_comm/

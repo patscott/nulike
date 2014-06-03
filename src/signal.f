@@ -24,36 +24,32 @@
       parameter (eps = 1.d-3)
       external nulike_sigintegrand, muonyield
  
-      theta_S = 0.d0
-      
-      if (log10mwimp .lt. EAlogE_inEAErrBins(1,1)) then
+      if (log10mwimp .lt. EAlogE_inEAErrBins(1)) then
 
-        theta_Snu(1) = 0.d0
-        theta_Snubar(1) = 0.d0
+        theta_Snu = 0.d0
+        theta_Snubar = 0.d0
  
       else
 
-        if (log10mwimp .lt. EAlogE_inEAErrBins(2,1)) then
+        if (log10mwimp .lt. EAlogE_inEAErrBins(2)) then
           upperLimit = log10mwimp
         else
-          upperLimit = EAlogE_inEAErrBins(2,1)
+          upperLimit = EAlogE_inEAErrBins(2)
         endif
 
         ptypeshare = 1
         integral = nulike_simpson(nulike_sigintegrand,muonyield,
-     &   EAlogE_inEAErrBins(1,1),upperLimit,eps)
-        theta_Snu(1) = integral * dlog(10.d0) * exp_time * annrate
+     &   EAlogE_inEAErrBins(1),upperLimit,eps)
+        theta_Snu = integral * dlog(10.d0) * exp_time * annrate
 
         ptypeshare = 2
         integral = nulike_simpson(nulike_sigintegrand,muonyield,
-     &   EAlogE_inEAErrBins(1,1),upperLimit,eps)
-        theta_Snubar(1) = integral * dlog(10.d0) * exp_time *annrate
+     &   EAlogE_inEAErrBins(1),upperLimit,eps)
+        theta_Snubar = integral * dlog(10.d0) * exp_time *annrate
 
       endif
 
-      theta_S(1) = theta_Snu(1) + theta_Snubar(1) 
-
-      theta_S_total = sum(theta_S)
+      theta_S = theta_Snu + theta_Snubar 
 
       end subroutine nulike_signal
 

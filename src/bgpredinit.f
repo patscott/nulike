@@ -22,10 +22,10 @@
       theta_BG = 0.d0
       normFactor = 0.d0
       do i = 1, nBinsBGE
-        theta_BG(1) = theta_BG(1) + 
+        theta_BG = theta_BG + 
      &     relProb(i+nchan_hist2BGoffset,1) * BGnchandist_prob(i)
       enddo
-      normFactor = normFactor + theta_BG(1)
+      normFactor = normFactor + theta_BG
 
       !Make sure the final fractions are properly normalised 
       theta_BG = theta_BG / normFactor

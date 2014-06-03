@@ -25,7 +25,7 @@
         stop 'Error: something has gone negative in nulike_pval!'
       endif
 
-      sigma = dsqrt(EAErr_max*EAErr_max+theoryErr*theoryErr)
+      sigma = dsqrt(EAErr*EAErr+theoryErr*theoryErr)
       if (sysErrDist_logNorm) then
         !Treat percentage error as log-normal distributed
         call nulike_lnpilnsum(ntot,theta_tot-theta_sig,theta_sig,

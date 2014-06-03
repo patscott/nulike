@@ -17,10 +17,8 @@
 
       character (len=*) filename
       character (len=1) instring
-      integer nbins, i, prevStartIndex, IER
-      real*8 totalSystematic(max_nBinsEA)
-      real*8 runningAverage, prevWidth, prevStartlogE, firstSystematic
-      real*8 firstWidth, working(2*nbins-2)
+      integer nbins, i, IER
+      real*8 totalSystematic(max_nBinsEA), working(2*nbins-2)
       logical clusterdebug
       parameter(clusterdebug = .false.)
 
@@ -61,25 +59,11 @@
       !have the character of a pure systematic when considered in the 
       !context of using a fixed effective area to do an analysis of real events.)
       totalSystematic = dsqrt(effArea_syserr*effArea_syserr + 
-     & effArea_staterr*effArea_staterr) * 0.01d0
+     & effArea_staterr*effArea_staterr) * 0.01d0      
+      EAErr = maxval(totalSystematic)
 
-      !A very rough hueuristic 1D clustering algorithm,
-      !meant to identify an appropriate rebinning such that
-      !each new bin has constant error to within some specified
-      !width.
-      runningAverage = 0.d0
-      prevStartIndex = 1
-      prevWidth = 0.d0
-      prevStartlogE = effArea_logE(1,1)
-      firstSystematic = totalSystematic(1)
-      firstWidth = effArea_logE(2,1) - prevStartlogE
-
-      do i = 1,nbins
-        EAErr_max = max(totalSystematic(i),EAErr_max)
-      enddo
-      EAErr_inEAErrBins(1) = EAErr_max
-      EAlogE_inEAErrBins(1,1) = prevStartlogE
-      EAlogE_inEAErrBins(2,1) = effArea_logE(2,nbins)     
+      EAlogE_inEAErrBins(1) = effArea_logE(1,1)
+      EAlogE_inEAErrBins(2) = effArea_logE(2,nbins)     
       
 
       !Now need to init the interpolators in effective area and angular resolution.

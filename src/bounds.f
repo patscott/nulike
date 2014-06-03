@@ -118,26 +118,24 @@
 
       !Calculate likelihood
       lnlike = 0.d0
-      Nsignal_predicted = 0.d0
-      NBG_expected = 0.d0
       angularLikelihood = 0.d0
       spectralLikelihood = 0.d0
-      theta_tot = theta_BG(1) + theta_S(1)
-      f_S = theta_S(1) / theta_tot
+      theta_tot = theta_BG + theta_S
+      f_S = theta_S / theta_tot
       if (liketype .ne. 1) then
         !Reset the saved spectral likelihoods next time nulike_speclike is run
         nulike_speclike_reset = .true.
         !Step through the individual events
-        do j = 1, nEvents_inEAErrBins(1)
+        do j = 1, nEvents
           !Add in angular likelihood for this event
           if (liketype .eq. 2 .or. liketype .eq. 4) 
      &     angularLikelihood = angularLikelihood + nulike_anglike(
-     &      events_cosphi(1,j),events_cosphiErr(1,j),f_S)
+     &      events_cosphi(j),events_cosphiErr(j),f_S)
           !Add in spectral likelihood for this event
           if (liketype .eq. 3 .or. liketype .eq. 4) 
      &     spectralLikelihood = spectralLikelihood + nulike_speclike(
-     &      events_nchan(1,j),theta_S(1),f_S,nulike_speclike_reset,
-     &      EAlogE_inEAErrBins(1,1),EAlogE_inEAErrBins(2,1),
+     &      events_nchan(j),theta_S,f_S,nulike_speclike_reset,
+     &      EAlogE_inEAErrBins(1),EAlogE_inEAErrBins(2),
      &      muonyield)
         enddo
       endif
@@ -149,8 +147,8 @@
       endif  
 
       !Calculate the number likelihood
-      nLikelihood = nulike_nlike(nEvents_inEAErrBins(1),
-     & theta_tot,theta_S(1),EAErr_inEAErrBins(1),theoryErr)
+      nLikelihood = nulike_nlike(nEvents,
+     & theta_tot,theta_S,EAErr,theoryErr)
 
       if (doProfiling) then
         call system_clock(counted1,countrate)
@@ -161,11 +159,6 @@
       !Put together the number, angular and spectral likelihoods
       lnlike = lnlike + nLikelihood + angularLikelihood + 
      & spectralLikelihood
-
-      !Work out total counts
-      NBG_expected = sum(theta_BG)
-      Nsignal_predicted = theta_S_total
-      Ntotal_observed = sum(nEvents_inEAErrBins)
       
       !Calculate pvalue
       if (pValFromRef) then !compute p-value with reference to input log likelihood
@@ -175,10 +168,10 @@
 
       else                  !compute p-value with reference to background
 
-        theta_tot = NBG_expected + theta_S_total
+        theta_tot = theta_BG + theta_S
         !p-value from Poissonian statistics
         if (.not. pvalBGPoisComputed) call nulike_bglikeprecomp
-        pvalue = nulike_pval(Ntotal_observed, theta_tot, theta_S_total)
+        pvalue = nulike_pval(nEvents, theta_tot, theta_S)
         pvalue = pvalue / BGpvalPoissonian
         
       endif
@@ -188,6 +181,11 @@
         write(*,*) 'Elapsed time on pval calc (s): ',
      &   real(counted2 - counted1)/real(countrate)
       endif  
+
+      !Export various counts
+      NBG_expected = theta_BG
+      Nsignal_predicted = theta_S
+      Ntotal_observed = nEvents 
 
       end subroutine nulike_bounds
 
