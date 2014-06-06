@@ -19,8 +19,9 @@
       real*8 cosphi, CosToInvDeg
       integer IER
 
-      call TSVAL1(nBinsBGAng(analysis),BGangdist_phi,BGangdist_prob,
-     & BGangdist_derivs,BGangdist_sigma,0,1,cosphi,nulike_bgangpdf,IER)
+      call TSVAL1(nBinsBGAng(analysis),BGangdist_phi(:,analysis),
+     & BGangdist_prob(:,analysis),BGangdist_derivs(:,analysis),
+     & BGangdist_sigma(:,analysis),0,1,cosphi,nulike_bgangpdf,IER)
 
       if (IER .lt. 0) then
         write(*,*) 'TSVAL1 error from background spectral'
@@ -29,6 +30,7 @@
       endif
 
       CosToInvDeg = sqrt(1.d0 - cosphi*cosphi) * pi / 180.d0
-      nulike_bgangpdf = nulike_bgangpdf * CosToInvDeg / BGangdist_conenorm
+      nulike_bgangpdf = nulike_bgangpdf * CosToInvDeg / 
+     &                  BGangdist_conenorm(analysis)
 
       end function nulike_bgangpdf

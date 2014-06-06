@@ -62,13 +62,14 @@
       real*8 effArea_nubarsigma(max_nBinsEA,max_analyses)
       real*8 effArea_AngRessigma(max_nBinsEA,max_analyses)
 
-      real*8  BGangdist_phi(max_nBinsBGAng)
-      real*8  BGangdist_prob(max_nBinsBGAng)
-      real*8  BGangdist_derivs(max_nBinsBGAng)
-      real*8  BGangdist_sigma(max_nBinsBGAng)
-      real*8  BGangdist_norm
-      integer BGnchandist_nchan(max_nBinsBGE)
-      real*8  BGnchandist_prob(max_nBinsBGE)
+      real*8  BGangdist_phi(max_nBinsBGAng,max_analyses)
+      real*8  BGangdist_prob(max_nBinsBGAng,max_analyses)
+      real*8  BGangdist_derivs(max_nBinsBGAng,max_analyses)
+      real*8  BGangdist_sigma(max_nBinsBGAng,max_analyses)
+      real*8  BGangdist_norm(max_analyses), BGangdist_conenorm(max_analyses)
+      integer BGnchandist_nchan(max_nBinsBGE,max_analyses)
+      real*8  BGnchandist_prob(max_nBinsBGE,max_analyses)
+      integer FullSkyBG(max_analyses)
 
       real*8  hist_logE(2,max_nHistograms)
       real*8  hist_logEcentres(max_nHistograms)
@@ -87,8 +88,8 @@
 
       real*8  theta_S,theta_Snu,theta_Snubar
       real*8  Eshare, thetashare, log10mwimp
-      real*8  BGpvalPoissonian, annrate, BGangdist_conenorm
-      integer FullSkyBG, ptypeshare, nchanshare, nchansaved
+      real*8  BGpvalPoissonian, annrate
+      integer ptypeshare, nchanshare, nchansaved
       logical pvalBGPoisComputed
 
       common /nulike_comm/ events_nchan,events_cosphi,events_cosphiErr,

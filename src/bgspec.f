@@ -24,11 +24,11 @@
       endif
   
       nchan_index = nchan - nchan_min(analysis) + 1 - nchan_hist2BGoffset
-      if (BGnchandist_nchan(nchan_index) .ne. nchan) then
-        write(*,*) BGnchandist_nchan(nchan_index), nchan, nchan_index
+      if (BGnchandist_nchan(nchan_index,analysis) .ne. nchan) then
+        write(*,*) BGnchandist_nchan(nchan_index,analysis), nchan, nchan_index
         stop 'Something is wrong with nchan_index in nulike_bgspec.'
       endif
 
-      nulike_bgspec = BGnchandist_prob(nchan_index)
+      nulike_bgspec = BGnchandist_prob(nchan_index,analysis)
 
       end function nulike_bgspec

@@ -16,6 +16,7 @@
 ***        
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
 *** Date: April 8, 2011
+*** Modified: Jun 6, 2014
 ***********************************************************************
 
       subroutine nulike_bginit(filename, nbins_angular, nbins_nchan, 
@@ -70,11 +71,11 @@
               BGangdist_prob_temp(j) = dummyfloat2
             else
               !Read in observed distribution of nchan (energies)
-              BGnchandist_nchan(j) = int(dummyfloat1)
-              BGnchandist_prob(j) = dummyfloat2
+              BGnchandist_nchan(j,analysis) = int(dummyfloat1)
+              BGnchandist_prob(j,analysis) = dummyfloat2
             endif
           else
-            FullSkyBG = dummyint
+            FullSkyBG(analysis) = dummyint
           endif
           read(lun, *) instring
        enddo
@@ -86,23 +87,23 @@
       !Throw a warning if energy dispersion files don't go low enough
       !in nchan to cover whole tabulated range in BG file, and then mark
       !them for extension.
-      if (nchan_min(analysis) .gt. BGnchandist_nchan(1)) then
+      if (nchan_min(analysis) .gt. BGnchandist_nchan(1,analysis)) then
        ! write(*,*) 'Warning from nulike_bginit: nchan
      & !values in the observed background spectrum go below
      & !the range tabulated in the energy dispersion histograms.
      & !Assuming zeros for histograms entries outside given range.'
-        nchan_min(analysis) = BGnchandist_nchan(1)
+        nchan_min(analysis) = BGnchandist_nchan(1,analysis)
       endif
 
       !Throw a warning if energy dispersion files don't go high enough
       !in nchan to cover whole tabulated range in BG file, and then mark
       !them for extension.
-      if (nchan_max(analysis) .lt. BGnchandist_nchan(nbins_nchan)) then
+      if (nchan_max(analysis) .lt. BGnchandist_nchan(nbins_nchan,analysis)) then
        ! write(*,*) 'Warning from nulike_bginit: nchan
      & !values in the observed background spectrum go above
      & !the range tabulated in the energy dispersion histograms.
      & !Assuming zeros for histograms entries outside given range.'
-        nchan_max(analysis) = BGnchandist_nchan(nbins_nchan)
+        nchan_max(analysis) = BGnchandist_nchan(nbins_nchan,analysis)
       endif
 
       !Reset nnchan_total
@@ -132,18 +133,18 @@
 
       do i = 1, nbins_angular
         !Convert angles to radians and flip em (for fussy interpolator)
-        BGangdist_phi(i) = 
+        BGangdist_phi(i,analysis) = 
      &   BGangdist_phi_temp(nbins_angular+1-i)/180.d0 * pi
         !Convert probabilities from dP/dphi to dP/dcos(phi) and flip em
-        BGangdist_prob(i) = BGangdist_prob_temp(nbins_angular+1-i)/
-     &   dsin(BGangdist_phi(i)) * 180.d0 / pi
+        BGangdist_prob(i,analysis) = BGangdist_prob_temp(nbins_angular+1-i)/
+     &   dsin(BGangdist_phi(i,analysis)) * 180.d0 / pi
       enddo
-      BGangdist_phi = dcos(BGangdist_phi)
+      BGangdist_phi(:,analysis) = dcos(BGangdist_phi(:,analysis))
 
       !Initialise interpolator
-      call TSPSI(nbins_angular,BGangdist_phi,BGangdist_prob,
-     & 2,0,.false.,.false.,2*nbins_angular-2,working,BGangdist_derivs,
-     & BGangdist_sigma,IER)
+      call TSPSI(nbins_angular,BGangdist_phi(:,analysis),BGangdist_prob(:,analysis),
+     & 2,0,.false.,.false.,2*nbins_angular-2,working,BGangdist_derivs(:,analysis),
+     & BGangdist_sigma(:,analysis),IER)
       if (IER .lt. 0) then
         write(*,*) 'Error in nulike_bgnit: TSPSI failed with error'
         write(*,*) 'code',IER
@@ -152,9 +153,9 @@
 
       !Calculate renormalisation factor required to cancel any tiny normalisation
       !change introduced by interpolation (typically order 1e-3)
-      BGangdist_norm = TSINTL (-1.d0,1.d0,nbins_angular,
-     & BGangdist_phi,BGangdist_prob,BGangdist_derivs,
-     & BGangdist_sigma,IER)     
+      BGangdist_norm(analysis) = TSINTL (-1.d0,1.d0,nbins_angular,
+     & BGangdist_phi(:,analysis),BGangdist_prob(:,analysis),
+     & BGangdist_derivs(:,analysis),BGangdist_sigma(:,analysis),IER)     
       if (IER .lt. 0) then
         write(*,*) 'Error in nulike_bgnit: TSINTL failed with error'
         write(*,*) 'code',IER
@@ -162,7 +163,8 @@
       endif
 
       !Make sure nchan histograms are properly normalised
-      BGnchandist_prob = BGnchandist_prob/sum(BGnchandist_prob)
+      BGnchandist_prob(:,analysis) = BGnchandist_prob(:,analysis)/
+     &                               sum(BGnchandist_prob(:,analysis))
 
 
       end subroutine nulike_bginit

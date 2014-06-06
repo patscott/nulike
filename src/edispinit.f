@@ -68,7 +68,7 @@
       !up with indexing of nchan values in observed background spectrum.
       nchan_hist2BGoffset = -1
       do k = 1, nnchan_total(analysis)
-        if (hist_nchan(1,k) .eq. BGnchandist_nchan(1)) then 
+        if (hist_nchan(1,k) .eq. BGnchandist_nchan(1,analysis)) then 
           nchan_hist2BGoffset = k-1
         endif
       enddo
