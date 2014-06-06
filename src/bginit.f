@@ -97,12 +97,12 @@
       !Throw a warning if energy dispersion files don't go high enough
       !in nchan to cover whole tabulated range in BG file, and then mark
       !them for extension.
-      if (nchan_max .lt. BGnchandist_nchan(nBinsBGE)) then
+      if (nchan_max .lt. BGnchandist_nchan(nbins_nchan)) then
        ! write(*,*) 'Warning from nulike_bginit: nchan
      & !values in the observed background spectrum go above
      & !the range tabulated in the energy dispersion histograms.
      & !Assuming zeros for histograms entries outside given range.'
-        nchan_max = BGnchandist_nchan(nBinsBGE)
+        nchan_max = BGnchandist_nchan(nbins_nchan)
       endif
 
       !Reset nnchan_total

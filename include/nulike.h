@@ -41,9 +41,8 @@
       real*8 exp_time(max_analyses), theoryErr(max_analyses) 
       real*8 theta_BG(max_analyses)
 
-      integer nBinsEA(max_analyses)
-      integer nEvents,nEvents_in_file
-      integer nBinsBGAng,nBinsBGE,nHistograms
+      integer nBinsEA(max_analyses), nBinsBGAng(max_analyses)
+      integer nEvents,nEvents_in_file, nHistograms
       integer nchan_min, nchan_max, nnchan_total
       integer analysis, nAnalyses
 
@@ -102,7 +101,7 @@
      & BGangdist_conenorm, hist_LogE, hist_logEcentres, hist_nchan,
      & hist_prob, hist_derivs, hist_sigma, edisp_prob, edisp_derivs,
      & edisp_sigma, effArea_nubar,effArea_syserr,effArea_staterr,
-     & nBinsEA, nBinsBGAng, nBinsBGE, nEvents, nEvents_in_file,
+     & nBinsEA, nBinsBGAng, nEvents, nEvents_in_file,
      & nHistograms, nnchan_total, nchan_min, nchan_max,
      & nchan_hist2BGoffset, FullSkyBG, ptypeshare, nchanshare,
      & nchansaved, pvalBGPoisComputed, sysErrDist_logNorm,

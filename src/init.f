@@ -52,6 +52,7 @@
       character (len=30) instring, instring2
       integer IFAIL, i, nBinsRunning, nnchan(max_nHistograms), nchan
       integer BGfirst, BGsecond, BGcurrent, altind(2), nulike_amap
+      integer nBinsBGE
       real*8 phi_cut, theoryError
       logical BGLikePrecompute, uselogNorm
       external nulike_amap
@@ -171,7 +172,7 @@
         do i = 1,2
           if (instring2 .eq. hstring(altind(i))) then
             if (BGcurrent .eq. BGfirst) BGsecond = altind(i)
-            if (BGcurrent .eq. angular) nBinsBGAng = nBinsRunning + 1
+            if (BGcurrent .eq. angular) nBinsBGAng(analysis) = nBinsRunning + 1
             if (BGcurrent .eq. nchannels) nBinsBGE = nBinsRunning + 1
             BGcurrent = altind(i)
             read(lun, fmt=*, IOSTAT=IFAIL) instring2
@@ -195,15 +196,15 @@
 20    close(lun)
       
       if (BGfirst.ne.angular .and. BGsecond.ne.angular) then
-        nBinsBGAng = nBinsBGAng + 1
+        nBinsBGAng(analysis) = nBinsBGAng(analysis) + 1
       else if (BGfirst.ne.nchannels .and. BGsecond.ne.nchannels) then
         nBinsBGE = nBinsRunning + 1
       endif
 
-      if (nBinsBGAng .gt. max_nBinsBGAng .or.
+      if (nBinsBGAng(analysis) .gt. max_nBinsBGAng .or.
      &    nBinsBGE .gt. max_nBinsBGE) then
         write(*,*) 'Background file contains more data than'
-        write(*,*) 'DarkSUSY has been configured to handle.'
+        write(*,*) 'nulike has been configured to handle.'
         write(*,*) 'Increase max_nBinsBGE or max_nBinsBGAng'
         write(*,*) 'in nulike.h and recompile.'
         stop
@@ -351,7 +352,7 @@
       call nulike_eainit(effareafile,nBinsEA(analysis))
 
       !Read in the actual background data
-      call nulike_bginit(BGfile, nBinsBGAng, nBinsBGE, BGfirst, BGsecond)
+      call nulike_bginit(BGfile, nBinsBGAng(analysis), nBinsBGE, BGfirst, BGsecond)
 
       !Read in the actual nchan response histograms and rearrange them into energy dispersion estimators
       call nulike_edispinit(nchandistfile, nHistograms, nnchan)
