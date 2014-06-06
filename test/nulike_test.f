@@ -87,7 +87,7 @@
       BGLikePrecompute = .true.
 
       ! Initialise the IceCube data and calculations. 
-      call nulike_init(eventf, edispf, BGf, efaorvf, phi_cut,
+      call nulike_init(experiment, eventf, edispf, BGf, efaorvf, phi_cut,
      & theoryError, uselogNorm, BGLikePrecompute)
 
       ! Open a file with some SUSY models inside.  See DarkSUSY's dstest for details.
@@ -176,7 +176,7 @@
         dof = 8.d0
    
         ! Finally use nulike to get signal and background predictions, number of observed events, likelihood and p-value
-        call nulike_bounds(wamwimp, annrate, nuyield, sigpred, bgpred, 
+        call nulike_bounds(experiment, wamwimp, annrate, nuyield, sigpred, bgpred, 
      &   totobs, lnLike, pval, likechoice, pvalFromRef, refLike, dof)
      
         write(*,*) '  Predicted signal events:    ', sigpred

@@ -6,6 +6,7 @@
 *** Input:      muonyield       external double function that returns
 ***                             the differential muon/neutrino flux
 ***                             at the detector in units of m^-2 GeV^-1
+***             like            likelihood type (2012 or 2014)
 ***
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
 *** Date: Apr 22, 2011
@@ -14,16 +15,19 @@
 ***********************************************************************
 
 
-      subroutine nulike_signal(muonyield)
+      subroutine nulike_signal(muonyield, like)
 
       implicit none
       include 'nulike.h'
 
       real*8 integral, eps, nulike_simpson, nulike_sigintegrand
       real*8 muonyield, upperLimit
+      integer like
       parameter (eps = 1.d-3)
       external nulike_sigintegrand, muonyield
  
+      if (like .eq. 2012) then
+
       if (log10mwimp .lt. effArea_logE(1,1)) then
 
         theta_Snu = 0.d0
@@ -50,6 +54,19 @@
       endif
 
       theta_S = theta_Snu + theta_Snubar 
+
+      else if (like .eq. 2014) then
+
+        write(*,*) '2014 likelihood not implemented'
+        stop
+
+      else 
+
+        write(*,*) 'Unrecognised likelihood type in nulike_signal: ',like
+        write(*,*) 'Quitting...'
+        stop
+
+      endif
 
       end subroutine nulike_signal
 

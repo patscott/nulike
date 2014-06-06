@@ -11,12 +11,13 @@
 
       integer lun, ridiculousNumberOfChannels
       integer max_nBinsEA,max_nBinsBGAng,max_nBinsBGE,max_nEvents
-      integer max_nHistograms,max_nnchan,nchan_maxallowed
+      integer max_nHistograms,max_nnchan,nchan_maxallowed,max_analyses
       integer angular, nchannels, events
-      character (len=15) hstring(3), nulike_version
+      character (len=15) hstring(3)
 
       parameter(lun = 20)
       parameter(ridiculousNumberOfChannels = 1000)
+      parameter(max_analyses    = 15)
       parameter(max_nBinsEA     = 10)
       parameter(max_nBinsBGAng  = 180)
       parameter(max_nBinsBGE    = 20)
@@ -29,6 +30,9 @@
      &                      '####--Nchan--  ',
      &                      '####--Nevents--'/))
 
+      character (len=100) analysis_name_array(max_analyses)
+      integer likelihood_version(max_analyses)
+
       real*8 pi, bigBadLike
       parameter (pi=3.141592653589793238d0)
       parameter(bigBadLike = -50.d0)
@@ -36,6 +40,7 @@
       integer nEvents,nEvents_in_file
       integer nBinsEA,nBinsBGAng,nBinsBGE,nHistograms
       integer nchan_min, nchan_max, nnchan_total
+      integer analysis, nAnalyses
 
       real*8 effArea_logE(2,max_nBinsEA)
       real*8 effArea_logEcentres(max_nBinsEA)
@@ -96,7 +101,8 @@
      & nBinsEA, nBinsBGAng, nBinsBGE, nEvents, nEvents_in_file,
      & nHistograms, nnchan_total, nchan_min, nchan_max,
      & nchan_hist2BGoffset, FullSkyBG, ptypeshare, nchanshare,
-     & nchansaved, pvalBGPoisComputed, sysErrDist_logNorm, nulike_version
+     & nchansaved, pvalBGPoisComputed, sysErrDist_logNorm,
+     & analysis, nAnalyses, analysis_name_array, likelihood_version
       save /nulike_comm/
 
       ! These parameters will be initialized in a block data routine

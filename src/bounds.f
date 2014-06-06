@@ -58,23 +58,23 @@
 ***********************************************************************
 
 
-      subroutine nulike_bounds(mwimp, ann_rate, muonyield, 
-     & Nsignal_predicted, NBG_expected, Ntotal_observed, 
+      subroutine nulike_bounds(analysis_name, mwimp, ann_rate, 
+     & muonyield, Nsignal_predicted, NBG_expected, Ntotal_observed, 
      & lnlike, pvalue, liketype, pvalFromRef, referenceLike, dof)
 
       implicit none
       include 'nulike.h'
 
-      integer Ntotal_observed, liketype, j
-      integer counted1, counted2, countrate
+      integer Ntotal_observed, liketype, j, like_type
+      integer counted1, counted2, countrate, nulike_amap
       real*8 Nsignal_predicted, NBG_expected, nulike_pval
       real*8 lnlike, pvalue, referenceLike, dof, DGAMIC, DGAMMA, muonyield
       real*8 nLikelihood, angularLikelihood, spectralLikelihood
       real*8 theta_tot, f_S, nulike_anglike, nulike_speclike, nulike_nlike
-      real*8 deltalnlike, mwimp, ann_rate
+      real*8 deltalnlike, mwimp, ann_rate, spec_ang_likelihood
       logical pvalFromRef, nulike_speclike_reset, doProfiling
-      character (len=*) pref,f1,f2,f3,f4
-      external muonyield
+      character (len=*) analysis_name,pref,f1,f2,f3,f4
+      external muonyield, nulike_amap
       !Hidden option for doing speed profiling
       parameter (doProfiling = .false.)
       parameter (pref = 'share/DarkSUSY/IC_data/')
@@ -83,6 +83,11 @@
       parameter (f3 = pref//'BG_distributions_IC79.dat')
       parameter (f4 = pref//'nuEffArea_IC79.dat')
         
+
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      ! 1. Initialisation
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       if (doProfiling) call system_clock(counted1,countrate)
 
       !Check validity of user-provided liketype
@@ -92,10 +97,22 @@
         stop
       endif
      
-      !if nulike_init has not yet been called, call it with the default IC-79 options
+      !If nulike_init has not yet been called, call it with the default IC-79 options and use that analysis.
       if (.not. nulike_init_called) then
-        call nulike_init(f1,f2,f3,f4,20.d0,0.05d0,.true.,.true.)
+        call nulike_init('IC79',f1,f2,f3,f4,20.d0,0.05d0,.true.,.true.)
+        analysis = 1
+      else !Otherwise, look up the analysis requested by the user.
+        analysis = nulike_amap(analysis_name)
+        if (analysis .eq. 0) then
+          write(*,*) "Analysis '"//analysis_name//"' requested of nulike_bounds"
+          write(*,*) 'is not one of the ones that has already been loaded.'
+          write(*,*) 'Quitting...'
+          stop
+        endif
       endif
+
+      !Set the internal likelihood calculation type (2012 or 2014)
+      like_type = likelihood_version(analysis)
 
       !Set internal WMIP mass and annihilation rate
       annrate = ann_rate
@@ -107,8 +124,17 @@
      &   real(counted2 - counted1)/real(countrate)
       endif  
 
-      !Calculate signal counts and spectrum
-      call nulike_signal(muonyield)
+
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      ! 2. Signal calculation
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      !Calculate signal counts and spectrum. 
+      call nulike_signal(muonyield, like_type)
+      !Calculate the total predicted number of events
+      theta_tot = theta_BG + theta_S
+      !Calculate the signal fraction.
+      f_S = theta_S / theta_tot
 
       if (doProfiling) then
         call system_clock(counted1,countrate)
@@ -116,12 +142,28 @@
      &   real(counted1 - counted2)/real(countrate)
       endif  
 
-      !Calculate likelihood
-      lnlike = 0.d0
+
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      ! 3. Number likelihood
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      !Calculate the number likelihood
+      nLikelihood = nulike_nlike(nEvents,
+     & theta_tot,theta_S,EAErr,theoryErr)
+
+      if (doProfiling) then
+        call system_clock(counted1,countrate)
+        write(*,*) 'Elapsed time on number likelihood calc (s): ', 
+     &   real(counted1 - counted2)/real(countrate)
+      endif  
+
+
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      ! 4. Angular and/or spectral likelihood
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       angularLikelihood = 0.d0
       spectralLikelihood = 0.d0
-      theta_tot = theta_BG + theta_S
-      f_S = theta_S / theta_tot
       if (liketype .ne. 1) then
         !Reset the saved spectral likelihoods next time nulike_speclike is run
         nulike_speclike_reset = .true.
@@ -146,20 +188,24 @@
      &   real(counted2 - counted1)/real(countrate)
       endif  
 
-      !Calculate the number likelihood
-      nLikelihood = nulike_nlike(nEvents,
-     & theta_tot,theta_S,EAErr,theoryErr)
+      !Combine the total spectral and angular likelihoods (if calculated seperately)
+      if (like_type .eq. 2012) then
+        spec_ang_likelihood = angularLikelihood + spectralLikelihood
+      endif
 
-      if (doProfiling) then
-        call system_clock(counted1,countrate)
-        write(*,*) 'Elapsed time on number likelihood calc (s): ', 
-     &   real(counted1 - counted2)/real(countrate)
-      endif  
+
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      ! 5. Combined likelihood
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       !Put together the number, angular and spectral likelihoods
-      lnlike = lnlike + nLikelihood + angularLikelihood + 
-     & spectralLikelihood
+      lnlike = nLikelihood + spec_ang_likelihood
       
+
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      ! 6. p value
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       !Calculate pvalue
       if (pValFromRef) then !compute p-value with reference to input log likelihood
 
@@ -181,6 +227,11 @@
         write(*,*) 'Elapsed time on pval calc (s): ',
      &   real(counted2 - counted1)/real(countrate)
       endif  
+
+
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      ! 7. Data return
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       !Export various counts
       NBG_expected = theta_BG

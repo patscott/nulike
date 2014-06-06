@@ -1,11 +1,12 @@
 ***********************************************************************
-*** nulike_init initialises IceCube data from included or user-supplied
+*** nulike_init initialises neutrino telescope data from user-supplied
 *** files.  The only things actually done here rather than in subroutines
-*** are to determine the amount of data in each file, and whether DarkSUSY
-*** (being a stubborn adherent to strict F77 and its static allocation
-*** rules) has been correctly configured to store that much data.
+*** are to determine the amount of data in each file, and whether nulike
+*** has been correctly configured to store that much data.
 ***
-*** input: eventfile    path to the file containing IceCube event data
+*** input: 
+***   analysis_name     a name by which to refer to this particular analysis.
+***   eventfile         path to the file containing IceCube event data
 ***                      and total exposure time.
 ***   nchandistfile     path to the file containing distributions of
 ***                      the number of DOMs in the IceCube detector  
@@ -35,37 +36,62 @@
 ***        
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
 *** Date: Mar 20, 2011
-*** Modified: Mar 5, Jun 3 2014
+*** Modified: Mar 5, Jun 3, 6 2014
 ***********************************************************************
 
 
-      subroutine nulike_init(eventfile, nchandistfile, BGfile, 
-     & effareafile, phi_cut, theoryError, uselogNorm, BGLikePrecompute)
+      subroutine nulike_init(analysis_name, eventfile, nchandistfile, 
+     & BGfile, effareafile, phi_cut, theoryError, uselogNorm, 
+     & BGLikePrecompute)
 
       implicit none
-
       include 'nulike.h'
 
-      character (len=*) eventfile, nchandistfile, BGfile, 
-     & effareafile
+      character (len=*) analysis_name, eventfile, nchandistfile, 
+     & BGfile, effareafile
       character (len=30) instring, instring2
       integer IFAIL, i, nBinsRunning, nnchan(max_nHistograms), nchan
-      integer BGfirst, BGsecond, BGcurrent, altind(2)
+      integer BGfirst, BGsecond, BGcurrent, altind(2), nulike_amap
       real*8 phi_cut, theoryError
       logical BGLikePrecompute, uselogNorm
+      external nulike_amap
 
-      if (.not. nulike_init_called) nulike_init_called = .true.
+      !Roll credits.
+      if (.not. nulike_init_called) then 
+        write(*,*) 
+        write(*,*) 'I like, you like...'
+        write(*,*) '**********************************************************'
+        write(*,*) '*                    nulike 1.0                          *'
+        write(*,*) '*              Pat Scott, Chris Savage                   *'
+        write(*,*) '*                 arXiv:1207.0810                        *'
+        write(*,*) '**********************************************************'
+        nulike_init_called = .true.      
+      endif
 
+      !Make sure that this analysis is not already loaded.
+      analysis = nulike_amap(analysis_name)
+      if (analysis .ne. 0) then
+        write(*,*) "Analysis '"//analysis_name//"' requested for load"
+        write(*,*) 'in nulike_init is already loaded.'
+        write(*,*) 'Returning without doing anything.'
+        return
+      endif
+
+      !Register this analysis.
+      nAnalyses = nAnalyses + 1
+      analysis = nAnalyses
+      analysis_name_array(analysis) = trim(analysis_name)
+      
       !Choose whether to have a Gaussian distribution for the assumed PDF of 
       !systematic errors on the effective area/volume or a log-normal distribution
-      sysErrDist_logNorm = uselogNorm
-
+      sysErrDist_logNorm = uselogNorm !FIXME annindex
+ 
       !Set maximum opening angle from solar centre to consider
-      phi_max_deg = phi_cut
-      phi_max_rad = phi_max_deg*pi/180.d0
+      phi_max_deg = phi_cut !FIXME annindex
+      phi_max_rad = phi_max_deg*pi/180.d0 !FIXME annindex
 
       !Set percentage theoretical error
-      theoryErr = theoryError
+      theoryErr = theoryError !FIXME annindex
 
     
       !Open neutrino effective area/volume file, determine number of bins
@@ -198,22 +224,16 @@
         read(lun, fmt=*) instring
       enddo
 
-      read(lun, fmt=*) instring, nulike_version
+      read(lun, fmt=*) instring, instring2
 
-      if (instring(1:3) .ne. '[v]') then
+      if (instring .ne. '[v]') then
         write(*,*) 'Bad format in IC event file ',eventfile,'.'
         write(*,*) 'First non-comment line begins with: ',instring
         write(*,*) 'Quitting...'
         stop
       endif 
 
-      write(*,*) 
-      write(*,*) '**********************************************************'
-      write(*,*) '*                   nulike 1.0                           *'
-      write(*,*) '*              Pat Scott, Chris Savage                   *'
-      write(*,*) '*                 arXiv:1207.0810                        *'       
-      write(*,*) '* Neutrino telescope likelihood version: ', nulike_version,' *' 
-      write(*,*) '**********************************************************'
+      read(instring2, fmt='(I4)') likelihood_version(analysis)
 
       do while (instring .ne. '###--Exposure--')
         read(lun, fmt=*) instring
