@@ -2,7 +2,7 @@
 ! DarkSUSY.
 !
 ! Author: Pat Scott patscott@phsyics.mcgill.ca
-! Date: March 6 2014 
+! Date: Mar 6, Jun 6 2014
 
 
       program nulike_test

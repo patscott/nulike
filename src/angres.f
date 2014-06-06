@@ -10,6 +10,7 @@
 ***       
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
 *** Date: Apr 24, 2011
+*** Modified: Jun 6, 2014
 ***********************************************************************
 
       real*8 function nulike_angres(log10E)
@@ -20,8 +21,8 @@
       real*8 log10E
       integer IER
       
-      call TSVAL1(nBinsEA,effArea_logEcentres,effArea_AngRes,
-     & effArea_AngResderivs,effArea_AngRessigma,0,1,
+      call TSVAL1(nBinsEA(analysis),effArea_logEcentres(analysis,:),
+     & effArea_AngRes,effArea_AngResderivs,effArea_AngRessigma,0,1,
      & log10E,nulike_angres,IER)
 
       if (IER .lt. 0) then

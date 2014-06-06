@@ -30,7 +30,7 @@
       nulike_dP_SdE = nulike_dP_SdE + nulike_dPhi_SdE(log10E,2,muonyield)
       !Normalise the distribution to differential probability per GeV
       !nulike_dP_SdE in GeV^-1, exp_time in s, annrate in s^-1
-      nulike_dP_SdE = nulike_dP_SdE * exp_time * annrate / tS_tot
+      nulike_dP_SdE = nulike_dP_SdE * exp_time(analysis) * annrate / tS_tot
 
       end function nulike_dP_SdE
 

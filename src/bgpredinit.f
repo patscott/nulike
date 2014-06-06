@@ -4,7 +4,7 @@
 ***        
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
 *** Date: April 8, 2011
-*** Modified: Jun 3, 2014
+*** Modified: Jun 3, 6 2014
 ***********************************************************************
 
       subroutine nulike_bgpredinit
@@ -18,10 +18,10 @@
       !Work out the total number of background events expected inside phi_cut, as integral 
       !of BG angular distribution from phi = 0 to phi_cut. Then multiply by number of events
       !across full sky, and dole out events into different bins.
-      BGangdist_conenorm = TSINTL(dcos(phi_max_rad),1.d0,nBinsBGAng,
-     & dcos(BGangdist_phi),BGangdist_prob,BGangdist_derivs,
-     & BGangdist_sigma,IER)
-      theta_BG = BGangdist_conenorm / BGangdist_norm
+      BGangdist_conenorm = TSINTL(dcos(phi_max_rad(analysis)),
+     & 1.d0,nBinsBGAng,dcos(BGangdist_phi),BGangdist_prob,
+     & BGangdist_derivs,BGangdist_sigma,IER)
+      theta_BG(analysis) = BGangdist_conenorm / BGangdist_norm
      & * dble(FullSkyBG)
 
       end subroutine nulike_bgpredinit

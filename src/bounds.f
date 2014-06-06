@@ -54,7 +54,7 @@
 *** Date: Mar 20, 2011
 *** Updated: Jul 21, 2011
 ***          Mar 6, 2014
-***          Jun 3, 2014
+***          Jun 3, 6 2014
 ***********************************************************************
 
 
@@ -132,7 +132,7 @@
       !Calculate signal counts and spectrum. 
       call nulike_signal(muonyield, like_type)
       !Calculate the total predicted number of events
-      theta_tot = theta_BG + theta_S
+      theta_tot = theta_BG(analysis) + theta_S
       !Calculate the signal fraction.
       f_S = theta_S / theta_tot
 
@@ -149,7 +149,7 @@
 
       !Calculate the number likelihood
       nLikelihood = nulike_nlike(nEvents,
-     & theta_tot,theta_S,EAErr,theoryErr)
+     & theta_tot,theta_S,EAErr,theoryErr(analysis))
 
       if (doProfiling) then
         call system_clock(counted1,countrate)
@@ -177,7 +177,8 @@
           if (liketype .eq. 3 .or. liketype .eq. 4) 
      &     spectralLikelihood = spectralLikelihood + nulike_speclike(
      &      events_nchan(j),theta_S,f_S,nulike_speclike_reset,
-     &      effArea_logE(1,1),effArea_logE(2,nBinsEA),
+     &      effArea_logE(analysis,1,1),
+     &      effArea_logE(analysis,2,nBinsEA(analysis)),
      &      muonyield)
         enddo
       endif
@@ -214,7 +215,7 @@
 
       else                  !compute p-value with reference to background
 
-        theta_tot = theta_BG + theta_S
+        theta_tot = theta_BG(analysis) + theta_S
         !p-value from Poissonian statistics
         if (.not. pvalBGPoisComputed) call nulike_bglikeprecomp
         pvalue = nulike_pval(nEvents, theta_tot, theta_S)
@@ -234,7 +235,7 @@
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       !Export various counts
-      NBG_expected = theta_BG
+      NBG_expected = theta_BG(analysis)
       Nsignal_predicted = theta_S
       Ntotal_observed = nEvents 
 

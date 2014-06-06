@@ -9,6 +9,7 @@
 ***       
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
 *** Date: Apr 24, 2011
+*** Modified: Jun 6 2014
 ***********************************************************************
 
       real*8 function nulike_effarea(log10E, ptype)
@@ -23,14 +24,15 @@
       if (ptype .eq. 1) then
 
         !neutrinos
-        call TSVAL1(nBinsEA,effArea_logEcentres,effArea_nu,
-     &   effArea_nuderivs,effArea_nusigma,0,1,log10E,nulike_effarea,IER)
+        call TSVAL1(nBinsEA(analysis),effArea_logEcentres(analysis,:),
+     &   effArea_nu,effArea_nuderivs,effArea_nusigma,0,1,log10E,
+     &   nulike_effarea,IER)
 
       else if (ptype .eq. 2) then
 
         !anti-neutrinos
-        call TSVAL1(nBinsEA,effArea_logEcentres,effArea_nubar,
-     &   effArea_nubarderivs,effArea_nubarsigma,0,1,
+        call TSVAL1(nBinsEA(analysis),effArea_logEcentres(analysis,:),
+     &   effArea_nubar,effArea_nubarderivs,effArea_nubarsigma,0,1,
      &   log10E,nulike_effarea,IER)
 
       else

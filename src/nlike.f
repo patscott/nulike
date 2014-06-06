@@ -15,6 +15,7 @@
 ***       
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
 *** Date: Apr 22, 2011, Jun 30, 2011, Jul 21, 2011
+*** Modified: Jun 6 2014
 ***********************************************************************
 
       real*8 function nulike_nlike(n_tot,theta_tot,theta_sig,sigma_eps,
@@ -36,7 +37,7 @@
 
       sigsq = sigma_eps*sigma_eps + tau*tau
       lnlike = nulike_lnpoisint(theta_tot,theta_sig,n_tot,sigsq,
-     & sysErrDist_logNorm)
+     & sysErrDist_logNorm(analysis))
 
       if (lnlike.gt.0.d0) then 
         write(*,*) lnlike

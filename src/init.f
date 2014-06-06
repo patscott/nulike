@@ -84,14 +84,14 @@
       
       !Choose whether to have a Gaussian distribution for the assumed PDF of 
       !systematic errors on the effective area/volume or a log-normal distribution
-      sysErrDist_logNorm = uselogNorm !FIXME annindex
+      sysErrDist_logNorm(analysis) = uselogNorm
  
       !Set maximum opening angle from solar centre to consider
-      phi_max_deg = phi_cut !FIXME annindex
-      phi_max_rad = phi_max_deg*pi/180.d0 !FIXME annindex
+      phi_max_deg(analysis) = phi_cut
+      phi_max_rad(analysis) = phi_cut*pi/180.d0
 
       !Set percentage theoretical error
-      theoryErr = theoryError !FIXME annindex
+      theoryErr(analysis) = theoryError
 
     
       !Open neutrino effective area/volume file, determine number of bins
@@ -115,12 +115,12 @@
         stop
       endif 
       
-      nBinsEA = 0
+      nBinsEA(analysis) = 0
       do
         do i = 1,5
           read(lun, fmt=*, IOSTAT=IFAIL, END=10), instring
         enddo
-        read(lun, fmt=*, IOSTAT=IFAIL, END=10) instring, nBinsEA
+        read(lun, fmt=*, IOSTAT=IFAIL, END=10) instring, nBinsEA(analysis)
         if (IFAIL .ne. 0) then
          write(*,*) 'Bad format in effective area/volume file ',effareafile,'.'
          write(*,*) 'Quitting...'
@@ -130,11 +130,11 @@
 
 10    close(lun)
       
-      nBinsEA = nBinsEA + 1
+      nBinsEA(analysis) = nBinsEA(analysis) + 1
 
-      if (nBinsEA .gt. max_nBinsEA) then
+      if (nBinsEA(analysis) .gt. max_nBinsEA) then
         write(*,*) 'Effective area/volume file contains more bins than'
-        write(*,*) 'DarkSUSY has been configured to handle.'
+        write(*,*) 'nulike has been configured to handle.'
         write(*,*) 'Increase max_nEffAreaBins in nulike.h and' 
         write(*,*) 'recompile.'
         stop
@@ -248,7 +248,7 @@
         stop
       endif 
 
-      read(instring2, fmt=*) exp_time
+      read(instring2, fmt=*) exp_time(analysis)
 
       do
         read(lun, fmt=*, IOSTAT=IFAIL, END=30) instring
@@ -348,7 +348,7 @@
       endif
       
       !Read in the actual effective area/volume data. 
-      call nulike_eainit(effareafile,nBinsEA)
+      call nulike_eainit(effareafile,nBinsEA(analysis))
 
       !Read in the actual background data
       call nulike_bginit(BGfile, nBinsBGAng, nBinsBGE, BGfirst, BGsecond)

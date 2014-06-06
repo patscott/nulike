@@ -11,7 +11,7 @@
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
 *** Date: Apr 22, 2011
 *** Modified: March 6 2014
-*** Modified: Jun 3, 2014
+*** Modified: Jun 3, 6 2014
 ***********************************************************************
 
 
@@ -28,28 +28,28 @@
  
       if (like .eq. 2012) then
 
-      if (log10mwimp .lt. effArea_logE(1,1)) then
+      if (log10mwimp .lt. effArea_logE(analysis,1,1)) then
 
         theta_Snu = 0.d0
         theta_Snubar = 0.d0
  
       else
 
-        if (log10mwimp .lt. effArea_logE(2,nBinsEA)) then
+        if (log10mwimp .lt. effArea_logE(analysis,2,nBinsEA(analysis))) then
           upperLimit = log10mwimp
         else
-          upperLimit = effArea_logE(2,nBinsEA)
+          upperLimit = effArea_logE(analysis,2,nBinsEA(analysis))
         endif
 
         ptypeshare = 1
         integral = nulike_simpson(nulike_sigintegrand,muonyield,
-     &   effArea_logE(1,1),upperLimit,eps)
-        theta_Snu = integral * dlog(10.d0) * exp_time * annrate
+     &   effArea_logE(analysis,1,1),upperLimit,eps)
+        theta_Snu = integral * dlog(10.d0) * exp_time(analysis) * annrate
 
         ptypeshare = 2
         integral = nulike_simpson(nulike_sigintegrand,muonyield,
-     &   effArea_logE(1,1),upperLimit,eps)
-        theta_Snubar = integral * dlog(10.d0) * exp_time *annrate
+     &   effArea_logE(analysis,1,1),upperLimit,eps)
+        theta_Snubar = integral * dlog(10.d0) * exp_time(analysis) * annrate
 
       endif
 

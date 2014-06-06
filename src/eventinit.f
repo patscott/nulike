@@ -21,7 +21,7 @@
 
 
       !Define cutoff angle above which events will be ignored
-      cosphimin = dcos(phi_max_rad)
+      cosphimin = dcos(phi_max_rad(analysis))
 
       !Open event file and read in events
       open(lun,file=filename, ACTION='READ')

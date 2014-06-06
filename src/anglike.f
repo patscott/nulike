@@ -16,7 +16,7 @@
 ***       
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
 *** Date: May 6, 2011
-*** Modified: Jun 3, 2014
+*** Modified: Jun 3, 6 2014
 ***********************************************************************
 
       double precision function nulike_anglike(cosphi,
@@ -36,7 +36,7 @@
 
       !Calculate the signal part of the likelihood
       signalpartiallike = f_S*nulike_psf(acos(cosphi)*180.d0/pi, 
-     & 0.d0, phi_max_deg, parabsigma)
+     & 0.d0, phi_max_deg(analysis), parabsigma)
 
       !Calculate the background part of the likelihood
       bgpartiallike = (1.d0-f_S) * nulike_bgangpdf(cosphi)

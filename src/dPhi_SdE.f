@@ -50,8 +50,8 @@
       !Obtain angular loss factor for neutrinos and anti-neutrinos
       !with energy E, to account for events that will leak out of
       !the analysis cone.
-      angLossFac = 1.d0-exp(phi_max_deg*phi_max_deg/(-2.d0*
-     & sigma*sigma))
+      angLossFac = 1.d0-exp(phi_max_deg(analysis)*phi_max_deg(analysis)
+     & /(-2.d0*sigma*sigma))
 
       !Put everything together to obtain the spectrum observed
       !by the neutrino telescope; nulike_dPhi_SdE in GeV^-1

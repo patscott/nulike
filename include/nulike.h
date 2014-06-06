@@ -7,7 +7,7 @@
 !***                           nulike.h                               ***
 !***         this piece of code is needed as a separate file          ***
 !----------------------------------------------------------------------c
-!  author: Pat Scott (patscott@physics.mcgill.ca), March 26 2011, June 3 2014
+!  author: Pat Scott (patscott@physics.mcgill.ca), March 26 2011, June 3, 6 2014
 
       integer lun, ridiculousNumberOfChannels
       integer max_nBinsEA,max_nBinsBGAng,max_nBinsBGE,max_nEvents
@@ -30,20 +30,25 @@
      &                      '####--Nchan--  ',
      &                      '####--Nevents--'/))
 
-      character (len=100) analysis_name_array(max_analyses)
-      integer likelihood_version(max_analyses)
-
       real*8 pi, bigBadLike
       parameter (pi=3.141592653589793238d0)
       parameter(bigBadLike = -50.d0)
 
+      character (len=100) analysis_name_array(max_analyses)
+      integer likelihood_version(max_analyses)
+      logical sysErrDist_logNorm(max_analyses)
+      real*8 phi_max_rad(max_analyses), phi_max_deg(max_analyses)
+      real*8 exp_time(max_analyses), theoryErr(max_analyses) 
+      real*8 theta_BG(max_analyses)
+
+      integer nBinsEA(max_analyses)
       integer nEvents,nEvents_in_file
-      integer nBinsEA,nBinsBGAng,nBinsBGE,nHistograms
+      integer nBinsBGAng,nBinsBGE,nHistograms
       integer nchan_min, nchan_max, nnchan_total
       integer analysis, nAnalyses
 
-      real*8 effArea_logE(2,max_nBinsEA)
-      real*8 effArea_logEcentres(max_nBinsEA)
+      real*8 effArea_logE(max_analyses,2,max_nBinsEA)
+      real*8 effArea_logEcentres(max_analyses,max_nBinsEA)
       real*8 effArea_nu(max_nBinsEA)
       real*8 effArea_nubar(max_nBinsEA)
       real*8 effArea_syserr(max_nBinsEA)
@@ -79,12 +84,11 @@
       real*8  events_cosphi(max_nEvents)
       real*8  events_cosphiErr(max_nEvents)
 
-      real*8  theta_BG,theta_S,theta_Snu,theta_Snubar
-      real*8  phi_max_rad, phi_max_deg, exp_time
-      real*8  Eshare, thetashare, log10mwimp, theoryErr, EAErr
+      real*8  theta_S,theta_Snu,theta_Snubar
+      real*8  Eshare, thetashare, log10mwimp, EAErr
       real*8  BGpvalPoissonian, annrate, BGangdist_conenorm
       integer FullSkyBG, ptypeshare, nchanshare, nchansaved
-      logical pvalBGPoisComputed, sysErrDist_logNorm
+      logical pvalBGPoisComputed
 
       common /nulike_comm/ events_nchan,events_cosphi,events_cosphiErr,
      & effArea_logE,effArea_nu,theta_BG, theta_S, BGnchandist_prob,
