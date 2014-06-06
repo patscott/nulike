@@ -34,13 +34,13 @@
       !Read in effective neutrino and anti-neutrino areas, uncertainties on eff area and angular resolutions
       do i = 1,nbins
         read(lun, *) instring, 
-     &   effArea_logE(analysis,1,i), effArea_logE(analysis,2,i)
+     &   effArea_logE(1,i,analysis), effArea_logE(2,i,analysis)
         !Convert to log(GeV) scale 
-        effArea_logE(analysis,1,i) = dlog10(effArea_logE(analysis,1,i))
-        effArea_logE(analysis,2,i) = dlog10(effArea_logE(analysis,2,i))
+        effArea_logE(1,i,analysis) = dlog10(effArea_logE(1,i,analysis))
+        effArea_logE(2,i,analysis) = dlog10(effArea_logE(2,i,analysis))
         !Find log-weighted bin centres 
-        effArea_logEcentres(analysis,i) = 0.5d0*(effArea_logE(analysis,1,i)
-     &   +effArea_logE(analysis,2,i))
+        effArea_logEcentres(i,analysis) = 0.5d0*(effArea_logE(1,i,analysis)
+     &   +effArea_logE(2,i,analysis))
         read(lun, *) instring, 
      &   effArea_nu(i), effArea_nubar(i)
         read(lun, *) instring, 
@@ -66,7 +66,7 @@
       !Now need to init the interpolators in effective area and angular resolution.
 
       !Set up interpolation in neutrino effective area
-      call TSPSI(nbins,effArea_logEcentres(analysis,:),effArea_nu,
+      call TSPSI(nbins,effArea_logEcentres(:,analysis),effArea_nu,
      & 2,0,.false.,.false.,2*nbins-2,working,effArea_nuderivs,
      & effArea_nusigma,IER)
       if (IER .lt. 0) then
@@ -76,7 +76,7 @@
       endif
 
       !Set up interpolation in anti-neutrino effective area
-      call TSPSI(nbins,effArea_logEcentres(analysis,:),effArea_nubar,
+      call TSPSI(nbins,effArea_logEcentres(:,analysis),effArea_nubar,
      & 2,0,.false.,.false.,2*nbins-2,working,effArea_nubarderivs,
      & effArea_nubarsigma,IER)
       if (IER .lt. 0) then
@@ -86,7 +86,7 @@
       endif
 
       !Set up interpolation in angular resolution
-      call TSPSI(nbins,effArea_logEcentres(analysis,:),effArea_AngRes,
+      call TSPSI(nbins,effArea_logEcentres(:,analysis),effArea_AngRes,
      & 2,0,.false.,.false.,2*nbins-2,working,effArea_AngResderivs,
      & effArea_AngRessigma,IER)
       if (IER .lt. 0) then

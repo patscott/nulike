@@ -14,7 +14,8 @@
 
       real*8 nulike_pval
 
-      BGpvalPoissonian = nulike_pval(nEvents,theta_BG(analysis),0.d0)
+      BGpvalPoissonian = nulike_pval(nEvents(analysis),
+     & theta_BG(analysis),0.d0)
       pvalBGPoisComputed = .true.
 
       end subroutine nulike_bglikeprecomp

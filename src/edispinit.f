@@ -26,7 +26,7 @@
       integer hist_nchan_temp(max_nHistograms, max_nnchan)
       integer IER
       real*8  hist_prob_temp(max_nHistograms, max_nnchan)
-      real*8  working(2*nHistograms-2)
+      real*8  working(2*nHistograms(analysis)-2)
 
       !Read in nchan response distribution for each incoming neutrino energy band
       open(lun,file=filename, ACTION='READ')
@@ -53,9 +53,9 @@
 
       !Arrange histograms so they all cover the same range in nchan
       hist_prob = 0.d0
-      do k = 1, nnchan_total
+      do k = 1, nnchan_total(analysis)
         do i = 1, nbins_Ein
-          hist_nchan(i,k) = k - 1 + nchan_min
+          hist_nchan(i,k) = k - 1 + nchan_min(analysis)
           do j = 1, nbins_nchan(i)
             if (hist_nchan_temp(i,j) .eq. hist_nchan(i,k)) then
               hist_prob(i,k) = hist_prob_temp(i,j)
@@ -67,21 +67,21 @@
       !Work out where the indexing of nchan values in energy dispersion lines
       !up with indexing of nchan values in observed background spectrum.
       nchan_hist2BGoffset = -1
-      do k = 1, nnchan_total
+      do k = 1, nnchan_total(analysis)
         if (hist_nchan(1,k) .eq. BGnchandist_nchan(1)) then 
           nchan_hist2BGoffset = k-1
         endif
       enddo
 
       !Set up interpolation in energy histograms for use as energy dispersion estimator
-      do i = 1, nnchan_total
+      do i = 1, nnchan_total(analysis)
 
-        do j = 1, nHistograms
+        do j = 1, nHistograms(analysis)
           edisp_prob(j) = hist_prob(j,i)
         enddo
 
-        call TSPSI(nHistograms,hist_logEcentres,edisp_prob,
-     &   2,0,.false.,.false.,2*nHistograms-2,working,edisp_derivs,
+        call TSPSI(nHistograms(analysis),hist_logEcentres,edisp_prob,
+     &   2,0,.false.,.false.,2*nHistograms(analysis)-2,working,edisp_derivs,
      &   edisp_sigma,IER)
         if (IER .lt. 0) then
           write(*,*) 'Error in nulike_edispinit: TSPSI failed with error'
@@ -89,7 +89,7 @@
           stop
         endif
 
-        do j = 1, nHistograms
+        do j = 1, nHistograms(analysis)
           hist_derivs(j,i) = edisp_derivs(j)
           hist_sigma(j,i) = edisp_sigma(j)
         enddo
@@ -97,7 +97,7 @@
       enddo 
 
       !Indicate which nchan data are currently loaded for
-      nchansaved = nnchan_total + nchan_min - 1
+      nchansaved = nnchan_total(analysis) + nchan_min(analysis) - 1
 
 
       end subroutine nulike_edispinit

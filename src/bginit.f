@@ -86,30 +86,30 @@
       !Throw a warning if energy dispersion files don't go low enough
       !in nchan to cover whole tabulated range in BG file, and then mark
       !them for extension.
-      if (nchan_min .gt. BGnchandist_nchan(1)) then
+      if (nchan_min(analysis) .gt. BGnchandist_nchan(1)) then
        ! write(*,*) 'Warning from nulike_bginit: nchan
      & !values in the observed background spectrum go below
      & !the range tabulated in the energy dispersion histograms.
      & !Assuming zeros for histograms entries outside given range.'
-        nchan_min = BGnchandist_nchan(1)
+        nchan_min(analysis) = BGnchandist_nchan(1)
       endif
 
       !Throw a warning if energy dispersion files don't go high enough
       !in nchan to cover whole tabulated range in BG file, and then mark
       !them for extension.
-      if (nchan_max .lt. BGnchandist_nchan(nbins_nchan)) then
+      if (nchan_max(analysis) .lt. BGnchandist_nchan(nbins_nchan)) then
        ! write(*,*) 'Warning from nulike_bginit: nchan
      & !values in the observed background spectrum go above
      & !the range tabulated in the energy dispersion histograms.
      & !Assuming zeros for histograms entries outside given range.'
-        nchan_max = BGnchandist_nchan(nbins_nchan)
+        nchan_max(analysis) = BGnchandist_nchan(nbins_nchan)
       endif
 
       !Reset nnchan_total
-      nnchan_total = nchan_max - nchan_min + 1
+      nnchan_total(analysis) = nchan_max(analysis) - nchan_min(analysis) + 1
 
       !Make sure we didn't break everything
-      if (nnchan_total .gt. max_nnchan) then
+      if (nnchan_total(analysis) .gt. max_nnchan) then
         write(*,*)
         write(*,*) 'Extension of histograms gives more nchan values'
         write(*,*) 'than DarkSUSY has been configured to handle.  '
@@ -138,9 +138,10 @@
         BGangdist_prob(i) = BGangdist_prob_temp(nbins_angular+1-i)/
      &   dsin(BGangdist_phi(i)) * 180.d0 / pi
       enddo
+      BGangdist_phi = dcos(BGangdist_phi)
 
       !Initialise interpolator
-      call TSPSI(nbins_angular,dcos(BGangdist_phi),BGangdist_prob,
+      call TSPSI(nbins_angular,BGangdist_phi,BGangdist_prob,
      & 2,0,.false.,.false.,2*nbins_angular-2,working,BGangdist_derivs,
      & BGangdist_sigma,IER)
       if (IER .lt. 0) then
@@ -152,7 +153,7 @@
       !Calculate renormalisation factor required to cancel any tiny normalisation
       !change introduced by interpolation (typically order 1e-3)
       BGangdist_norm = TSINTL (-1.d0,1.d0,nbins_angular,
-     & dcos(BGangdist_phi),BGangdist_prob,BGangdist_derivs,
+     & BGangdist_phi,BGangdist_prob,BGangdist_derivs,
      & BGangdist_sigma,IER)     
       if (IER .lt. 0) then
         write(*,*) 'Error in nulike_bgnit: TSINTL failed with error'

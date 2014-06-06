@@ -7,6 +7,7 @@
 ***       
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
 *** Date: Apr 24, 2011
+*** Modified: Jun 6, 2014
 ***********************************************************************
 
       real*8 function nulike_bgspec(nchan)
@@ -16,13 +17,13 @@
 
       integer nchan, nchan_index
 
-      if (nchan .lt. nchan_min .or. nchan .gt. nchan_max) then
+      if (nchan .lt. nchan_min(analysis) .or. nchan .gt. nchan_max(analysis)) then
         write(*,*) 'Error in nulike_bgspec: nchan outside tabulated'
         write(*,*) 'range, nchan=',nchan,'.  Quitting...'
         stop
       endif
   
-      nchan_index = nchan - nchan_min + 1 - nchan_hist2BGoffset
+      nchan_index = nchan - nchan_min(analysis) + 1 - nchan_hist2BGoffset
       if (BGnchandist_nchan(nchan_index) .ne. nchan) then
         write(*,*) BGnchandist_nchan(nchan_index), nchan, nchan_index
         stop 'Something is wrong with nchan_index in nulike_bgspec.'

@@ -148,7 +148,7 @@
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       !Calculate the number likelihood
-      nLikelihood = nulike_nlike(nEvents,
+      nLikelihood = nulike_nlike(nEvents(analysis),
      & theta_tot,theta_S,EAErr,theoryErr(analysis))
 
       if (doProfiling) then
@@ -168,7 +168,7 @@
         !Reset the saved spectral likelihoods next time nulike_speclike is run
         nulike_speclike_reset = .true.
         !Step through the individual events
-        do j = 1, nEvents
+        do j = 1, nEvents(analysis)
           !Add in angular likelihood for this event
           if (liketype .eq. 2 .or. liketype .eq. 4) 
      &     angularLikelihood = angularLikelihood + nulike_anglike(
@@ -177,8 +177,8 @@
           if (liketype .eq. 3 .or. liketype .eq. 4) 
      &     spectralLikelihood = spectralLikelihood + nulike_speclike(
      &      events_nchan(j),theta_S,f_S,nulike_speclike_reset,
-     &      effArea_logE(analysis,1,1),
-     &      effArea_logE(analysis,2,nBinsEA(analysis)),
+     &      effArea_logE(1,1,analysis),
+     &      effArea_logE(2,nBinsEA(analysis),analysis),
      &      muonyield)
         enddo
       endif
@@ -218,7 +218,7 @@
         theta_tot = theta_BG(analysis) + theta_S
         !p-value from Poissonian statistics
         if (.not. pvalBGPoisComputed) call nulike_bglikeprecomp
-        pvalue = nulike_pval(nEvents, theta_tot, theta_S)
+        pvalue = nulike_pval(nEvents(analysis), theta_tot, theta_S)
         pvalue = pvalue / BGpvalPoissonian
         
       endif
@@ -237,7 +237,7 @@
       !Export various counts
       NBG_expected = theta_BG(analysis)
       Nsignal_predicted = theta_S
-      Ntotal_observed = nEvents 
+      Ntotal_observed = nEvents(analysis) 
 
       end subroutine nulike_bounds
 

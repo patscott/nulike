@@ -33,19 +33,19 @@
       enddo
 
       !Read in events
-      nEvents = 0
+      nEvents(analysis) = 0
       do j = 1, totalevents
         read(lun, *) instring, nchan
         read(lun, *) instring, cosphi
         read(lun, *) instring, instring2, cosphierr
         read(lun, *) instring
-        if (j .ne. nEvents_in_file) read(lun, *) instring
+        if (j .ne. nEvents_in_file(analysis)) read(lun, *) instring
         !read in only events that have phi < phi_cut
         if (cosphi .gt. cosphimin) then
-          nEvents = nEvents + 1
-          events_nchan(nEvents) = nchan
-          events_cosphi(nEvents) = cosphi
-          events_cosphiErr(nEvents) = cosphiErr
+          nEvents(analysis) = nEvents(analysis) + 1
+          events_nchan(nEvents(analysis)) = nchan
+          events_cosphi(nEvents(analysis)) = cosphi
+          events_cosphiErr(nEvents(analysis)) = cosphiErr
         endif
       enddo
 

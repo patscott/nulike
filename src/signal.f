@@ -28,27 +28,27 @@
  
       if (like .eq. 2012) then
 
-      if (log10mwimp .lt. effArea_logE(analysis,1,1)) then
+      if (log10mwimp .lt. effArea_logE(1,1,analysis)) then
 
         theta_Snu = 0.d0
         theta_Snubar = 0.d0
  
       else
 
-        if (log10mwimp .lt. effArea_logE(analysis,2,nBinsEA(analysis))) then
+        if (log10mwimp .lt. effArea_logE(2,nBinsEA(analysis),analysis)) then
           upperLimit = log10mwimp
         else
-          upperLimit = effArea_logE(analysis,2,nBinsEA(analysis))
+          upperLimit = effArea_logE(2,nBinsEA(analysis),analysis)
         endif
 
         ptypeshare = 1
         integral = nulike_simpson(nulike_sigintegrand,muonyield,
-     &   effArea_logE(analysis,1,1),upperLimit,eps)
+     &   effArea_logE(1,1,analysis),upperLimit,eps)
         theta_Snu = integral * dlog(10.d0) * exp_time(analysis) * annrate
 
         ptypeshare = 2
         integral = nulike_simpson(nulike_sigintegrand,muonyield,
-     &   effArea_logE(analysis,1,1),upperLimit,eps)
+     &   effArea_logE(1,1,analysis),upperLimit,eps)
         theta_Snubar = integral * dlog(10.d0) * exp_time(analysis) * annrate
 
       endif

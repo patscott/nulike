@@ -23,7 +23,7 @@
         call nulike_edispcheckout(nchan)
       endif
 
-      call TSVAL1(nHistograms,hist_logEcentres,edisp_prob,
+      call TSVAL1(nHistograms(analysis),hist_logEcentres,edisp_prob,
      & edisp_derivs,edisp_sigma,0,1,log10E,nulike_edisp,IER)
 
       if (nulike_edisp .lt. 0.d0) nulike_edisp = 0.d0

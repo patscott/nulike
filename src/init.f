@@ -253,7 +253,7 @@
 
       do
         read(lun, fmt=*, IOSTAT=IFAIL, END=30) instring
-        read(lun, fmt=*, IOSTAT=IFAIL, END=30) instring, nEvents_in_file
+        read(lun, fmt=*, IOSTAT=IFAIL, END=30) instring, nEvents_in_file(analysis)
         if (IFAIL .ne. 0) then
          write(*,*) 'Bad format in IC event file.',eventfile,'.'
          write(*,*) 'Quitting...'
@@ -266,9 +266,9 @@
 
 30    close(lun)
       
-      if (nEvents_in_file .gt. max_nEvents) then
-        write(*,*) 'IC event file contains more bins than'
-        write(*,*) 'DarkSUSY has been configured to handle.'
+      if (nEvents_in_file(analysis) .gt. max_nEvents) then
+        write(*,*) 'Event file '//trim(eventfile)//' contains more bins than'
+        write(*,*) 'nulike has been configured to handle.'
         write(*,*) 'Increase max_nEffAreaBins in nulike.h and' 
         write(*,*) 'recompile.'
         stop
@@ -297,9 +297,9 @@
         stop
       endif 
         
-      nchan_min = ridiculousNumberOfChannels
-      nchan_max = 0
-      nHistograms = 0
+      nchan_min(analysis) = ridiculousNumberOfChannels
+      nchan_max(analysis) = 0
+      nHistograms(analysis) = 0
 
       do
 
@@ -307,12 +307,12 @@
 
         if (instring(1:1) .eq. 'h') then
           read(instring, fmt=*, IOSTAT=IFAIL) instring2, 
-     &     nnchan(nHistograms+1), nchan
-          if (nchan .lt. nchan_min) nchan_min = nchan
-          if (nchan .gt. nchan_max) nchan_max = nchan
+     &     nnchan(nHistograms(analysis)+1), nchan
+          if (nchan .lt. nchan_min(analysis)) nchan_min(analysis) = nchan
+          if (nchan .gt. nchan_max(analysis)) nchan_max(analysis) = nchan
         else if (instring(1:1) .eq. 'H') then
-          read(instring, fmt=*, IOSTAT=IFAIL) instring2, nHistograms
-          nnchan(nHistograms) = nnchan(nHistograms) + 1
+          read(instring, fmt=*, IOSTAT=IFAIL) instring2, nHistograms(analysis)
+          nnchan(nHistograms(analysis)) = nnchan(nHistograms(analysis)) + 1
         endif     
 
         if (IFAIL .ne. 0) then
@@ -327,9 +327,9 @@
 
 40    close(lun)
 
-      nnchan_total = nchan_max - nchan_min + 1
+      nnchan_total(analysis) = nchan_max(analysis) - nchan_min(analysis) + 1
 
-      if (nnchan_total .gt. max_nnchan) then
+      if (nnchan_total(analysis) .gt. max_nnchan) then
         write(*,*) 'IC nchan histogram file contains more'
         write(*,*) 'nchan values than DarkSUSY has'
         write(*,*) 'been configured to handle.  Increase' 
@@ -337,10 +337,10 @@
         stop
       endif
 
-      nHistograms = nHistograms + 1
-      nnchan(nHistograms) = nnchan(nHistograms) + 1
+      nHistograms(analysis) = nHistograms(analysis) + 1
+      nnchan(nHistograms(analysis)) = nnchan(nHistograms(analysis)) + 1
       
-      if (nHistograms .gt. max_nHistograms) then
+      if (nHistograms(analysis) .gt. max_nHistograms) then
         write(*,*) 'IC nchan histogram file contains more histograms'
         write(*,*) 'than DarkSUSY has been configured to handle.'
         write(*,*) 'Increase max_nHistograms in nulike.h and' 
@@ -355,10 +355,10 @@
       call nulike_bginit(BGfile, nBinsBGAng(analysis), nBinsBGE, BGfirst, BGsecond)
 
       !Read in the actual nchan response histograms and rearrange them into energy dispersion estimators
-      call nulike_edispinit(nchandistfile, nHistograms, nnchan)
+      call nulike_edispinit(nchandistfile, nHistograms(analysis), nnchan)
 
       !Read in the actual details of all events.
-      call nulike_eventinit(eventfile, nEvents_in_file)
+      call nulike_eventinit(eventfile, nEvents_in_file(analysis))
 
       !Calculate the expected background count.
       call nulike_bgpredinit

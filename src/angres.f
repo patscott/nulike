@@ -21,7 +21,7 @@
       real*8 log10E
       integer IER
       
-      call TSVAL1(nBinsEA(analysis),effArea_logEcentres(analysis,:),
+      call TSVAL1(nBinsEA(analysis),effArea_logEcentres(:,analysis),
      & effArea_AngRes,effArea_AngResderivs,effArea_AngRessigma,0,1,
      & log10E,nulike_angres,IER)
 

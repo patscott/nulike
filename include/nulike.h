@@ -34,6 +34,8 @@
       parameter (pi=3.141592653589793238d0)
       parameter(bigBadLike = -50.d0)
 
+      integer analysis, nAnalyses
+
       character (len=100) analysis_name_array(max_analyses)
       integer likelihood_version(max_analyses)
       logical sysErrDist_logNorm(max_analyses)
@@ -42,12 +44,12 @@
       real*8 theta_BG(max_analyses)
 
       integer nBinsEA(max_analyses), nBinsBGAng(max_analyses)
-      integer nEvents,nEvents_in_file, nHistograms
-      integer nchan_min, nchan_max, nnchan_total
-      integer analysis, nAnalyses
+      integer nEvents(max_analyses), nEvents_in_file(max_analyses)
+      integer nHistograms(max_analyses), nchan_min(max_analyses)
+      integer nchan_max(max_analyses), nnchan_total(max_analyses)
 
-      real*8 effArea_logE(max_analyses,2,max_nBinsEA)
-      real*8 effArea_logEcentres(max_analyses,max_nBinsEA)
+      real*8 effArea_logE(2,max_nBinsEA,max_analyses)
+      real*8 effArea_logEcentres(max_nBinsEA,max_analyses)
       real*8 effArea_nu(max_nBinsEA)
       real*8 effArea_nubar(max_nBinsEA)
       real*8 effArea_syserr(max_nBinsEA)

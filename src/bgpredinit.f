@@ -19,7 +19,7 @@
       !of BG angular distribution from phi = 0 to phi_cut. Then multiply by number of events
       !across full sky, and dole out events into different bins.
       BGangdist_conenorm = TSINTL(dcos(phi_max_rad(analysis)),
-     & 1.d0,nBinsBGAng(analysis),dcos(BGangdist_phi),BGangdist_prob,
+     & 1.d0,nBinsBGAng(analysis),BGangdist_phi,BGangdist_prob,
      & BGangdist_derivs,BGangdist_sigma,IER)
       theta_BG(analysis) = BGangdist_conenorm / BGangdist_norm
      & * dble(FullSkyBG)
