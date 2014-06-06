@@ -17,7 +17,7 @@ TSPACK=contrib/TSPACK
 # Define fortran compiler and options
 FF=ifort
 FC=$(FF)
-FOPT=-O -extend_source -I$(INC) -fPIC -warn all
+FOPT=-O -extend_source -I$(INC) -module $(BUILD) -fPIC -warn all -check all
 FFLAGS=$(FOPT) -c
 
 # DarkSUSY location, library name and include path
@@ -80,7 +80,7 @@ nulike_test : libnulike.a $(TEST)/nulike_test.f
 	$(FF) $(FOPT) -I$(DSLIBINC) -o $@ $(TEST)/nulike_test.f -L$(DSLIBDIR) -static -l$(DSLIBNAME) -lHB -lFH -L$(LIB) -static -lnulike -lisospin
 
 clean : 
-	rm -f $(BUILD)/*.o tspack.f Key.dat *.mod *.tmp *_genmod.f90 nulike_test nulike_prep
+	rm -f $(BUILD)/* tspack.f Key.dat nulike_test nulike_prep
 
 distclean : clean
 	rm -f $(LIB)/libnulike.a $(LIB)/libnulike.so

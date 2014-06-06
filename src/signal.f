@@ -24,7 +24,7 @@
       real*8 muonyield, upperLimit
       integer like
       parameter (eps = 1.d-3)
-      external nulike_sigintegrand, muonyield
+      external muonyield, nulike_sigintegrand
  
       if (like .eq. 2012) then
 

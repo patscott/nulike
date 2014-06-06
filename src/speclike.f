@@ -37,7 +37,7 @@
       real*8 nulike_specintegrand, eps, logEmin, logEmax
       real*8 savedSpecLikes(nchan_maxallowed), muonyield
       parameter (eps = 1.d-2)
-      external nulike_specintegrand, muonyield
+      external muonyield, nulike_specintegrand
       save savedSpecLikeFlags, savedSpecLikes
       
       nchanshare = nchan

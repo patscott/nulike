@@ -45,7 +45,7 @@
       effArea = nulike_effarea(log10E, ptype)
 
       !Obtain angular resolution for nu and nubar with energy E; sigma in degrees
-      sigma = nulike_angRes(log10E)
+      sigma = nulike_angres(log10E)
 
       !Obtain angular loss factor for neutrinos and anti-neutrinos
       !with energy E, to account for events that will leak out of

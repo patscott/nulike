@@ -74,7 +74,7 @@
       real*8 deltalnlike, mwimp, ann_rate, spec_ang_likelihood
       logical pvalFromRef, nulike_speclike_reset, doProfiling
       character (len=*) analysis_name,pref,f1,f2,f3,f4
-      external muonyield, nulike_amap
+      external muonyield
       !Hidden option for doing speed profiling
       parameter (doProfiling = .false.)
       parameter (pref = 'share/DarkSUSY/IC_data/')
