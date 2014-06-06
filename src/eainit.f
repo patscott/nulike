@@ -42,11 +42,11 @@
         effArea_logEcentres(i,analysis) = 0.5d0*(effArea_logE(1,i,analysis)
      &   +effArea_logE(2,i,analysis))
         read(lun, *) instring, 
-     &   effArea_nu(i), effArea_nubar(i)
+     &   effArea_nu(i,analysis), effArea_nubar(i,analysis)
         read(lun, *) instring, 
-     &   effArea_syserr(i), effArea_staterr(i)
+     &   effArea_syserr(i,analysis), effArea_staterr(i,analysis)
         read(lun, *) instring, 
-     &   effArea_AngRes(i)
+     &   effArea_AngRes(i,analysis)
         read(lun, fmt='(A1)') instring
         if (i .ne. nbins) read(lun, fmt='(A1)'), instring
       enddo
@@ -58,17 +58,17 @@
       !systematic and the Monte Carlo statistical error.  (Both contributions
       !have the character of a pure systematic when considered in the 
       !context of using a fixed effective area to do an analysis of real events.)
-      totalSystematic = dsqrt(effArea_syserr*effArea_syserr + 
-     & effArea_staterr*effArea_staterr) * 0.01d0      
-      EAErr = maxval(totalSystematic)
+      totalSystematic = dsqrt(effArea_syserr(:,analysis)**2 + 
+     & effArea_staterr(:,analysis)**2) * 0.01d0      
+      EAErr(analysis) = maxval(totalSystematic)
 
 
       !Now need to init the interpolators in effective area and angular resolution.
 
       !Set up interpolation in neutrino effective area
-      call TSPSI(nbins,effArea_logEcentres(:,analysis),effArea_nu,
-     & 2,0,.false.,.false.,2*nbins-2,working,effArea_nuderivs,
-     & effArea_nusigma,IER)
+      call TSPSI(nbins,effArea_logEcentres(:,analysis),effArea_nu(:,analysis),
+     & 2,0,.false.,.false.,2*nbins-2,working,effArea_nuderivs(:,analysis),
+     & effArea_nusigma(:,analysis),IER)
       if (IER .lt. 0) then
         write(*,*) 'Error in nulike_eainit: TSPSI failed with error'
         write(*,*) 'code',IER,' in setting up neutrino eff area.'
@@ -76,9 +76,9 @@
       endif
 
       !Set up interpolation in anti-neutrino effective area
-      call TSPSI(nbins,effArea_logEcentres(:,analysis),effArea_nubar,
-     & 2,0,.false.,.false.,2*nbins-2,working,effArea_nubarderivs,
-     & effArea_nubarsigma,IER)
+      call TSPSI(nbins,effArea_logEcentres(:,analysis),effArea_nubar(:,analysis),
+     & 2,0,.false.,.false.,2*nbins-2,working,effArea_nubarderivs(:,analysis),
+     & effArea_nubarsigma(:,analysis),IER)
       if (IER .lt. 0) then
         write(*,*) 'Error in nulike_eainit: TSPSI failed with error'
         write(*,*) 'code',IER,' in setting up anti-nu eff area.'
@@ -86,9 +86,9 @@
       endif
 
       !Set up interpolation in angular resolution
-      call TSPSI(nbins,effArea_logEcentres(:,analysis),effArea_AngRes,
-     & 2,0,.false.,.false.,2*nbins-2,working,effArea_AngResderivs,
-     & effArea_AngRessigma,IER)
+      call TSPSI(nbins,effArea_logEcentres(:,analysis),effArea_AngRes(:,analysis),
+     & 2,0,.false.,.false.,2*nbins-2,working,effArea_AngResderivs(:,analysis),
+     & effArea_AngRessigma(:,analysis),IER)
       if (IER .lt. 0) then
         write(*,*) 'Error in nulike_eainit: TSPSI failed with error'
         write(*,*) 'code',IER,' in setting up angular resolution.'

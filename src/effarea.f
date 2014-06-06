@@ -17,7 +17,7 @@
       implicit none
       include 'nulike.h'
 
-      real*8 log10E, effarea(1)
+      real*8 log10E
       integer ptype, IER
       
       !Choose relevant species
@@ -25,15 +25,15 @@
 
         !neutrinos
         call TSVAL1(nBinsEA(analysis),effArea_logEcentres(:,analysis),
-     &   effArea_nu,effArea_nuderivs,effArea_nusigma,0,1,log10E,
-     &   effarea,IER)
+     &   effArea_nu(:,analysis),effArea_nuderivs(:,analysis),
+     &   effArea_nusigma(:,analysis),0,1,log10E,nulike_effarea,IER)
 
       else if (ptype .eq. 2) then
 
         !anti-neutrinos
         call TSVAL1(nBinsEA(analysis),effArea_logEcentres(:,analysis),
-     &   effArea_nubar,effArea_nubarderivs,effArea_nubarsigma,0,1,
-     &   log10E,effarea,IER)
+     &   effArea_nubar(:,analysis),effArea_nubarderivs(:,analysis),
+     &   effArea_nubarsigma,0,1,log10E,nulike_effarea,IER)
 
       else
 
@@ -47,7 +47,5 @@
         write(*,*) 'in nulike_effarea, code:', IER
         stop
       endif
-
-      nulike_effarea = effarea(1)
 
       end function nulike_effarea

@@ -41,7 +41,7 @@
       logical sysErrDist_logNorm(max_analyses)
       real*8 phi_max_rad(max_analyses), phi_max_deg(max_analyses)
       real*8 exp_time(max_analyses), theoryErr(max_analyses) 
-      real*8 theta_BG(max_analyses)
+      real*8 theta_BG(max_analyses), EAErr(max_analyses)
 
       integer nBinsEA(max_analyses), nBinsBGAng(max_analyses)
       integer nEvents(max_analyses), nEvents_in_file(max_analyses)
@@ -50,17 +50,17 @@
 
       real*8 effArea_logE(2,max_nBinsEA,max_analyses)
       real*8 effArea_logEcentres(max_nBinsEA,max_analyses)
-      real*8 effArea_nu(max_nBinsEA)
-      real*8 effArea_nubar(max_nBinsEA)
-      real*8 effArea_syserr(max_nBinsEA)
-      real*8 effArea_staterr(max_nBinsEA)
-      real*8 effArea_AngRes(max_nBinsEA)
-      real*8 effArea_nuderivs(max_nBinsEA)
-      real*8 effArea_nubarderivs(max_nBinsEA)
-      real*8 effArea_AngResderivs(max_nBinsEA)
-      real*8 effArea_nusigma(max_nBinsEA)
-      real*8 effArea_nubarsigma(max_nBinsEA)
-      real*8 effArea_AngRessigma(max_nBinsEA)
+      real*8 effArea_nu(max_nBinsEA,max_analyses)
+      real*8 effArea_nubar(max_nBinsEA,max_analyses)
+      real*8 effArea_syserr(max_nBinsEA,max_analyses)
+      real*8 effArea_staterr(max_nBinsEA,max_analyses)
+      real*8 effArea_AngRes(max_nBinsEA,max_analyses)
+      real*8 effArea_nuderivs(max_nBinsEA,max_analyses)
+      real*8 effArea_nubarderivs(max_nBinsEA,max_analyses)
+      real*8 effArea_AngResderivs(max_nBinsEA,max_analyses)
+      real*8 effArea_nusigma(max_nBinsEA,max_analyses)
+      real*8 effArea_nubarsigma(max_nBinsEA,max_analyses)
+      real*8 effArea_AngRessigma(max_nBinsEA,max_analyses)
 
       real*8  BGangdist_phi(max_nBinsBGAng)
       real*8  BGangdist_prob(max_nBinsBGAng)
@@ -86,7 +86,7 @@
       real*8  events_cosphiErr(max_nEvents)
 
       real*8  theta_S,theta_Snu,theta_Snubar
-      real*8  Eshare, thetashare, log10mwimp, EAErr
+      real*8  Eshare, thetashare, log10mwimp
       real*8  BGpvalPoissonian, annrate, BGangdist_conenorm
       integer FullSkyBG, ptypeshare, nchanshare, nchansaved
       logical pvalBGPoisComputed

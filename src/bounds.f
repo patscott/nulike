@@ -149,7 +149,7 @@
 
       !Calculate the number likelihood
       nLikelihood = nulike_nlike(nEvents(analysis),
-     & theta_tot,theta_S,EAErr,theoryErr(analysis))
+     & theta_tot,theta_S,EAErr(analysis),theoryErr(analysis))
 
       if (doProfiling) then
         call system_clock(counted1,countrate)
