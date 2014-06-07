@@ -172,11 +172,11 @@
           !Add in angular likelihood for this event
           if (liketype .eq. 2 .or. liketype .eq. 4) 
      &     angularLikelihood = angularLikelihood + nulike_anglike(
-     &      events_cosphi(j),events_cosphiErr(j),f_S)
+     &      events_cosphi(j,analysis),events_cosphiErr(j,analysis),f_S)
           !Add in spectral likelihood for this event
           if (liketype .eq. 3 .or. liketype .eq. 4) 
      &     spectralLikelihood = spectralLikelihood + nulike_speclike(
-     &      events_nchan(j),theta_S,f_S,nulike_speclike_reset,
+     &      events_nchan(j,analysis),theta_S,f_S,nulike_speclike_reset,
      &      effArea_logE(1,1,analysis),
      &      effArea_logE(2,nBinsEA(analysis),analysis),
      &      muonyield)
@@ -217,9 +217,9 @@
 
         theta_tot = theta_BG(analysis) + theta_S
         !p-value from Poissonian statistics
-        if (.not. pvalBGPoisComputed) call nulike_bglikeprecomp
+        if (.not. pvalBGPoisComputed(analysis)) call nulike_bglikeprecomp
         pvalue = nulike_pval(nEvents(analysis), theta_tot, theta_S)
-        pvalue = pvalue / BGpvalPoissonian
+        pvalue = pvalue / BGpvalPoissonian(analysis)
         
       endif
 

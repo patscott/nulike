@@ -43,9 +43,9 @@
         !read in only events that have phi < phi_cut
         if (cosphi .gt. cosphimin) then
           nEvents(analysis) = nEvents(analysis) + 1
-          events_nchan(nEvents(analysis)) = nchan
-          events_cosphi(nEvents(analysis)) = cosphi
-          events_cosphiErr(nEvents(analysis)) = cosphiErr
+          events_nchan(nEvents(analysis),analysis) = nchan
+          events_cosphi(nEvents(analysis),analysis) = cosphi
+          events_cosphiErr(nEvents(analysis),analysis) = cosphiErr
         endif
       enddo
 

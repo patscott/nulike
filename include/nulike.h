@@ -79,15 +79,16 @@
       real*8  hist_sigma(max_nHistograms,max_nnchan,max_analyses)
       integer nchan_hist2BGoffset(max_analyses)
 
-      integer events_nchan(max_nEvents)
-      real*8  events_cosphi(max_nEvents)
-      real*8  events_cosphiErr(max_nEvents)
+      integer events_nchan(max_nEvents,max_analyses)
+      real*8  events_cosphi(max_nEvents,max_analyses)
+      real*8  events_cosphiErr(max_nEvents,max_analyses)
+
+      logical pvalBGPoisComputed(max_analyses)
+      real*8  BGpvalPoissonian(max_analyses)
 
       real*8  theta_S,theta_Snu,theta_Snubar
-      real*8  Eshare, thetashare, log10mwimp
-      real*8  BGpvalPoissonian, annrate
+      real*8  Eshare, thetashare, log10mwimp, annrate
       integer ptypeshare, nchanshare, nchansaved
-      logical pvalBGPoisComputed
 
       common /nulike_comm/ events_nchan,events_cosphi,events_cosphiErr,
      & effArea_logE,effArea_nu,theta_BG, theta_S, BGnchandist_prob,

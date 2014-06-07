@@ -62,9 +62,10 @@
         write(*,*) 
         write(*,*) 'I like, you like...'
         write(*,*) '**********************************************************'
-        write(*,*) '*                    nulike 1.0                          *'
-        write(*,*) '*              Pat Scott, Chris Savage                   *'
-        write(*,*) '*                 arXiv:1207.0810                        *'
+        write(*,*) '*                      nulike 1.0                        *'
+        write(*,*) '*               Pat Scott, Chris Savage                  *'
+        write(*,*) '*         JCAP (2012) 11:057, arXiv:1207.0810)           *'
+        write(*,*) '*         JCAP (2014) xx:xxx, arXiv:141y.yyyy)           *'
         write(*,*) '**********************************************************'
         nulike_init_called = .true.      
       endif
@@ -365,10 +366,10 @@
 
       !Precompute the background p-value (confidence level) for the Poissonian likelihood if requested.  
       !This is used for calculation of the final p-value for each model if nulike_bounds is called with pvalFromRef = F.
-      pvalBGPoisComputed = .false.
+      pvalBGPoisComputed(analysis) = .false.
       if (BGLikePrecompute) call nulike_bglikeprecomp
 
-      write(*,*) 'Initialisation of nulike complete.'
+      write(*,*) "Initialisation of nulike analysis '"//trim(analysis_name)//"' complete."
 
       end subroutine nulike_init
 

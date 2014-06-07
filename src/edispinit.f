@@ -77,10 +77,6 @@
       !Set up interpolation in energy histograms for use as energy dispersion estimator
       do i = 1, nnchan_total(analysis)
 
-        !do j = 1, nHistograms(analysis)
-        !  edisp_prob(j,analysis) = hist_prob(j,i,analysis)
-        !enddo
-
         call TSPSI(nHistograms(analysis),hist_logEcentres(:,analysis),hist_prob(:,i,analysis),
      &   2,0,.false.,.false.,2*nHistograms(analysis)-2,working,hist_derivs(:,i,analysis),
      &   hist_sigma(:,i,analysis),IER)
@@ -90,15 +86,7 @@
           stop
         endif
 
-        !do j = 1, nHistograms(analysis)
-        !  hist_derivs(j,i,analysis) = edisp_derivs(j,analysis)
-        !  hist_sigma(j,i,analysis) = edisp_sigma(j,analysis)
-        !enddo
-
       enddo 
-
-      !Indicate which nchan data are currently loaded for !FIXME nchansaved needs to be made array?
-      nchansaved = nnchan_total(analysis) + nchan_min(analysis) - 1
 
 
       end subroutine nulike_edispinit

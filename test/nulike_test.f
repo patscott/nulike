@@ -28,11 +28,10 @@
       include 'dsdirver.h'
       include 'dswacom.h'
 
-      ! Initialise DarkSUSY
-      call dsinit
 
-      ! Choose a print level for DarkSUSY output to stdout
-      prtlevel=1
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      ! 1. Nulike initialisation
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       ! Before starting anything, we initialise the neutrino telescope data and
       ! the nulike routines.  See the header of src/init.f for detailed 
@@ -51,30 +50,15 @@
       iclike2014 = 'data/IceCube/likelihood2014/'
 
       ! Here we use the IC-22 data that ships with nulike.
-      !  experiment = 'IC-22'
-      !  eventf  = trim(iclike2012)//'events_10deg_IC22.dat'
-      !  edispf  = trim(iclike2012)//'energy_histograms_IC22.dat'
-      !  BGf     = trim(iclike2012)//'BG_distributions_IC22.dat'
-      !  efareaf = trim(iclike2012)//'nuEffArea_IC22.dat'
+        experiment = 'IC-22'
+        eventf  = trim(iclike2012)//'events_10deg_IC22.dat'
+        edispf  = trim(iclike2012)//'energy_histograms_IC22.dat'
+        BGf     = trim(iclike2012)//'BG_distributions_IC22.dat'
+        efaorvf = trim(iclike2012)//'nuEffArea_IC22.dat'
 
-      ! Here we use the IC79 WH data that ships with nulike.
-      !  experiment = 'IC-79 WH'
-      !  eventf  = trim(iclike2014)//'IC79_Events_WH_10degrees.dat'
-      !  edispf  = trim(iclike2014)//'IC79_energy_histograms_WH.dat'
-      !  BGf     = trim(iclike2014)//'IC79_Background_distributions_WH.dat'
-      !  efaorvf = trim(iclike2014)//'IC79_Effective_Volume_WH.dat'
-
-      ! Here we use the IC-86 simulation that ships with nulike
-      experiment = 'IC-86 (predicted)'
-      eventf  = trim(iclike2012)//'events_20deg_IC86_sim_nosig.dat'
-      edispf  = trim(iclike2012)//'energy_histograms_IC86_sim_dummy.dat'
-      BGf     = trim(iclike2012)//'BG_distributions_IC86_sim.dat'
-      efaorvf = trim(iclike2012)//'nuEffArea_IC86_sim.dat'
-
-      ! Set the analysis cut in degrees around the solar position
-      ! phi_cut = 10.d0 !for IC22 or IC79 WH
-      phi_cut = 20.d0 !for IC86
-
+      ! Set the analysis cut in degrees around the solar position for IC22
+      phi_cut = 10.d0
+      
       ! Set the estimated relative theoretical error in neutrino flux calculation 
       theoryError = 0.05d0
 
@@ -86,9 +70,41 @@
       ! statistics is used.
       BGLikePrecompute = .true.
 
-      ! Initialise the IceCube data and calculations. 
+      ! Initialise the IceCube data and calculations for IC22. 
       call nulike_init(experiment, eventf, edispf, BGf, efaorvf, phi_cut,
      & theoryError, uselogNorm, BGLikePrecompute)
+
+      ! Here we use the IC-86 simulation that ships with nulike
+      experiment = 'IC-86 (predicted)'
+      eventf  = trim(iclike2012)//'events_20deg_IC86_sim_nosig.dat'
+      edispf  = trim(iclike2012)//'energy_histograms_IC86_sim_dummy.dat'
+      BGf     = trim(iclike2012)//'BG_distributions_IC86_sim.dat'
+      efaorvf = trim(iclike2012)//'nuEffArea_IC86_sim.dat'
+
+      ! Set the analysis cut in degrees around the solar position for the IC86 prediction
+      phi_cut = 20.d0
+
+      ! Initialise the IceCube data and calculations for the IC86 prediction. 
+      call nulike_init(experiment, eventf, edispf, BGf, efaorvf, phi_cut,
+     & theoryError, uselogNorm, BGLikePrecompute)
+
+      ! Here we use the IC79 WH data that ships with nulike.
+      !  experiment = 'IC-79 WH'
+      !  eventf  = trim(iclike2014)//'IC79_Events_WH_10degrees.dat'
+      !  edispf  = trim(iclike2014)//'IC79_energy_histograms_WH.dat'
+      !  BGf     = trim(iclike2014)//'IC79_Background_distributions_WH.dat'
+      !  efaorvf = trim(iclike2014)//'IC79_Effective_Volume_WH.dat'
+
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      ! 2. DarkSUSY initialisation and model read-in
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      ! Initialise DarkSUSY
+      write(*,*)
+      call dsinit
+
+      ! Choose a print level for DarkSUSY output to stdout
+      prtlevel=1
 
       ! Open a file with some SUSY models inside.  See DarkSUSY's dstest for details.
       open (unit=11,file='test/testmodels.mod')
@@ -147,6 +163,10 @@
         write(*,*) '  Capture rate in the Sun = ',csu,' s^-1'
         write(*,*) '  Annihilation rate in the Sun = ',annrate,' s^-1'
 
+
+        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        ! 3. Nulike likelihoods and p values
+        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         !  Likelihoods and p values from IceCube
         write(*,*) 'Calculating likelihood and p value for '//trim(experiment)
