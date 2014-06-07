@@ -71,16 +71,13 @@
       real*8  BGnchandist_prob(max_nBinsBGE,max_analyses)
       integer FullSkyBG(max_analyses)
 
-      real*8  hist_logE(2,max_nHistograms)
-      real*8  hist_logEcentres(max_nHistograms)
-      integer hist_nchan(max_nHistograms, max_nnchan)
-      real*8  hist_prob(max_nHistograms, max_nnchan)
-      real*8  hist_derivs(max_nHistograms, max_nnchan)
-      real*8  hist_sigma(max_nHistograms, max_nnchan)
-      integer nchan_hist2BGoffset
-      real*8  edisp_prob(max_nHistograms)
-      real*8  edisp_derivs(max_nHistograms)
-      real*8  edisp_sigma(max_nHistograms)
+      real*8  hist_logE(2,max_nHistograms,max_analyses)
+      real*8  hist_logEcentres(max_nHistograms,max_analyses)
+      integer hist_nchan(max_nHistograms,max_nnchan,max_analyses)
+      real*8  hist_prob(max_nHistograms,max_nnchan,max_analyses)
+      real*8  hist_derivs(max_nHistograms,max_nnchan,max_analyses)
+      real*8  hist_sigma(max_nHistograms,max_nnchan,max_analyses)
+      integer nchan_hist2BGoffset(max_analyses)
 
       integer events_nchan(max_nEvents)
       real*8  events_cosphi(max_nEvents)
@@ -102,9 +99,8 @@
      & BGangdist_norm, effArea_AngRes, exp_time, Eshare, thetashare, 
      & theta_Snu, theta_Snubar, annrate, 
      & BGangdist_conenorm, hist_LogE, hist_logEcentres, hist_nchan,
-     & hist_prob, hist_derivs, hist_sigma, edisp_prob, edisp_derivs,
-     & edisp_sigma, effArea_nubar,effArea_syserr,effArea_staterr,
-     & nBinsEA, nBinsBGAng, nEvents, nEvents_in_file,
+     & hist_prob, hist_derivs, hist_sigma, effArea_nubar,effArea_syserr,
+     & effArea_staterr, nBinsEA, nBinsBGAng, nEvents, nEvents_in_file,
      & nHistograms, nnchan_total, nchan_min, nchan_max,
      & nchan_hist2BGoffset, FullSkyBG, ptypeshare, nchanshare,
      & nchansaved, pvalBGPoisComputed, sysErrDist_logNorm,

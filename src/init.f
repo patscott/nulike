@@ -331,7 +331,7 @@
 
       if (nnchan_total(analysis) .gt. max_nnchan) then
         write(*,*) 'IC nchan histogram file contains more'
-        write(*,*) 'nchan values than DarkSUSY has'
+        write(*,*) 'nchan values than nulike has'
         write(*,*) 'been configured to handle.  Increase' 
         write(*,*) 'max_nnchan in nulike.h and recompile.'
         stop
@@ -342,7 +342,7 @@
       
       if (nHistograms(analysis) .gt. max_nHistograms) then
         write(*,*) 'IC nchan histogram file contains more histograms'
-        write(*,*) 'than DarkSUSY has been configured to handle.'
+        write(*,*) 'than nulike has been configured to handle.'
         write(*,*) 'Increase max_nHistograms in nulike.h and' 
         write(*,*) 'recompile.'
         stop

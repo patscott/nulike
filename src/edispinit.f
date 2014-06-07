@@ -11,7 +11,7 @@
 ***        
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
 *** Date: April 8, 2011
-*** Modified: Jun 3, 2014
+*** Modified: Jun 3, 7 2014
 ***********************************************************************
 
       subroutine nulike_edispinit(filename, nbins_Ein, 
@@ -39,8 +39,9 @@
 
       !Read actual data
       do i = 1, nbins_Ein
-        read(lun, *) instring, hist_logE(1,i), hist_logE(2,i)
-        hist_logEcentres(i) = 0.5d0*(hist_logE(1,i)+hist_logE(2,i))
+        read(lun, *) instring, hist_logE(1,i,analysis), hist_logE(2,i,analysis)
+        hist_logEcentres(i,analysis) = 0.5d0*(hist_logE(1,i,analysis)+
+     &   hist_logE(2,i,analysis))
         do j = 1, nbins_nchan(i)
           read(lun, *), instring, dummyint,
      &     hist_nchan_temp(i,j), hist_prob_temp(i,j)
@@ -52,13 +53,13 @@
       close(lun)
 
       !Arrange histograms so they all cover the same range in nchan
-      hist_prob = 0.d0
+      hist_prob(:,:,analysis) = 0.d0
       do k = 1, nnchan_total(analysis)
         do i = 1, nbins_Ein
-          hist_nchan(i,k) = k - 1 + nchan_min(analysis)
+          hist_nchan(i,k,analysis) = k - 1 + nchan_min(analysis)
           do j = 1, nbins_nchan(i)
-            if (hist_nchan_temp(i,j) .eq. hist_nchan(i,k)) then
-              hist_prob(i,k) = hist_prob_temp(i,j)
+            if (hist_nchan_temp(i,j) .eq. hist_nchan(i,k,analysis)) then
+              hist_prob(i,k,analysis) = hist_prob_temp(i,j)
             endif
           enddo
         enddo
@@ -66,37 +67,37 @@
 
       !Work out where the indexing of nchan values in energy dispersion lines
       !up with indexing of nchan values in observed background spectrum.
-      nchan_hist2BGoffset = -1
+      nchan_hist2BGoffset(analysis) = -1
       do k = 1, nnchan_total(analysis)
-        if (hist_nchan(1,k) .eq. BGnchandist_nchan(1,analysis)) then 
-          nchan_hist2BGoffset = k-1
+        if (hist_nchan(1,k,analysis) .eq. BGnchandist_nchan(1,analysis)) then 
+          nchan_hist2BGoffset(analysis) = k-1
         endif
       enddo
 
       !Set up interpolation in energy histograms for use as energy dispersion estimator
       do i = 1, nnchan_total(analysis)
 
-        do j = 1, nHistograms(analysis)
-          edisp_prob(j) = hist_prob(j,i)
-        enddo
+        !do j = 1, nHistograms(analysis)
+        !  edisp_prob(j,analysis) = hist_prob(j,i,analysis)
+        !enddo
 
-        call TSPSI(nHistograms(analysis),hist_logEcentres,edisp_prob,
-     &   2,0,.false.,.false.,2*nHistograms(analysis)-2,working,edisp_derivs,
-     &   edisp_sigma,IER)
+        call TSPSI(nHistograms(analysis),hist_logEcentres(:,analysis),hist_prob(:,i,analysis),
+     &   2,0,.false.,.false.,2*nHistograms(analysis)-2,working,hist_derivs(:,i,analysis),
+     &   hist_sigma(:,i,analysis),IER)
         if (IER .lt. 0) then
           write(*,*) 'Error in nulike_edispinit: TSPSI failed with error'
           write(*,*) 'code',IER, ' at i=',i
           stop
         endif
 
-        do j = 1, nHistograms(analysis)
-          hist_derivs(j,i) = edisp_derivs(j)
-          hist_sigma(j,i) = edisp_sigma(j)
-        enddo
+        !do j = 1, nHistograms(analysis)
+        !  hist_derivs(j,i,analysis) = edisp_derivs(j,analysis)
+        !  hist_sigma(j,i,analysis) = edisp_sigma(j,analysis)
+        !enddo
 
       enddo 
 
-      !Indicate which nchan data are currently loaded for
+      !Indicate which nchan data are currently loaded for !FIXME nchansaved needs to be made array?
       nchansaved = nnchan_total(analysis) + nchan_min(analysis) - 1
 
 

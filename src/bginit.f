@@ -113,7 +113,7 @@
       if (nnchan_total(analysis) .gt. max_nnchan) then
         write(*,*)
         write(*,*) 'Extension of histograms gives more nchan values'
-        write(*,*) 'than DarkSUSY has been configured to handle.  '
+        write(*,*) 'than nulike has been configured to handle.  '
         write(*,*) 'Increase max_nnchan in nulike.h and recompile.'
         write(*,*)
         call exit(0)
