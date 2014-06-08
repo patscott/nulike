@@ -2,9 +2,19 @@
 *** nulike_bounds returns counts, likelihoods and p-values from neutrino
 *** telescope searches for dark matter annihilation in the Sun. 
 ***
-*** input: mwimp         WIMP mass (GeV)
+*** input: analysis_name Name of the nulike analysis to use for calculating
+***                      likelihood and/or p-value.
+***
+***        mwimp         WIMP mass (GeV)
 ***
 ***        annrate       Annihilation rate (s^-1) 
+***
+***        nuyield       Name of a function that takes arguments 
+***                       real*8   log10E  log_10(E_nu / GeV)
+***                       integer  ptype   1=nu, 2=nubar
+***                      and returns
+***                       real*8   differential neutrino flux at the detector
+***                                (m^-2 s^-1 GeV^-1)
 ***
 ***        liketype      Sets combination of data to use in likelihood
 ***                         calculations
@@ -59,7 +69,7 @@
 
 
       subroutine nulike_bounds(analysis_name, mwimp, annrate, 
-     & muonyield, Nsignal_predicted, NBG_expected, Ntotal_observed, 
+     & nuyield, Nsignal_predicted, NBG_expected, Ntotal_observed, 
      & lnlike, pvalue, liketype, pvalFromRef, referenceLike, dof)
 
       implicit none
@@ -68,13 +78,13 @@
       integer Ntotal_observed, liketype, j
       integer counted1, counted2, countrate, nulike_amap
       real*8 Nsignal_predicted, NBG_expected, nulike_pval, theta_S
-      real*8 lnlike, pvalue, referenceLike, dof, DGAMIC, DGAMMA, muonyield
+      real*8 lnlike, pvalue, referenceLike, dof, DGAMIC, DGAMMA, nuyield
       real*8 nLikelihood, angularLikelihood, spectralLikelihood, logmw
       real*8 theta_tot, f_S, nulike_anglike, nulike_speclike, nulike_nlike
       real*8 deltalnlike, mwimp, annrate, spec_ang_likelihood, nulike_signal
       logical pvalFromRef, nulike_speclike_reset, doProfiling
       character (len=*) analysis_name,pref,f1,f2,f3,f4
-      external muonyield
+      external nuyield
       !Hidden option for doing speed profiling
       parameter (doProfiling = .false.)
       parameter (pref = 'share/DarkSUSY/IC_data/')
@@ -124,7 +134,7 @@
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       !Calculate signal counts and spectrum. 
-      theta_S = nulike_signal(muonyield, annrate, logmw, likelihood_version(analysis))
+      theta_S = nulike_signal(nuyield, annrate, logmw, likelihood_version(analysis))
       !Calculate the total predicted number of events
       theta_tot = theta_BG(analysis) + theta_S
       !Calculate the signal fraction.
@@ -174,7 +184,7 @@
      &      nulike_speclike_reset,
      &      effArea_logE(1,1,analysis),
      &      effArea_logE(2,nBinsEA(analysis),analysis),
-     &      muonyield)
+     &      nuyield)
         enddo
       endif
 

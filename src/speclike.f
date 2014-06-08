@@ -17,9 +17,10 @@
 ***                     boundary of the analysis energy range  
 ***         logEmax    log10(Emax/GeV), where Emax is the upper energy
 ***                     boundary of the analysis energy range
-***         muonyield  external double function that returns
-***                     the differential muon/neutrino flux
-***                     at the detector in units of m^-2 GeV^-1
+***         nuyield    external double function that returns
+***                     the differential neutrino flux
+***                     at the detector in units of m^-2 GeV^-1 
+***                     annihilation^-1
 *** output:            ln(Likelihood / chan^-1)
 ***       
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
@@ -29,7 +30,7 @@
 ***********************************************************************
 
       double precision function nulike_speclike(nchan,theta_S,
-     & f_S,annrate,logmw,reset,logEmin,logEmax,muonyield)
+     & f_S,annrate,logmw,reset,logEmin,logEmax,nuyield)
 
       implicit none
       include 'nulike.h'
@@ -39,9 +40,9 @@
       real*8 theta_S, f_S, annrate, nulike_simpson, upperLimit
       real*8 signalpartiallike, bgpartiallike, integral, nulike_bgspec
       real*8 nulike_specintegrand, eps, logEmin, logEmax
-      real*8 savedSpecLikes(nchan_maxallowed), muonyield, logmw
+      real*8 savedSpecLikes(nchan_maxallowed), nuyield, logmw
       parameter (eps = 1.d-2)
-      external muonyield, nulike_specintegrand
+      external nuyield, nulike_specintegrand
       save savedSpecLikeFlags, savedSpecLikes
       
       nchanshare = nchan
@@ -75,7 +76,7 @@
         endif
 
         !Find the part of the spectral likelihood associated with the signal
-        integral = nulike_simpson(nulike_specintegrand,muonyield,
+        integral = nulike_simpson(nulike_specintegrand,nuyield,
      &   logEmin,upperLimit,eps)
 
       else

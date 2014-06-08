@@ -3,9 +3,10 @@
 *** to neutralino annihilation, saving global variables
 *** for later access by likelihood codes.
 ***        
-*** Input:      muonyield       External double function that returns
-***                             the differential muon/neutrino flux
+*** Input:      nuyield         External double function that returns
+***                             the differential neutrino flux
 ***                             at the detector in units of m^-2 GeV^-1
+***                             annihilation^-1
 ***             annrate         Annihilation rate (s^-1) 
 ***             logmw           log_10(m_WIMP / GeV)
 ***             like            Likelihood type (2012 or 2014)
@@ -19,16 +20,16 @@
 ***********************************************************************
 
 
-      double precision function nulike_signal(muonyield, annrate, logmw, like)
+      double precision function nulike_signal(nuyield, annrate, logmw, like)
 
       implicit none
       include 'nulike.h'
 
       real*8 integral, eps, nulike_simpson, nulike_sigintegrand, logmw
-      real*8 muonyield, upperLimit, theta_Snu, theta_Snubar, annrate
+      real*8 nuyield, upperLimit, theta_Snu, theta_Snubar, annrate
       integer like
       parameter (eps = 1.d-3)
-      external muonyield, nulike_sigintegrand
+      external nuyield, nulike_sigintegrand
  
       if (like .eq. 2012) then
 
@@ -46,12 +47,12 @@
         endif
 
         ptypeshare = 1
-        integral = nulike_simpson(nulike_sigintegrand,muonyield,
+        integral = nulike_simpson(nulike_sigintegrand,nuyield,
      &   effArea_logE(1,1,analysis),upperLimit,eps)
         theta_Snu = integral * dlog(10.d0) * exp_time(analysis) * annrate
 
         ptypeshare = 2
-        integral = nulike_simpson(nulike_sigintegrand,muonyield,
+        integral = nulike_simpson(nulike_sigintegrand,nuyield,
      &   effArea_logE(1,1,analysis),upperLimit,eps)
         theta_Snubar = integral * dlog(10.d0) * exp_time(analysis) * annrate
 
