@@ -181,7 +181,7 @@
         ! this is the fastest.
         !likechoice = 1		! Number of events only
         !likechoice = 2		! Number of events and event arrival angles
-        !likechoice = 3		! Number of events and energy estimator (nchan = number of lit DOMs)
+        !likechoice = 3		! Number of events and energy estimator (for IceCube, this is nchan = number of hit DOMs)
         likechoice = 4		! Number of events, event arrival angles and energy estimator
 
         ! Choose whether to calculate the p value relative to a reference value of 

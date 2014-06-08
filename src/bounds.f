@@ -4,7 +4,7 @@
 ***
 *** input: mwimp         WIMP mass (GeV)
 ***
-***        ann_rate      Annihilation rate (s^-1) 
+***        annrate       Annihilation rate (s^-1) 
 ***
 ***        liketype      Sets combination of data to use in likelihood
 ***                         calculations
@@ -58,20 +58,20 @@
 ***********************************************************************
 
 
-      subroutine nulike_bounds(analysis_name, mwimp, ann_rate, 
+      subroutine nulike_bounds(analysis_name, mwimp, annrate, 
      & muonyield, Nsignal_predicted, NBG_expected, Ntotal_observed, 
      & lnlike, pvalue, liketype, pvalFromRef, referenceLike, dof)
 
       implicit none
       include 'nulike.h'
 
-      integer Ntotal_observed, liketype, j, like_type
+      integer Ntotal_observed, liketype, j
       integer counted1, counted2, countrate, nulike_amap
-      real*8 Nsignal_predicted, NBG_expected, nulike_pval
+      real*8 Nsignal_predicted, NBG_expected, nulike_pval, theta_S
       real*8 lnlike, pvalue, referenceLike, dof, DGAMIC, DGAMMA, muonyield
-      real*8 nLikelihood, angularLikelihood, spectralLikelihood
+      real*8 nLikelihood, angularLikelihood, spectralLikelihood, logmw
       real*8 theta_tot, f_S, nulike_anglike, nulike_speclike, nulike_nlike
-      real*8 deltalnlike, mwimp, ann_rate, spec_ang_likelihood
+      real*8 deltalnlike, mwimp, annrate, spec_ang_likelihood, nulike_signal
       logical pvalFromRef, nulike_speclike_reset, doProfiling
       character (len=*) analysis_name,pref,f1,f2,f3,f4
       external muonyield
@@ -98,25 +98,19 @@
       endif
      
       !If nulike_init has not yet been called, call it with the default IC-79 options and use that analysis.
-      if (.not. nulike_init_called) then
-        call nulike_init('IC79',f1,f2,f3,f4,20.d0,0.05d0,.true.,.true.)
-        analysis = 1
-      else !Otherwise, look up the analysis requested by the user.
-        analysis = nulike_amap(analysis_name)
-        if (analysis .eq. 0) then
-          write(*,*) "Analysis '"//analysis_name//"' requested of nulike_bounds"
-          write(*,*) 'is not one of the ones that has already been loaded.'
-          write(*,*) 'Quitting...'
-          stop
-        endif
+      if (.not. nulike_init_called) call nulike_init(analysis_name,f1,f2,f3,f4,20.d0,0.05d0,.true.,.true.)
+      
+      !Look up the analysis requested by the user.
+      analysis = nulike_amap(analysis_name)
+      if (analysis .eq. 0) then
+        write(*,*) "Analysis '"//analysis_name//"' requested of nulike_bounds"
+        write(*,*) 'is not one of the ones that has already been loaded.'
+        write(*,*) 'Quitting...'
+        stop
       endif
-
-      !Set the internal likelihood calculation type (2012 or 2014)
-      like_type = likelihood_version(analysis)
-
-      !Set internal WMIP mass and annihilation rate
-      annrate = ann_rate
-      log10mwimp = dlog10(mwimp)
+      
+      !Take log of WIMP mass
+      logmw = dlog10(mwimp)
 
       if (doProfiling) then
         call system_clock(counted2,countrate)
@@ -130,7 +124,7 @@
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       !Calculate signal counts and spectrum. 
-      call nulike_signal(muonyield, like_type)
+      theta_S = nulike_signal(muonyield, annrate, logmw, likelihood_version(analysis))
       !Calculate the total predicted number of events
       theta_tot = theta_BG(analysis) + theta_S
       !Calculate the signal fraction.
@@ -176,7 +170,8 @@
           !Add in spectral likelihood for this event
           if (liketype .eq. 3 .or. liketype .eq. 4) 
      &     spectralLikelihood = spectralLikelihood + nulike_speclike(
-     &      events_nchan(j,analysis),theta_S,f_S,nulike_speclike_reset,
+     &      events_nchan(j,analysis),theta_S,f_S,annrate,logmw,
+     &      nulike_speclike_reset,
      &      effArea_logE(1,1,analysis),
      &      effArea_logE(2,nBinsEA(analysis),analysis),
      &      muonyield)
@@ -190,7 +185,7 @@
       endif  
 
       !Combine the total spectral and angular likelihoods (if calculated seperately)
-      if (like_type .eq. 2012) then
+      if (likelihood_version(analysis) .eq. 2012) then
         spec_ang_likelihood = angularLikelihood + spectralLikelihood
       endif
 

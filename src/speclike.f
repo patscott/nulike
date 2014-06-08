@@ -4,11 +4,15 @@
 *** theoretical energy spectrum of incoming neutrinos.
 ***
 *** input:  nchan      observed number of hit DOMs for this event
-***         theta_S_input total predicted number of signal events
+***         theta_S    total predicted number of signal events
 ***                     within analysis window (cut cone)
 ***         f_S        signal fraction; percentage of predicted counts
 ***                     expected to be due to signal rather than back-
 ***                     ground.
+***         annrate    Annihilation rate (s^-1) 
+***         logmw      log_10(m_WIMP / GeV)
+***         reset      Reset cached spectral likelihoods (these allow reuse
+***                     for multiple events with the same spectral data).
 ***         logEmin    log10(Emin/GeV), where Emin is the lower energy
 ***                     boundary of the analysis energy range  
 ***         logEmax    log10(Emax/GeV), where Emax is the upper energy
@@ -24,24 +28,25 @@
 *** Modified: Jun 3, 2014
 ***********************************************************************
 
-      double precision function nulike_speclike(nchan,theta_S_input,
-     & f_S,reset,logEmin,logEmax,muonyield)
+      double precision function nulike_speclike(nchan,theta_S,
+     & f_S,annrate,logmw,reset,logEmin,logEmax,muonyield)
 
       implicit none
       include 'nulike.h'
 
       integer nchan
       logical reset, savedSpecLikeFlags(nchan_maxallowed)
-      real*8 theta_S_input, f_S, nulike_simpson, upperLimit
+      real*8 theta_S, f_S, annrate, nulike_simpson, upperLimit
       real*8 signalpartiallike, bgpartiallike, integral, nulike_bgspec
       real*8 nulike_specintegrand, eps, logEmin, logEmax
-      real*8 savedSpecLikes(nchan_maxallowed), muonyield
+      real*8 savedSpecLikes(nchan_maxallowed), muonyield, logmw
       parameter (eps = 1.d-2)
       external muonyield, nulike_specintegrand
       save savedSpecLikeFlags, savedSpecLikes
       
       nchanshare = nchan
-      thetashare = theta_S_input
+      thetashare = theta_S
+      annrateshare = annrate
 
       if (nchan .gt. nchan_maxallowed) 
      & stop 'nchan>nchan_maxallowed in nulike_speclike'
@@ -61,10 +66,10 @@
 
       endif
          
-      if (theta_S_input .ne. 0.d0 .and. log10mwimp .gt. logEmin) then
+      if (theta_S .ne. 0.d0 .and. logmw .gt. logEmin) then
 
-        if (log10mwimp .lt. logEmax) then
-          upperLimit = log10mwimp
+        if (logmw .lt. logEmax) then
+          upperLimit = logmw
         else
           upperLimit = logEmax
         endif

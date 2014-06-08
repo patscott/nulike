@@ -3,11 +3,15 @@
 *** to neutralino annihilation, saving global variables
 *** for later access by likelihood codes.
 ***        
-*** Input:      muonyield       external double function that returns
+*** Input:      muonyield       External double function that returns
 ***                             the differential muon/neutrino flux
 ***                             at the detector in units of m^-2 GeV^-1
-***             like            likelihood type (2012 or 2014)
+***             annrate         Annihilation rate (s^-1) 
+***             logmw           log_10(m_WIMP / GeV)
+***             like            Likelihood type (2012 or 2014)
 ***
+*** Output:     theta_S         predicted number of signal events.
+*** 
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
 *** Date: Apr 22, 2011
 *** Modified: March 6 2014
@@ -15,28 +19,28 @@
 ***********************************************************************
 
 
-      subroutine nulike_signal(muonyield, like)
+      double precision function nulike_signal(muonyield, annrate, logmw, like)
 
       implicit none
       include 'nulike.h'
 
-      real*8 integral, eps, nulike_simpson, nulike_sigintegrand
-      real*8 muonyield, upperLimit
+      real*8 integral, eps, nulike_simpson, nulike_sigintegrand, logmw
+      real*8 muonyield, upperLimit, theta_Snu, theta_Snubar, annrate
       integer like
       parameter (eps = 1.d-3)
       external muonyield, nulike_sigintegrand
  
       if (like .eq. 2012) then
 
-      if (log10mwimp .lt. effArea_logE(1,1,analysis)) then
+      if (logmw .lt. effArea_logE(1,1,analysis)) then
 
         theta_Snu = 0.d0
         theta_Snubar = 0.d0
  
       else
 
-        if (log10mwimp .lt. effArea_logE(2,nBinsEA(analysis),analysis)) then
-          upperLimit = log10mwimp
+        if (logmw .lt. effArea_logE(2,nBinsEA(analysis),analysis)) then
+          upperLimit = logmw
         else
           upperLimit = effArea_logE(2,nBinsEA(analysis),analysis)
         endif
@@ -53,7 +57,7 @@
 
       endif
 
-      theta_S = theta_Snu + theta_Snubar 
+      nulike_signal = theta_Snu + theta_Snubar 
 
       else if (like .eq. 2014) then
 
@@ -68,5 +72,5 @@
 
       endif
 
-      end subroutine nulike_signal
+      end function nulike_signal
 
