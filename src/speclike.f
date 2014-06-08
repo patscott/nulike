@@ -46,7 +46,7 @@
       external nuyield, nulike_specintegrand
       save savedSpecLikeFlags, savedSpecLikes
       
-      nchan_int = anint(nchan)
+      nchan_int = nint(nchan)
       nchanshare = nchan_int
       thetashare = theta_S
       annrateshare = annrate

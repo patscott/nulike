@@ -30,7 +30,7 @@
       ! 2012 likelihood, as per arXiv:1207.0810
       case (2012)
 
-        nchan_int = anint(nchan)
+        nchan_int = nint(nchan)
         nchan_index = nchan_int - nchan_min(analysis) + 1 - nchan_hist2BGoffset(analysis)
         if (BGnchandist_nchan(nchan_index,analysis) .ne. nchan_int) then
           write(*,*) BGnchandist_nchan(nchan_index,analysis), nchan_int, nchan_index
@@ -43,7 +43,7 @@
       case (2014)
 
         !FIXME FIXME
-        nchan_int = anint(nchan)
+        nchan_int = nint(nchan)
         nchan_index = nchan_int - nchan_min(analysis) + 1 - nchan_hist2BGoffset(analysis)
         if (BGnchandist_nchan(nchan_index,analysis) .ne. nchan_int) then
           write(*,*) BGnchandist_nchan(nchan_index,analysis), nchan_int, nchan_index
