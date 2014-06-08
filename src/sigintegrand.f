@@ -1,6 +1,8 @@
 ***********************************************************************
 *** nulike_sigintegrad provides the integrand for computing theta_S,
 *** the number of expected signal events at IceCube.
+*** This routine is used only with the 2012 likelihood.
+***
 *** Input:		log10E		log10(neutrino energy/GeV)
 ***                     nuyield         external double function that returns
 ***                                     the differential neutrino flux

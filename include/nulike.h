@@ -79,7 +79,7 @@
       real*8  hist_sigma(max_nHistograms,max_nnchan,max_analyses)
       integer nchan_hist2BGoffset(max_analyses)
 
-      integer events_nchan(max_nEvents,max_analyses)
+      real*8  events_nchan(max_nEvents,max_analyses)
       real*8  events_cosphi(max_nEvents,max_analyses)
       real*8  events_cosphiErr(max_nEvents,max_analyses)
 
@@ -87,7 +87,7 @@
       real*8  BGpvalPoissonian(max_analyses)
 
       real*8  Eshare, thetashare, annrateshare
-      integer ptypeshare, nchanshare
+      integer ptypeshare, nchanshare, eventnumshare
 
       common /nulike_comm/ events_nchan,events_cosphi,events_cosphiErr,
      & effArea_logE,effArea_nu,theta_BG, BGnchandist_prob,
@@ -102,7 +102,7 @@
      & effArea_staterr, nBinsEA, nBinsBGAng, nEvents, nEvents_in_file,
      & nHistograms, nnchan_total, nchan_min, nchan_max,
      & nchan_hist2BGoffset, FullSkyBG, ptypeshare, nchanshare,
-     & pvalBGPoisComputed, sysErrDist_logNorm,
+     & pvalBGPoisComputed, sysErrDist_logNorm, eventnumshare,
      & analysis, nAnalyses, analysis_name_array, likelihood_version
       save /nulike_comm/
 

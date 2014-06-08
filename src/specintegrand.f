@@ -1,6 +1,7 @@
 ***********************************************************************
 *** nulike_specintegrand provides the integrand for computing the
 *** signal component of the spectral likelihood in nulike_speclike.
+*** This routine is used only with the 2012 likelihood.
 ***
 *** Input:		log10E       log10(neutrino energy/GeV)
 ***                     nuyield      external double function that returns

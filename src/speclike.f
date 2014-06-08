@@ -2,6 +2,7 @@
 *** nulike_speclike returns the contribution of a single event to the 
 *** unbinned likelihood, based on the number of hit DOMs and the
 *** theoretical energy spectrum of incoming neutrinos.
+*** This routine is used only with the 2012 likelihood.
 ***
 *** input:  nchan      observed number of hit DOMs for this event
 ***         theta_S    total predicted number of signal events
@@ -34,22 +35,23 @@
 
       implicit none
       include 'nulike.h'
-
-      integer nchan
+     
       logical reset, savedSpecLikeFlags(nchan_maxallowed)
-      real*8 theta_S, f_S, annrate, nulike_simpson, upperLimit
+      real*8 nchan, theta_S, f_S, annrate, nulike_simpson, upperLimit
       real*8 signalpartiallike, bgpartiallike, integral, nulike_bgspec
       real*8 nulike_specintegrand, eps, logEmin, logEmax
       real*8 savedSpecLikes(nchan_maxallowed), nuyield, logmw
+      integer nchan_int
       parameter (eps = 1.d-2)
       external nuyield, nulike_specintegrand
       save savedSpecLikeFlags, savedSpecLikes
       
-      nchanshare = nchan
+      nchan_int = anint(nchan)
+      nchanshare = nchan_int
       thetashare = theta_S
       annrateshare = annrate
 
-      if (nchan .gt. nchan_maxallowed) 
+      if (nchan_int .gt. nchan_maxallowed) 
      & stop 'nchan>nchan_maxallowed in nulike_speclike'
 
       !Reset saved spectral likelihoods if requested
@@ -60,9 +62,9 @@
       endif
 
       !If a cached result is available, use it - otherwise, calculate...
-      if (savedSpecLikeFlags(nchan)) then
+      if (savedSpecLikeFlags(nchan_int)) then
 
-        nulike_speclike = savedSpecLikes(nchan)
+        nulike_speclike = savedSpecLikes(nchan_int)
         return
 
       endif
@@ -88,11 +90,11 @@
       signalpartiallike = f_S * integral * dlog(10.d0)
 
       !Find the part associated with the background spectrum
-      bgpartiallike = (1.d0-f_S) * nulike_bgspec(nchan)
+      bgpartiallike = (1.d0-f_S) * nulike_bgspec(nchan,2012)
 
       nulike_speclike = dlog(signalpartiallike + bgpartiallike)
-      savedSpecLikeFlags(nchan) = .true.
-      savedSpecLikes(nchan) = nulike_speclike
+      savedSpecLikeFlags(nchan_int) = .true.
+      savedSpecLikes(nchan_int) = nulike_speclike
 
       end function nulike_speclike
 

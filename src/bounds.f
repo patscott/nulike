@@ -14,7 +14,7 @@
 ***                       integer  ptype   1=nu, 2=nubar
 ***                      and returns
 ***                       real*8   differential neutrino flux at the detector
-***                                (m^-2 s^-1 GeV^-1)
+***                                (m^-2 GeV^-1 annihilation^-1)
 ***
 ***        liketype      Sets combination of data to use in likelihood
 ***                         calculations
@@ -64,7 +64,7 @@
 *** Date: Mar 20, 2011
 *** Updated: Jul 21, 2011
 ***          Mar 6, 2014
-***          Jun 3, 6 2014
+***          Jun 3, 6, 8 2014
 ***********************************************************************
 
 
@@ -81,7 +81,8 @@
       real*8 lnlike, pvalue, referenceLike, dof, DGAMIC, DGAMMA, nuyield
       real*8 nLikelihood, angularLikelihood, spectralLikelihood, logmw
       real*8 theta_tot, f_S, nulike_anglike, nulike_speclike, nulike_nlike
-      real*8 deltalnlike, mwimp, annrate, spec_ang_likelihood, nulike_signal
+      real*8 deltalnlike, mwimp, annrate, specAngLikelihood, nulike_signal
+      real*8 nulike_specanglike
       logical pvalFromRef, nulike_speclike_reset, doProfiling
       character (len=*) analysis_name,pref,f1,f2,f3,f4
       external nuyield
@@ -119,6 +120,15 @@
         stop
       endif
       
+      !Make sure the user has not tried to use the 2014 like with only angular or only spectral likelihood.
+      if (likelihood_version(analysis) .eq. 2014 .and. 
+     & (liketype .eq. 2 .or. liketype .eq. 3) ) then
+        write(*,*) "Analysis '"//analysis_name//"' requested of nulike_bounds"
+        write(*,*) 'uses the 2014 likelihood, which is incompatible with liketype = ',liketype
+        write(*,*) 'Quitting...'
+        stop
+      endif 
+
       !Take log of WIMP mass
       logmw = dlog10(mwimp)
 
@@ -166,27 +176,51 @@
       ! 4. Angular and/or spectral likelihood
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      angularLikelihood = 0.d0
-      spectralLikelihood = 0.d0
-      if (liketype .ne. 1) then
-        !Reset the saved spectral likelihoods next time nulike_speclike is run
-        nulike_speclike_reset = .true.
-        !Step through the individual events
-        do j = 1, nEvents(analysis)
-          !Add in angular likelihood for this event
-          if (liketype .eq. 2 .or. liketype .eq. 4) 
-     &     angularLikelihood = angularLikelihood + nulike_anglike(
-     &      events_cosphi(j,analysis),events_cosphiErr(j,analysis),f_S)
-          !Add in spectral likelihood for this event
-          if (liketype .eq. 3 .or. liketype .eq. 4) 
-     &     spectralLikelihood = spectralLikelihood + nulike_speclike(
-     &      events_nchan(j,analysis),theta_S,f_S,annrate,logmw,
-     &      nulike_speclike_reset,
-     &      effArea_logE(1,1,analysis),
-     &      effArea_logE(2,nBinsEA(analysis),analysis),
-     &      nuyield)
-        enddo
-      endif
+      ! Switch according to likelihood version.
+      select case (likelihood_version(analysis))
+
+      ! 2012 likelihood, as per arXiv:1207.0810
+      case (2012)
+        angularLikelihood = 0.d0  
+        spectralLikelihood = 0.d0 
+        if (liketype .ne. 1) then
+          !Reset the saved spectral likelihoods next time nulike_speclike is run
+          nulike_speclike_reset = .true.
+          !Step through the individual events
+          do j = 1, nEvents(analysis)
+            !Add in angular likelihood for this event
+            if (liketype .eq. 2 .or. liketype .eq. 4) 
+     &       angularLikelihood = angularLikelihood + nulike_anglike(
+     &       events_cosphi(j,analysis),events_cosphiErr(j,analysis),f_S)
+            !Add in spectral likelihood for this event
+            if (liketype .eq. 3 .or. liketype .eq. 4) 
+     &       spectralLikelihood = spectralLikelihood + nulike_speclike(
+     &       events_nchan(j,analysis),theta_S,f_S,annrate,logmw,
+     &       nulike_speclike_reset,
+     &       effArea_logE(1,1,analysis),
+     &       effArea_logE(2,nBinsEA(analysis),analysis),
+     &       nuyield)
+          enddo
+        endif
+        specAngLikelihood = angularLikelihood + spectralLikelihood
+
+      !2014 likelihood, as per arXiv:141x.xxxx
+      case (2014)
+        specAngLikelihood = 0.d0
+        if (liketype .eq. 4) then
+          !Step through the individual events
+          do j = 1, nEvents(analysis)          
+            specAngLikelihood = specAngLikelihood + nulike_specanglike(j,
+     &       theta_S, f_S, annrate, logmw, effArea_logE(1,1,analysis), nuyield)
+          enddo
+        endif
+
+      case default
+        write(*,*) "Unrecognised likelihood version in nulike_bounds."
+        write(*,*) "Quitting..."
+        stop
+
+      end select
 
       if (doProfiling) then
         call system_clock(counted2,countrate)
@@ -194,18 +228,13 @@
      &   real(counted2 - counted1)/real(countrate)
       endif  
 
-      !Combine the total spectral and angular likelihoods (if calculated seperately)
-      if (likelihood_version(analysis) .eq. 2012) then
-        spec_ang_likelihood = angularLikelihood + spectralLikelihood
-      endif
-
 
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       ! 5. Combined likelihood
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       !Put together the number, angular and spectral likelihoods
-      lnlike = nLikelihood + spec_ang_likelihood
+      lnlike = nLikelihood + specAngLikelihood
       
 
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

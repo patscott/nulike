@@ -1,7 +1,6 @@
 ***********************************************************************
 *** nulike_signal computes the predicted number of neutrino events due
-*** to neutralino annihilation, saving global variables
-*** for later access by likelihood codes.
+*** to neutralino annihilation.
 ***        
 *** Input:      nuyield         External double function that returns
 ***                             the differential neutrino flux
@@ -9,14 +8,14 @@
 ***                             annihilation^-1
 ***             annrate         Annihilation rate (s^-1) 
 ***             logmw           log_10(m_WIMP / GeV)
-***             like            Likelihood type (2012 or 2014)
+***             like            Likelihood version (2012 or 2014)
 ***
 *** Output:     theta_S         predicted number of signal events.
 *** 
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
 *** Date: Apr 22, 2011
 *** Modified: March 6 2014
-*** Modified: Jun 3, 6 2014
+*** Modified: Jun 3, 6, 8 2014
 ***********************************************************************
 
 
@@ -25,20 +24,25 @@
       implicit none
       include 'nulike.h'
 
-      real*8 integral, eps, nulike_simpson, nulike_sigintegrand, logmw
+      real*8 integral, nulike_simpson, nulike_sigintegrand, logmw
       real*8 nuyield, upperLimit, theta_Snu, theta_Snubar, annrate
+      real*8 nulike_specangintegrand, eps2012, eps2014
       integer like
-      parameter (eps = 1.d-3)
-      external nuyield, nulike_sigintegrand
+      parameter (eps2012 = 1.d-3, eps2014 = 1e-4)
+      external nuyield, nulike_sigintegrand, nulike_specangintegrand
  
-      if (like .eq. 2012) then
-
+      ! Short-circuit if the mass is too low to produce any observable events.
       if (logmw .lt. effArea_logE(1,1,analysis)) then
+        nulike_signal = 0.d0
+        return
+      endif
+      
 
-        theta_Snu = 0.d0
-        theta_Snubar = 0.d0
- 
-      else
+      ! Switch according to likelihood version.
+      select case (like)
+
+      ! 2012 likelihood, as per arXiv:1207.0810
+      case (2012)
 
         if (logmw .lt. effArea_logE(2,nBinsEA(analysis),analysis)) then
           upperLimit = logmw
@@ -46,32 +50,36 @@
           upperLimit = effArea_logE(2,nBinsEA(analysis),analysis)
         endif
 
+        ! Neutrinos
         ptypeshare = 1
         integral = nulike_simpson(nulike_sigintegrand,nuyield,
-     &   effArea_logE(1,1,analysis),upperLimit,eps)
+     &   effArea_logE(1,1,analysis),upperLimit,eps2012)
         theta_Snu = integral * dlog(10.d0) * exp_time(analysis) * annrate
 
+        ! Anti-neutrinos
         ptypeshare = 2
         integral = nulike_simpson(nulike_sigintegrand,nuyield,
-     &   effArea_logE(1,1,analysis),upperLimit,eps)
+     &   effArea_logE(1,1,analysis),upperLimit,eps2012)
         theta_Snubar = integral * dlog(10.d0) * exp_time(analysis) * annrate
 
-      endif
+        ! Total
+        nulike_signal = theta_Snu + theta_Snubar 
 
-      nulike_signal = theta_Snu + theta_Snubar 
+      !2014 likelihood, as per arXiv:141x.xxxx
+      case (2014)
 
-      else if (like .eq. 2014) then
+        eventnumshare = 0 ! Use effective area from previous tabulation.
+        integral = nulike_simpson(nulike_specangintegrand,nuyield,
+     &   effArea_logE(1,1,analysis),logmw,eps2014)
+        nulike_signal = integral * dlog(10.d0) * exp_time(analysis) * annrate
 
-        write(*,*) '2014 likelihood not implemented'
+      case default
+        write(*,*) "Unrecognised likelihood version in nulike_signal."
+        write(*,*) "Quitting..."
         stop
 
-      else 
+      end select
 
-        write(*,*) 'Unrecognised likelihood type in nulike_signal: ',like
-        write(*,*) 'Quitting...'
-        stop
-
-      endif
 
       end function nulike_signal
 

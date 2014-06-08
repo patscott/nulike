@@ -1,6 +1,7 @@
 ***********************************************************************
 *** nulike_dP_SdE provides the differential probability for any neutrino
 *** or anti-neutrino signal event in IceCube to have the energy E.
+*** This routine is used only with the 2012 likelihood.
 ***
 *** Input:	log10E	  log10(neutrino energy/GeV)
 ***		tS_tot	  the total number of signal events expected,

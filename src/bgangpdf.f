@@ -25,7 +25,7 @@
 
       if (IER .lt. 0) then
         write(*,*) 'TSVAL1 error from background spectral'
-        write(*,*) 'distribution in nulike_bgspec, code:', IER
+        write(*,*) 'distribution in nulike_bgangpdf, code:', IER
         stop
       endif
 

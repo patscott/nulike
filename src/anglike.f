@@ -2,6 +2,7 @@
 *** nulike_anglike returns the contribution of a single event to the 
 *** unbinned likelihood, based on the reconstructed angle between
 *** its arrival direction in the detector and the direction of the Sun.
+*** This routine is used only with the 2012 likelihood.
 ***
 *** input:  cosphi     cos(reconstructed angle from solar position)
 ***         parabsigma paraboloid (or other) sigma corresponding to 

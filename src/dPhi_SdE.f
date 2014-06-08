@@ -10,6 +10,7 @@
 ***    total number of epected events (essentially identical regardless
 ***    of whether energy dispersion is included or not)
 *** b) a prefactor, to be weighted by the energy dispersion
+*** This routine is used only with the 2012 likelihood.
 *** 
 *** Input:	log10E		log10(neutrino energy/GeV)
 *** 		ptype	= 1	neutrinos
