@@ -17,8 +17,8 @@
       implicit none
       include 'nulike.h'
 
-      real*8 log10E
-      integer nchan, nchan_index, IER
+      real*8 log10E, nchan
+      integer nchan_index, IER
 
       if (nchan .lt. nchan_min(analysis) .or. nchan .gt. nchan_max(analysis)) then
         write(*,*) 'Error in nulike_edisp: nchan outside'
@@ -26,7 +26,7 @@
         stop
       endif
 
-      nchan_index = nchan - nchan_min(analysis) + 1
+      nchan_index = nint(nchan) - nint(nchan_min(analysis)) + 1
       if (hist_nchan(1,nchan_index,analysis) .ne. nchan) then
         stop'Something is wrong with nchan_index in nulike_edisp'
       endif

@@ -18,7 +18,7 @@
       logical uselogNorm, pvalFromRef                         ! neutrino likelihood
       logical BGLikePrecompute                                ! neutrino likelihood
       character (len=256) iclike2012, iclike2014, experiment  ! neutrino likelihood
-      character (len=256) eventf, edispf, BGf, efaorvf        ! neutrino likelihood
+      character (len=256) eventf, edispf, BGf, efareaf        ! neutrino likelihood
       integer unphys,hwarning,iend,ierr,iwar,nfc              ! bookkeeping
       external nuyield
 
@@ -52,9 +52,9 @@
       ! Here we use the IC-22 data that ships with nulike.
         experiment = 'IC-22'
         eventf  = trim(iclike2012)//'events_10deg_IC22.dat'
-        edispf  = trim(iclike2012)//'energy_histograms_IC22.dat'
         BGf     = trim(iclike2012)//'BG_distributions_IC22.dat'
-        efaorvf = trim(iclike2012)//'nuEffArea_IC22.dat'
+        efareaf = trim(iclike2012)//'nuEffArea_IC22.dat'
+        edispf  = trim(iclike2012)//'energy_histograms_IC22.dat'
 
       ! Set the analysis cut in degrees around the solar position for IC22
       phi_cut = 10.d0
@@ -71,29 +71,29 @@
       BGLikePrecompute = .true.
 
       ! Initialise the IceCube data and calculations for IC22. 
-      call nulike_init(experiment, eventf, edispf, BGf, efaorvf, phi_cut,
+      call nulike_init(experiment, eventf, BGf, efareaf, edispf, phi_cut,
      & theoryError, uselogNorm, BGLikePrecompute)
 
       ! Here we use the IC-86 simulation that ships with nulike
       experiment = 'IC-86 (predicted)'
       eventf  = trim(iclike2012)//'events_20deg_IC86_sim_nosig.dat'
-      edispf  = trim(iclike2012)//'energy_histograms_IC86_sim_dummy.dat'
       BGf     = trim(iclike2012)//'BG_distributions_IC86_sim.dat'
-      efaorvf = trim(iclike2012)//'nuEffArea_IC86_sim.dat'
+      efareaf = trim(iclike2012)//'nuEffArea_IC86_sim.dat'
+      edispf  = trim(iclike2012)//'energy_histograms_IC86_sim_dummy.dat'
 
       ! Set the analysis cut in degrees around the solar position for the IC86 prediction
       phi_cut = 20.d0
 
       ! Initialise the IceCube data and calculations for the IC86 prediction. 
-      call nulike_init(experiment, eventf, edispf, BGf, efaorvf, phi_cut,
-     & theoryError, uselogNorm, BGLikePrecompute)
+      call nulike_init(experiment, eventf, BGf, efareaf, edispf, 
+     & phi_cut, theoryError, uselogNorm, BGLikePrecompute)
 
       ! Here we use the IC79 WH data that ships with nulike.
       !  experiment = 'IC-79 WH'
       !  eventf  = trim(iclike2014)//'IC79_Events_WH_10degrees.dat'
-      !  edispf  = trim(iclike2014)//'IC79_energy_histograms_WH.dat'
       !  BGf     = trim(iclike2014)//'IC79_Background_distributions_WH.dat'
-      !  efaorvf = trim(iclike2014)//'IC79_Effective_Volume_WH.dat'
+      !  efareaf = ignored
+      !  edispf  = ignored
 
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       ! 2. DarkSUSY initialisation and model read-in
@@ -107,7 +107,7 @@
       prtlevel=1
 
       ! Open a file with some SUSY models inside.  See DarkSUSY's dstest for details.
-      open (unit=11,file='test/testmodels.mod')
+      open (unit=11,file='programs/testmodels.mod')
       read (11,*) ! this skips the header
       iend=0
 

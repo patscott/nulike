@@ -47,12 +47,12 @@
       save savedSpecLikeFlags, savedSpecLikes
       
       nchan_int = nint(nchan)
-      nchanshare = nchan_int
+      nchanshare = nchan
       thetashare = theta_S
       annrateshare = annrate
 
       if (nchan_int .gt. nchan_maxallowed) 
-     & stop 'nchan>nchan_maxallowed in nulike_speclike'
+     & stop 'nchan > nchan_maxallowed in nulike_speclike'
 
       !Reset saved spectral likelihoods if requested
       if (reset) then

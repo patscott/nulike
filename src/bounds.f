@@ -88,11 +88,10 @@
       external nuyield
       !Hidden option for doing speed profiling
       parameter (doProfiling = .false.)
-      parameter (pref = 'share/DarkSUSY/IC_data/')
+      parameter (pref = 'data/IceCube/likelihood2014/')
       parameter (f1 = pref//'events_10deg_IC79.dat')
-      parameter (f2 = pref//'energy_histograms_IC79.dat')
-      parameter (f3 = pref//'BG_distributions_IC79.dat')
-      parameter (f4 = pref//'nuEffArea_IC79.dat')
+      parameter (f2 = pref//'BG_distributions_IC79.dat')
+      parameter (f3 = 'dummy', f4 = 'dummy')
         
 
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

@@ -56,7 +56,7 @@
       hist_prob(:,:,analysis) = 0.d0
       do k = 1, nnchan_total(analysis)
         do i = 1, nbins_Ein
-          hist_nchan(i,k,analysis) = k - 1 + nchan_min(analysis)
+          hist_nchan(i,k,analysis) = k - 1 + nint(nchan_min(analysis))
           do j = 1, nbins_nchan(i)
             if (hist_nchan_temp(i,j) .eq. hist_nchan(i,k,analysis)) then
               hist_prob(i,k,analysis) = hist_prob_temp(i,j)

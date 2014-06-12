@@ -8,15 +8,19 @@
 ***   analysis_name     a name by which to refer to this particular analysis.
 ***   eventfile         path to the file containing IceCube event data
 ***                      and total exposure time.
-***   nchandistfile     path to the file containing distributions of
-***                      the number of DOMs in the IceCube detector  
-***                      triggered by neutrinos of different energies.
 ***   BGfile            path to the file containing the distribution
 ***                      of arrival directions and number of hit DOMs
 ***                      for the observed background, as well as the
 ***                      total number of background events.
 ***   effareafile       path to the file containing the IceCube
 ***                      effective area (or volume) and angular resolution.
+***                      Ignored if eventfile indicates that the analysis
+***                      uses the 2014 likelihood.
+***   nchandistfile     path to the file containing distributions of
+***                      the number of DOMs in the IceCube detector  
+***                      triggered by neutrinos of different energies.
+***                      Ignored if eventfile indicates that the analysis
+***                      uses the 2014 likelihood.
 ***   phi_cut	        cutoff angle; likelihoods and p-values will be 
 ***			 based only on events with reconstructed 
 ***			 directions within this angle of the solar centre.
@@ -40,8 +44,8 @@
 ***********************************************************************
 
 
-      subroutine nulike_init(analysis_name, eventfile, nchandistfile, 
-     & BGfile, effareafile, phi_cut, theoryError, uselogNorm, 
+      subroutine nulike_init(analysis_name, eventfile, BGfile, 
+     & effareafile, nchandistfile, phi_cut, theoryError, uselogNorm, 
      & BGLikePrecompute)
 
       implicit none
@@ -96,51 +100,71 @@
       theoryErr(analysis) = theoryError
 
     
-      !Open neutrino effective area/volume file, determine number of bins
-      
-      open(lun,file=effareafile,IOSTAT=IFAIL, ACTION='READ')
+      !Open event file, determine the total number of events and likelihood version
+
+      open(lun,file=eventfile,IOSTAT=IFAIL, ACTION='READ')
       if (IFAIL .ne. 0) then
-        write(*,*) 'Error opening effective area/volume file. ',effareafile,'.'
+        write(*,*) 'Error opening IC event file. ',eventfile,'.'
         write(*,*) 'Quitting...'
         stop
-      endif
+      endif 
 
       instring = '#'
-      do while (instring .eq. '#')
-        read(lun, fmt='(A1,I1)'), instring        
+      do while (instring .ne. '###--Likelihood--')
+        read(lun, fmt=*) instring
       enddo
 
-      if (instring .ne. 'B') then
-        write(*,*) 'Bad format in effective area/volume file ',effareafile,'.'
+      read(lun, fmt=*) instring, instring2
+
+      if (instring .ne. '[v]') then
+        write(*,*) 'Bad format in IC event file ',eventfile,'.'
         write(*,*) 'First non-comment line begins with: ',instring
         write(*,*) 'Quitting...'
         stop
       endif 
-      
-      nBinsEA(analysis) = 0
+
+      read(instring2, fmt='(I4)') likelihood_version(analysis)
+
+      do while (instring .ne. '###--Exposure--')
+        read(lun, fmt=*) instring
+      enddo
+
+      read(lun, fmt=*) instring, instring2
+
+      if (instring(1:3) .ne. '[t]') then
+        write(*,*) 'Bad format in IC event file ',eventfile,'.'
+        write(*,*) 'Second non-comment line begins with: ',instring
+        write(*,*) 'Quitting...'
+        stop
+      endif 
+
+      read(instring2, fmt=*) exp_time(analysis)
+
       do
-        do i = 1,5
-          read(lun, fmt=*, IOSTAT=IFAIL, END=10), instring
-        enddo
-        read(lun, fmt=*, IOSTAT=IFAIL, END=10) instring, nBinsEA(analysis)
+        read(lun, fmt=*, IOSTAT=IFAIL, END=30) instring
+        read(lun, fmt=*, IOSTAT=IFAIL, END=30) instring, nEvents_in_file(analysis)
         if (IFAIL .ne. 0) then
-         write(*,*) 'Bad format in effective area/volume file ',effareafile,'.'
+         write(*,*) 'Bad format in IC event file.',eventfile,'.'
          write(*,*) 'Quitting...'
          stop
         endif
+        do i = 1,3
+          read(lun, fmt=*, IOSTAT=IFAIL, END=30), instring
+        enddo
       enddo
 
-10    close(lun)
+30    close(lun)
       
-      nBinsEA(analysis) = nBinsEA(analysis) + 1
-
-      if (nBinsEA(analysis) .gt. max_nBinsEA) then
-        write(*,*) 'Effective area/volume file contains more bins than'
+      if (nEvents_in_file(analysis) .gt. max_nEvents) then
+        write(*,*) 'Event file '//trim(eventfile)//' contains more bins than'
         write(*,*) 'nulike has been configured to handle.'
         write(*,*) 'Increase max_nEffAreaBins in nulike.h and' 
         write(*,*) 'recompile.'
         stop
       endif
+
+      !Read in the actual details of all events.
+      call nulike_eventinit(eventfile, nEvents_in_file(analysis))
 
 
       !Open background file, determine numbers of bins for angular 
@@ -212,154 +236,162 @@
       endif
 
 
-      !Open event file, determine the total number of events
+      ! Switch according to likelihood version.
+      select case (likelihood_version(analysis))
 
-      open(lun,file=eventfile,IOSTAT=IFAIL, ACTION='READ')
-      if (IFAIL .ne. 0) then
-        write(*,*) 'Error opening IC event file. ',eventfile,'.'
-        write(*,*) 'Quitting...'
-        stop
-      endif 
+      ! 2012 likelihood, as per arXiv:1207.0810 (load the effective area, PSF and energy dispersion.)
+      case (2012)
 
-      instring = '#'
-      do while (instring .ne. '###--Likelihood--')
-        read(lun, fmt=*) instring
-      enddo
-
-      read(lun, fmt=*) instring, instring2
-
-      if (instring .ne. '[v]') then
-        write(*,*) 'Bad format in IC event file ',eventfile,'.'
-        write(*,*) 'First non-comment line begins with: ',instring
-        write(*,*) 'Quitting...'
-        stop
-      endif 
-
-      read(instring2, fmt='(I4)') likelihood_version(analysis)
-
-      do while (instring .ne. '###--Exposure--')
-        read(lun, fmt=*) instring
-      enddo
-
-      read(lun, fmt=*) instring, instring2
-
-      if (instring(1:3) .ne. '[t]') then
-        write(*,*) 'Bad format in IC event file ',eventfile,'.'
-        write(*,*) 'Second non-comment line begins with: ',instring
-        write(*,*) 'Quitting...'
-        stop
-      endif 
-
-      read(instring2, fmt=*) exp_time(analysis)
-
-      do
-        read(lun, fmt=*, IOSTAT=IFAIL, END=30) instring
-        read(lun, fmt=*, IOSTAT=IFAIL, END=30) instring, nEvents_in_file(analysis)
-        if (IFAIL .ne. 0) then
-         write(*,*) 'Bad format in IC event file.',eventfile,'.'
-         write(*,*) 'Quitting...'
-         stop
-        endif
-        do i = 1,3
-          read(lun, fmt=*, IOSTAT=IFAIL, END=30), instring
-        enddo
-      enddo
-
-30    close(lun)
+        !Open neutrino effective area/volume file, determine number of bins
       
-      if (nEvents_in_file(analysis) .gt. max_nEvents) then
-        write(*,*) 'Event file '//trim(eventfile)//' contains more bins than'
-        write(*,*) 'nulike has been configured to handle.'
-        write(*,*) 'Increase max_nEffAreaBins in nulike.h and' 
-        write(*,*) 'recompile.'
-        stop
-      endif
-
-      !Open file of nchan response histograms (energy dispersions), determine how many histograms
-      !and how many bins in each histogram.
-
-      open(lun,file=nchandistfile,IOSTAT=IFAIL, ACTION='READ')
-      if (IFAIL .ne. 0) then
-        write(*,*) 'Error opening IC nchan distribution'
-        write(*,*) ' file. ',nchandistfile,'. Quitting...'
-        stop
-      endif
-
-      instring = '#'
-      do while (instring .eq. '#')
-        read(lun, fmt='(A1)'), instring
-      enddo
-
-      if (instring .ne. 'H') then
-        write(*,*) 'Bad format in IC nchan histogram file'
-        write(*,*) nchandistfile,'.'
-        write(*,*) 'First non-comment line begins with: ',instring
-        write(*,*) 'Quitting...'
-        stop
-      endif 
-        
-      nchan_min(analysis) = ridiculousNumberOfChannels
-      nchan_max(analysis) = 0
-      nHistograms(analysis) = 0
-
-      do
-
-        read(lun, fmt='(A20)', IOSTAT=IFAIL, END=40) instring
-
-        if (instring(1:1) .eq. 'h') then
-          read(instring, fmt=*, IOSTAT=IFAIL) instring2, 
-     &     nnchan(nHistograms(analysis)+1), nchan
-          if (nchan .lt. nchan_min(analysis)) nchan_min(analysis) = nchan
-          if (nchan .gt. nchan_max(analysis)) nchan_max(analysis) = nchan
-        else if (instring(1:1) .eq. 'H') then
-          read(instring, fmt=*, IOSTAT=IFAIL) instring2, nHistograms(analysis)
-          nnchan(nHistograms(analysis)) = nnchan(nHistograms(analysis)) + 1
-        endif     
-
+        open(lun,file=effareafile,IOSTAT=IFAIL, ACTION='READ')
         if (IFAIL .ne. 0) then
-        write(*,*) 'Bad format in IC nchan histogram file'
-        write(*,*) nchandistfile,'.'
-        write(*,*) 'Quitting...'
-        stop
+          write(*,*) 'Error opening effective area/volume file. ',effareafile,'.'
+          write(*,*) 'Quitting...'
           stop
         endif
 
-      enddo
+        instring = '#'
+        do while (instring .eq. '#')
+          read(lun, fmt='(A1,I1)'), instring        
+        enddo
 
-40    close(lun)
-
-      nnchan_total(analysis) = nchan_max(analysis) - nchan_min(analysis) + 1
-
-      if (nnchan_total(analysis) .gt. max_nnchan) then
-        write(*,*) 'IC nchan histogram file contains more'
-        write(*,*) 'nchan values than nulike has'
-        write(*,*) 'been configured to handle.  Increase' 
-        write(*,*) 'max_nnchan in nulike.h and recompile.'
-        stop
-      endif
-
-      nHistograms(analysis) = nHistograms(analysis) + 1
-      nnchan(nHistograms(analysis)) = nnchan(nHistograms(analysis)) + 1
+        if (instring .ne. 'B') then
+          write(*,*) 'Bad format in effective area/volume file ',effareafile,'.'
+          write(*,*) 'First non-comment line begins with: ',instring
+          write(*,*) 'Quitting...'
+          stop
+        endif 
       
-      if (nHistograms(analysis) .gt. max_nHistograms) then
-        write(*,*) 'IC nchan histogram file contains more histograms'
-        write(*,*) 'than nulike has been configured to handle.'
-        write(*,*) 'Increase max_nHistograms in nulike.h and' 
-        write(*,*) 'recompile.'
-        stop
-      endif
+        nBinsEA(analysis) = 0
+        do
+          do i = 1,5
+            read(lun, fmt=*, IOSTAT=IFAIL, END=10), instring
+          enddo
+          read(lun, fmt=*, IOSTAT=IFAIL, END=10) instring, nBinsEA(analysis)
+          if (IFAIL .ne. 0) then
+           write(*,*) 'Bad format in effective area/volume file ',effareafile,'.'
+           write(*,*) 'Quitting...'
+           stop
+          endif
+        enddo
+
+10      close(lun)
       
-      !Read in the actual effective area/volume data. 
-      call nulike_eainit(effareafile,nBinsEA(analysis))
+        nBinsEA(analysis) = nBinsEA(analysis) + 1
 
-      !Read in the actual background data
-      call nulike_bginit(BGfile, nBinsBGAng(analysis), nBinsBGE, BGfirst, BGsecond)
+        if (nBinsEA(analysis) .gt. max_nBinsEA) then
+          write(*,*) 'Effective area/volume file contains more bins than'
+          write(*,*) 'nulike has been configured to handle.'
+          write(*,*) 'Increase max_nEffAreaBins in nulike.h and' 
+          write(*,*) 'recompile.'
+          stop
+        endif
 
-      !Read in the actual nchan response histograms and rearrange them into energy dispersion estimators
-      call nulike_edispinit(nchandistfile, nHistograms(analysis), nnchan)
+        !Read in the actual effective area and PSF data. 
+        call nulike_eainit(effareafile,nBinsEA(analysis))
 
-      !Read in the actual details of all events.
-      call nulike_eventinit(eventfile, nEvents_in_file(analysis))
+
+        !Open file of nchan response histograms (energy dispersions), determine how many histograms
+        !and how many bins in each histogram.
+
+        open(lun,file=nchandistfile,IOSTAT=IFAIL, ACTION='READ')
+        if (IFAIL .ne. 0) then
+          write(*,*) 'Error opening IC nchan distribution'
+          write(*,*) ' file. ',nchandistfile,'. Quitting...'
+          stop
+        endif
+
+        instring = '#'
+        do while (instring .eq. '#')
+          read(lun, fmt='(A1)'), instring
+        enddo
+
+        if (instring .ne. 'H') then
+          write(*,*) 'Bad format in IC nchan histogram file'
+          write(*,*) nchandistfile,'.'
+          write(*,*) 'First non-comment line begins with: ',instring
+          write(*,*) 'Quitting...'
+          stop
+        endif 
+        
+        nchan_min(analysis) = dble(ridiculousNumberOfChannels)
+        nchan_max(analysis) = 0.d0
+        nHistograms(analysis) = 0
+
+        do
+
+          read(lun, fmt='(A20)', IOSTAT=IFAIL, END=40) instring
+
+          if (instring(1:1) .eq. 'h') then
+            read(instring, fmt=*, IOSTAT=IFAIL) instring2, 
+     &       nnchan(nHistograms(analysis)+1), nchan
+            if (nchan .lt. nint(nchan_min(analysis))) nchan_min(analysis) = dble(nchan)
+            if (nchan .gt. nint(nchan_max(analysis))) nchan_max(analysis) = dble(nchan)
+          else if (instring(1:1) .eq. 'H') then
+            read(instring, fmt=*, IOSTAT=IFAIL) instring2, nHistograms(analysis)
+            nnchan(nHistograms(analysis)) = nnchan(nHistograms(analysis)) + 1
+          endif     
+
+          if (IFAIL .ne. 0) then
+            write(*,*) 'Bad format in energy dispersion histogram file'
+            write(*,*) nchandistfile,'.'
+            write(*,*) 'Quitting...'
+            stop
+          endif
+
+        enddo
+
+40      close(lun)
+
+        nnchan_total(analysis) = nint(nchan_max(analysis) - nchan_min(analysis)) + 1
+
+        if (nnchan_total(analysis) .gt. max_nnchan) then
+          write(*,*) 'IC nchan histogram file contains more'
+          write(*,*) 'nchan values than nulike has'
+          write(*,*) 'been configured to handle.  Increase' 
+          write(*,*) 'max_nnchan in nulike.h and recompile.'
+          stop
+        endif
+
+        nHistograms(analysis) = nHistograms(analysis) + 1
+        nnchan(nHistograms(analysis)) = nnchan(nHistograms(analysis)) + 1
+      
+        if (nHistograms(analysis) .gt. max_nHistograms) then
+          write(*,*) 'IC nchan histogram file contains more histograms'
+          write(*,*) 'than nulike has been configured to handle.'
+          write(*,*) 'Increase max_nHistograms in nulike.h and' 
+          write(*,*) 'recompile.'
+          stop
+        endif
+      
+        !Read in the actual background data
+        call nulike_bginit(BGfile, nBinsBGAng(analysis), nBinsBGE, BGfirst, BGsecond, likelihood_version(analysis))
+
+        !Read in the actual nchan response histograms and rearrange them into energy dispersion estimators
+        call nulike_edispinit(nchandistfile, nHistograms(analysis), nnchan)
+
+
+      !2014 likelihood, as per arXiv:141x.xxxx (load the precalculated effective area and partial likelihoods.)
+      case (2014)!FIXME
+
+        !Read in the actual background data
+        call nulike_bginit(BGfile, nBinsBGAng(analysis), nBinsBGE, BGfirst, BGsecond, likelihood_version(analysis))
+
+        !Set nchan_min and nchan_max
+        !do it from vector of nchan abcissae for bg spectrum
+
+        !Read in the partial likelihoods
+        !call nulike_bgspecanginit()
+
+      case default
+        write(*,*) "Unrecognised likelihood version in nulike_init."
+        write(*,*) "Quitting..."
+        stop
+
+      end select
+
+
 
       !Calculate the expected background count.
       call nulike_bgpredinit

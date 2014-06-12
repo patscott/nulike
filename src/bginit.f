@@ -20,7 +20,7 @@
 ***********************************************************************
 
       subroutine nulike_bginit(filename, nbins_angular, nbins_nchan, 
-     & first, second)
+     & first, second, like)
 
       implicit none
       include 'nulike.h'
@@ -29,7 +29,7 @@
       character (len=200) instring
       character (len=15) headerstring
       integer nbins_angular, nbins_nchan, counts(3), IER
-      integer i, j, dummyint, first, second, indices(3)
+      integer i, j, dummyint, first, second, indices(3), like
       real*8 dummyfloat1, dummyfloat2
       real*8 BGangdist_phi_temp(max_nBinsBGAng)
       real*8 BGangdist_prob_temp(max_nBinsBGAng)
@@ -71,7 +71,7 @@
               BGangdist_prob_temp(j) = dummyfloat2
             else
               !Read in observed distribution of nchan (energies)
-              BGnchandist_nchan(j,analysis) = int(dummyfloat1)
+              BGnchandist_nchan(j,analysis) = dummyfloat1
               BGnchandist_prob(j,analysis) = dummyfloat2
             endif
           else
@@ -84,40 +84,39 @@
 
       close(lun)
 
-      !Throw a warning if energy dispersion files don't go low enough
-      !in nchan to cover whole tabulated range in BG file, and then mark
-      !them for extension.
-      if (nchan_min(analysis) .gt. BGnchandist_nchan(1,analysis)) then
-       ! write(*,*) 'Warning from nulike_bginit: nchan
-     & !values in the observed background spectrum go below
-     & !the range tabulated in the energy dispersion histograms.
-     & !Assuming zeros for histograms entries outside given range.'
-        nchan_min(analysis) = BGnchandist_nchan(1,analysis)
-      endif
+      ! Switch according to likelihood version.
+      select case (like)
 
-      !Throw a warning if energy dispersion files don't go high enough
-      !in nchan to cover whole tabulated range in BG file, and then mark
-      !them for extension.
-      if (nchan_max(analysis) .lt. BGnchandist_nchan(nbins_nchan,analysis)) then
-       ! write(*,*) 'Warning from nulike_bginit: nchan
-     & !values in the observed background spectrum go above
-     & !the range tabulated in the energy dispersion histograms.
-     & !Assuming zeros for histograms entries outside given range.'
-        nchan_max(analysis) = BGnchandist_nchan(nbins_nchan,analysis)
-      endif
+      ! 2012 likelihood, as per arXiv:1207.0810
+      case (2012)
+        !If the energy dispersion files don't go high or low enough in nchan
+        !to cover the whole tabulated range in the BG file, mark them for extension.
+        if (nchan_min(analysis) .gt. BGnchandist_nchan(1,analysis)) 
+     &   nchan_min(analysis) = BGnchandist_nchan(1,analysis)
+        if (nchan_max(analysis) .lt. BGnchandist_nchan(nbins_nchan,analysis))
+     &   nchan_max(analysis) = BGnchandist_nchan(nbins_nchan,analysis)
+        !Reset nnchan_total
+        nnchan_total(analysis) = nint(nchan_max(analysis) - nchan_min(analysis)) + 1
+        !Make sure we didn't break everything
+        if (nnchan_total(analysis) .gt. max_nnchan) then
+          write(*,*)
+          write(*,*) 'Extension of histograms gives more nchan values'
+          write(*,*) 'than nulike has been configured to handle.  '
+          write(*,*) 'Increase max_nnchan in nulike.h and recompile.'
+          write(*,*)
+          call exit(0)
+        endif
 
-      !Reset nnchan_total
-      nnchan_total(analysis) = nchan_max(analysis) - nchan_min(analysis) + 1
+      !2014 likelihood, as per arXiv:141x.xxxx (Set up interpolation in distribution of the energy estimator.)
+      case (2014)
+        !FIXME
 
-      !Make sure we didn't break everything
-      if (nnchan_total(analysis) .gt. max_nnchan) then
-        write(*,*)
-        write(*,*) 'Extension of histograms gives more nchan values'
-        write(*,*) 'than nulike has been configured to handle.  '
-        write(*,*) 'Increase max_nnchan in nulike.h and recompile.'
-        write(*,*)
-        call exit(0)
-      endif
+      case default
+        write(*,*) "Unrecognised likelihood version in nulike_bginit."
+        write(*,*) "Quitting..."
+        stop
+
+      end select
       
 
       !Set up interpolation in angular distribution

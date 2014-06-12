@@ -47,8 +47,8 @@
 
       integer nBinsEA(max_analyses), nBinsBGAng(max_analyses)
       integer nEvents(max_analyses), nEvents_in_file(max_analyses)
-      integer nHistograms(max_analyses), nchan_min(max_analyses)
-      integer nchan_max(max_analyses), nnchan_total(max_analyses)
+      integer nHistograms(max_analyses), nnchan_total(max_analyses)
+      real*8  nchan_min(max_analyses), nchan_max(max_analyses) 
 
       real*8 effArea_logE(2,max_nBinsEA,max_analyses)
       real*8 effArea_logEcentres(max_nBinsEA,max_analyses)
@@ -69,7 +69,7 @@
       real*8  BGangdist_derivs(max_nBinsBGAng,max_analyses)
       real*8  BGangdist_sigma(max_nBinsBGAng,max_analyses)
       real*8  BGangdist_norm(max_analyses), BGangdist_conenorm(max_analyses)
-      integer BGnchandist_nchan(max_nBinsBGE,max_analyses)
+      real*8  BGnchandist_nchan(max_nBinsBGE,max_analyses)
       real*8  BGnchandist_prob(max_nBinsBGE,max_analyses)
       integer FullSkyBG(max_analyses)
 
@@ -97,8 +97,8 @@
       real*8 precompEA_derivs(max_nPrecompE,2,max_analyses)
       real*8 precompEA_sigma(max_nPrecompE,2,max_analyses)
 
-      real*8  Eshare, thetashare, annrateshare
-      integer ptypeshare, nchanshare, eventnumshare
+      real*8  Eshare, thetashare, annrateshare, nchanshare
+      integer ptypeshare, eventnumshare
 
       common /nulike_comm/ events_nchan,events_cosphi,events_cosphiErr,
      & effArea_logE,effArea_nu,theta_BG, BGnchandist_prob,
@@ -114,7 +114,7 @@
      & precomp_sigma, precompEA_weights, precompEA_derivs, 
      & precompEA_sigma, nBinsEA, nBinsBGAng, nEvents, nEvents_in_file,
      & nPrecompE, nHistograms, nnchan_total, nchan_min, nchan_max,
-     & nchan_hist2BGoffset, FullSkyBG, ptypeshare, nchanshare,
+     & nchanshare, nchan_hist2BGoffset, FullSkyBG, ptypeshare,
      & pvalBGPoisComputed, sysErrDist_logNorm, eventnumshare,
      & analysis, nAnalyses, analysis_name_array, likelihood_version
       save /nulike_comm/
