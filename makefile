@@ -11,7 +11,7 @@ INC=include
 BUILD=build
 SRC=src
 LIB=lib
-TEST=test
+PROGS=programs
 TSPACK=contrib/TSPACK
 
 # Define fortran compiler and options
@@ -75,11 +75,11 @@ libnulike.a : $(OBJ)
 libnulike.so : $(OBJ)
 	$(FC) -shared -o $(LIB)/$@ $(OBJ)
 
-nulike_prep : libnulike.a $(TEST)/nulike_prep.f
-	$(FC) $(FOPT) -I$(NUSIGINC) -o $@ $(TEST)/nulike_prep.f -L$(NUSIGDIR) -static -l$(NUSIGNAME) -L$(LIB) -static -lnulike
+nulike_prep : libnulike.a $(PROGS)/nulike_prep.f
+	$(FC) $(FOPT) -I$(NUSIGINC) -o $@ $(PROGS)/nulike_prep.f -L$(NUSIGDIR) -static -l$(NUSIGNAME) -L$(LIB) -static -lnulike
 
-nulike_test : libnulike.a $(TEST)/nulike_test.f
-	$(FF) $(FOPT) -I$(DSLIBINC) -o $@ $(TEST)/nulike_test.f -L$(DSLIBDIR) -static -l$(DSLIBNAME) -lHB -lFH -L$(LIB) -static -lnulike -lisospin
+nulike_test : libnulike.a $(PROGS)/nulike_test.f
+	$(FF) $(FOPT) -I$(DSLIBINC) -o $@ $(PROGS)/nulike_test.f -L$(DSLIBDIR) -static -l$(DSLIBNAME) -lHB -lFH -L$(LIB) -static -lnulike -lisospin
 
 clean : 
 	rm -f $(BUILD)/* tspack.f Key.dat nulike_test nulike_prep
