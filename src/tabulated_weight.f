@@ -25,8 +25,35 @@
       include 'nulike.h'
 
       real*8 log10E
-      integer ptype, eventnum
+      integer ptype, eventnum, IER
 
-      nulike_tabulated_weight = 1.d0
+
+      if (eventnum .eq. 0) then 
+
+        !Call interpolator to get effective area for this energy
+        call TSVAL1(nPrecompE(analysis),precomp_energies(:,analysis),
+     &   precompEA_weights(:,ptype,analysis),
+     &   precompEA_derivs(:,ptype,analysis),
+     &   precompEA_sigma(:,ptype,analysis),
+     &   0,1,log10E,nulike_tabulated_weight,IER)
+
+      else
+
+        !Call interpolator for this event to get weight for this energy
+        call TSVAL1(nPrecompE(analysis),precomp_energies(:,analysis),
+     &   precomp_weights(:,eventnum,ptype,analysis),
+     &   precomp_derivs(:,eventnum,ptype,analysis),
+     &   precomp_sigma(:,eventnum,ptype,analysis),
+     &   0,1,log10E,nulike_tabulated_weight,IER)
+
+      endif
+
+      if (nulike_tabulated_weight .lt. 0.d0) nulike_tabulated_weight = 0.d0
+
+      if (IER .lt. 0) then
+        write(*,*) 'TSVAL1 error from weight or effective area'
+        write(*,*) 'in nulike_tabulated_weight, code:', IER
+        stop
+      endif
 
       end function nulike_tabulated_weight

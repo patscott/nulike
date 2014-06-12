@@ -9,6 +9,8 @@
 !----------------------------------------------------------------------c
 !  author: Pat Scott (patscott@physics.mcgill.ca), March 26 2011, June 3, 6 2014
 
+      include 'nucommon.h'
+
       integer lun, ridiculousNumberOfChannels
       integer max_nBinsEA,max_nBinsBGAng,max_nBinsBGE,max_nEvents
       integer max_nHistograms,max_nnchan,nchan_maxallowed,max_analyses
@@ -86,6 +88,15 @@
       logical pvalBGPoisComputed(max_analyses)
       real*8  BGpvalPoissonian(max_analyses)
 
+      integer nPrecompE(max_nPrecompE)
+      real*8 precomp_energies(max_nPrecompE,max_analyses)
+      real*8 precomp_weights(max_nPrecompE,max_nEvents,2,max_analyses)
+      real*8 precomp_derivs(max_nPrecompE,max_nEvents,2,max_analyses)
+      real*8 precomp_sigma(max_nPrecompE,max_nEvents,2,max_analyses)
+      real*8 precompEA_weights(max_nPrecompE,2,max_analyses)
+      real*8 precompEA_derivs(max_nPrecompE,2,max_analyses)
+      real*8 precompEA_sigma(max_nPrecompE,2,max_analyses)
+
       real*8  Eshare, thetashare, annrateshare
       integer ptypeshare, nchanshare, eventnumshare
 
@@ -99,8 +110,10 @@
      & effArea_AngRes, exp_time, Eshare, thetashare, annrateshare, 
      & BGangdist_conenorm, hist_LogE, hist_logEcentres, hist_nchan,
      & hist_prob, hist_derivs, hist_sigma, effArea_nubar,effArea_syserr,
-     & effArea_staterr, nBinsEA, nBinsBGAng, nEvents, nEvents_in_file,
-     & nHistograms, nnchan_total, nchan_min, nchan_max,
+     & effArea_staterr, precomp_energies, precomp_weights, precomp_derivs,
+     & precomp_sigma, precompEA_weights, precompEA_derivs, 
+     & precompEA_sigma, nBinsEA, nBinsBGAng, nEvents, nEvents_in_file,
+     & nPrecompE, nHistograms, nnchan_total, nchan_min, nchan_max,
      & nchan_hist2BGoffset, FullSkyBG, ptypeshare, nchanshare,
      & pvalBGPoisComputed, sysErrDist_logNorm, eventnumshare,
      & analysis, nAnalyses, analysis_name_array, likelihood_version
