@@ -12,28 +12,48 @@
 *** Modified: Jun 7, 15 2014
 ***********************************************************************
 
-      real*8 function nulike_edisp(log10E, ee)
+      real*8 function nulike_edisp(log10E, ee, like)
 
       implicit none
       include 'nulike.h'
+      include 'nuprep.h'
 
       real*8 log10E, ee
-      integer nchan_index, IER
+      integer nchan_index, IER, like
 
-      if (ee .lt. ee_min(analysis) .or. ee .gt. ee_max(analysis)) then
-        write(*,*) 'Error in nulike_edisp: energy estimator outside'
-        write(*,*) 'tabulated range: ee=',ee,'.  Quitting...'
+      !Switch according to likelihood version.
+      select case (like)
+
+      !2012 likelihood, as per arXiv:1207.0810
+      case (2012)
+
+        if (ee .lt. ee_min(analysis) .or. ee .gt. ee_max(analysis)) then
+          write(*,*) 'Error in nulike_edisp: energy estimator outside'
+          write(*,*) 'tabulated range: ee=',ee,'.  Quitting...'
+          stop
+        endif
+
+        nchan_index = nint(ee) - nint(ee_min(analysis)) + 1
+        if (hist_nchan(1,nchan_index,analysis) .ne. nint(ee)) then
+          stop'Something is wrong with nchan_index in nulike_edisp'
+        endif
+
+        call TSVAL1(nHistograms(analysis),hist_logEcentres(:,analysis),
+     &   hist_prob(:,nchan_index,analysis),hist_derivs(:,nchan_index,analysis),
+     &   hist_sigma(:,nchan_index,analysis),0,1,log10E,nulike_edisp,IER)
+
+      !2014 likelihood, as per arXiv:141x.xxxx
+      case (2014)
+
+        call TSVAL1(nhist,hist_logEnergies,hist_single_ee_prob,
+     &   hist_single_ee_derivs,hist_single_ee_sigma,0,1,log10E,nulike_edisp,IER)
+
+      case default
+        write(*,*) "Unrecognised likelihood version in nulike_init."
+        write(*,*) "Quitting..."
         stop
-      endif
 
-      nchan_index = nint(ee) - nint(ee_min(analysis)) + 1
-      if (hist_nchan(1,nchan_index,analysis) .ne. nint(ee)) then
-        stop'Something is wrong with nchan_index in nulike_edisp'
-      endif
-
-      call TSVAL1(nHistograms(analysis),hist_logEcentres(:,analysis),
-     & hist_prob(:,nchan_index,analysis),hist_derivs(:,nchan_index,analysis),
-     & hist_sigma(:,nchan_index,analysis),0,1,log10E,nulike_edisp,IER)
+      end select
 
       if (nulike_edisp .lt. 0.d0) nulike_edisp = 0.d0
 

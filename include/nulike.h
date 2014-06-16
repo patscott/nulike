@@ -77,8 +77,7 @@
       real*8 precompEA_derivs(max_nPrecompE,2,max_analyses)
       real*8 precompEA_sigma(max_nPrecompE,2,max_analyses)
 
-      real*8  Eshare, thetashare, annrateshare, nchanshare
-      integer ptypeshare, eventnumshare
+      real*8  thetashare, annrateshare, nchanshare
 
       common /nulike_comm/ events_nchan,events_cosphi,events_cosphiErr,
      & sens_logE,sens_nu,theta_BG, BGeedist_prob,
@@ -87,15 +86,15 @@
      & sens_AngRessigma, BGangdist_derivs, BGangdist_sigma,
      & BGangdist_phi, BGangdist_prob, BGeedist_ee,
      & phi_max_deg, theoryErr, EAErr, BGpvalPoissonian, BGangdist_norm,
-     & sens_AngRes, exp_time, Eshare, thetashare, annrateshare, 
+     & sens_AngRes, exp_time, thetashare, annrateshare, 
      & BGangdist_conenorm, hist_LogE, hist_logEcentres, hist_nchan,
      & hist_prob, hist_derivs, hist_sigma, sens_nubar,sens_syserr,
      & sens_staterr, precomp_energies, precomp_weights, precomp_derivs,
      & precomp_sigma, precompEA_weights, precompEA_derivs, 
      & precompEA_sigma, nSensBins, nBinsBGAng, nEvents, nEvents_in_file,
      & nPrecompE, nHistograms, nnchan_total, ee_min, ee_max,
-     & nchanshare, nchan_hist2BGoffset, FullSkyBG, ptypeshare,
-     & pvalBGPoisComputed, sysErrDist_logNorm, eventnumshare,
+     & nchanshare, nchan_hist2BGoffset, FullSkyBG,
+     & pvalBGPoisComputed, sysErrDist_logNorm,
      & analysis_name_array, likelihood_version
       save /nulike_comm/
 

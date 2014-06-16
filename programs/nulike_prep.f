@@ -11,19 +11,19 @@
       include 'nucommon.h'
       include 'nuprep.h'
 
-      character (len=300) files(5)
-      real*8 phi_cut
-      integer i, gotarg
+      character (len=300) files(8)
+      real*8 phi_cut, lEmin, lEmax
+      integer i, gotarg, nE
 
       !Check that the correct number of arguments have been passed on the command line
-      if (command_argument_count() .ne. 5) then
+      if (command_argument_count() .ne. 8) then
         write(*,*)
-        write(*,*) 'Usage: nulike_prep f1 f2 f3 f4 angle'
+        write(*,*) 'Usage: nulike_prep f1 f2 f3 f4 nE lEmin lEmax angle'
         write(*,*)
-        write(*,*) '   f1  path to the file containing IceCube event data '
+        write(*,*) '   f1  path to the file containing event data '
         write(*,*) '       and total exposure time.'
         write(*,*)
-        write(*,*) '   f2  path to the file containing the IceCube'
+        write(*,*) '   f2  path to the file containing the detector'
         write(*,*) '       effective volume and angular resolution.'
         write(*,*)
         write(*,*) '   f3  path to the file containing distributions of'
@@ -35,6 +35,13 @@
         write(*,*) '       with the results of the partial likelihood'
         write(*,*) '       calculation.'
         write(*,*)
+        write(*,*) '  nE   number of neutrino energies to tabluate the'
+        write(*,*) '       partial likelihoods for.'
+        write(*,*)
+        write(*,*) 'lEmin  log10(lower neutrino energy in GeV for tabulation)' 
+        write(*,*)
+        write(*,*) 'lEmax  log10(upper neutrino energy in GeV for tabulation)'        
+        write(*,*)
         write(*,*) 'angle  cutoff angle; likelihoods and p-values will be '
         write(*,*) '       based only on events with reconstructed '
         write(*,*) '       directions within this angle of the solar centre.'
@@ -44,14 +51,17 @@
       endif
 
       !Retrieve command-line arguments
-      do i = 1, 5
+      do i = 1, 8
         call get_command_argument(i,files(i),status=gotarg)
         if (gotarg .ne. 0) stop 'Error parsing command-line arg in nulike_prep.'
       enddo
-      read(files(5),*) phi_cut
+      read(files(5),*) nE
+      read(files(6),*) lEmin
+      read(files(7),*) lEmax
+      read(files(8),*) phi_cut
 
       !Compute the partial likelihoods and output them in partialfile
       call nulike_partials(trim(files(1)),trim(files(2)),trim(files(3)),
-     & trim(files(4)),phi_cut)
+     & trim(files(4)),nE,lEmin,lEmax,phi_cut)
 
       end program nulike_prep

@@ -98,10 +98,10 @@
       call nulike_preparse_bgfile(BGfile, nBinsBGAng(analysis), nBinsBGE, BGfirst, BGsecond)
 
 
-      ! Switch according to likelihood version.
+      !Switch according to likelihood version.
       select case (likelihood_version(analysis))
 
-      ! 2012 likelihood, as per arXiv:1207.0810 (load the effective area, PSF and energy dispersion.)
+      !2012 likelihood, as per arXiv:1207.0810 (load the effective area, PSF and energy dispersion.)
       case (2012)
 
         !Set maximum opening angle from solar centre to consider

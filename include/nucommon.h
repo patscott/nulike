@@ -21,8 +21,6 @@
       integer angular, enrgyest, events, lun
       parameter(angular = 1, enrgyest = 2, events = 3, lun = 20)
 
-      integer analysis, nAnalyses
-
       real*8 pi
       parameter (pi=3.141592653589793238d0)
 
@@ -31,7 +29,10 @@
      &                      '####--Nchan--  ',
      &                      '####--Nevents--'/))
 
-      common /nu_comm/ analysis, nAnalyses
+      integer analysis, nAnalyses, ptypeshare, eventnumshare
+      real*8  Eshare
+
+      common /nu_comm/ analysis, nAnalyses, ptypeshare, eventnumshare, Eshare
       save /nu_comm/
 
       ! This parameter will be initialized in a block data routine
