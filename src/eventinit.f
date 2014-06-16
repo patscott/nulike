@@ -3,25 +3,27 @@
 ***
 *** input:   filename     name of file containing all event data
 ***          totalevents  total number of events contained in file
+***          cosphimin    cosine(cutoff angle above which events will 
+***                       be ignored)
 ***        
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
 *** Date: April 8, 2011
-*** Modified: March 5 2014
+*** Modified: March 5, June 15 2014
 ***********************************************************************
 
-      subroutine nulike_eventinit(filename, totalevents)
+      subroutine nulike_eventinit(filename, totalevents, cutevents, cosphimin, like)
 
       implicit none
       include 'nulike.h'
+      include 'nuprep.h'
 
       character (len=*) filename
       character (len=20) instring, instring2
-      integer totalevents, j, nchan
-      real*8 cosphimin, cosphi, cosphierr
+      integer totalevents, cutevents, savedevents, j, like
+      real*8 cosphimin, cosphi, cosphierr, ee
 
-
-      !Define cutoff angle above which events will be ignored
-      cosphimin = dcos(phi_max_rad(analysis))
+      !Save the current number of events for later comparison if it is already set.
+      if (like .eq. 2014) savedevents = cutevents
 
       !Open event file and read in events
       open(lun,file=filename, ACTION='READ')
@@ -33,21 +35,31 @@
       enddo
 
       !Read in events
-      nEvents(analysis) = 0
+      cutevents = 0
       do j = 1, totalevents
-        read(lun, *) instring, nchan
+        read(lun, *) instring, ee
         read(lun, *) instring, cosphi
         read(lun, *) instring, instring2, cosphierr
         read(lun, *) instring
-        if (j .ne. nEvents_in_file(analysis)) read(lun, *) instring
+        if (j .ne. totalevents) read(lun, *) instring
         !read in only events that have phi < phi_cut
         if (cosphi .gt. cosphimin) then
-          nEvents(analysis) = nEvents(analysis) + 1
-          events_nchan(nEvents(analysis),analysis) = nchan
-          events_cosphi(nEvents(analysis),analysis) = cosphi
-          events_cosphiErr(nEvents(analysis),analysis) = cosphiErr
+          cutevents = cutevents + 1
+          select case (like)
+          case (2012)
+            events_nchan(cutevents,analysis) = nint(ee)
+          case (2014)
+            events_ee(cutevents) = ee
+          case default
+            stop 'Unrecognised likelihood type in nulike_eventinit.'
+          end select
+          events_cosphi(cutevents,analysis) = cosphi
+          events_cosphiErr(cutevents,analysis) = cosphiErr
         endif
       enddo
+
+      if (like .eq. 2014 .and. savedevents .gt. 0 .and. cutevents .ne. savedevents)
+     & stop 'Number of events in partial likelihood file and event file do not match!! Death.'
 
       close(lun)
 

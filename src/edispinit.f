@@ -1,5 +1,5 @@
 ***********************************************************************
-*** nulike_edispinit initialises the IceCube energy dispersion function.
+*** nulike_edispinit initialises the telescope energy dispersion function.
 *** This entails reading in the nchan response distributions for neutrinos
 *** with energies in certain bands.
 ***
@@ -15,7 +15,7 @@
 ***********************************************************************
 
       subroutine nulike_edispinit(filename, nbins_Ein, 
-     & nbins_nchan)
+     & nbins_nchan, nchan_min, like)
 
       implicit none
       include 'nulike.h'
@@ -23,10 +23,10 @@
       character (len=*) filename
       character (len=20) instring
       integer nbins_Ein, nbins_nchan(nbins_Ein), dummyint, i, j, k
-      integer hist_nchan_temp(max_nHistograms, max_nnchan)
-      integer IER
-      real*8  hist_prob_temp(max_nHistograms, max_nnchan)
-      real*8  working(2*nHistograms(analysis)-2)
+      integer hist_nchan_temp(max_nHistograms, max_ncols)
+      integer like, IER
+      real*8  hist_prob_temp(max_nHistograms, max_ncols)
+      real*8  working(2*nHistograms(analysis)-2), nchan_min
 
       !Read in nchan response distribution for each incoming neutrino energy band
       open(lun,file=filename, ACTION='READ')
@@ -56,7 +56,7 @@
       hist_prob(:,:,analysis) = 0.d0
       do k = 1, nnchan_total(analysis)
         do i = 1, nbins_Ein
-          hist_nchan(i,k,analysis) = k - 1 + nint(nchan_min(analysis))
+          hist_nchan(i,k,analysis) = k - 1 + nint(nchan_min)
           do j = 1, nbins_nchan(i)
             if (hist_nchan_temp(i,j) .eq. hist_nchan(i,k,analysis)) then
               hist_prob(i,k,analysis) = hist_prob_temp(i,j)
@@ -69,7 +69,7 @@
       !up with indexing of nchan values in observed background spectrum.
       nchan_hist2BGoffset(analysis) = -1
       do k = 1, nnchan_total(analysis)
-        if (hist_nchan(1,k,analysis) .eq. BGnchandist_nchan(1,analysis)) then 
+        if (hist_nchan(1,k,analysis) .eq. BGeedist_ee(1,analysis)) then 
           nchan_hist2BGoffset(analysis) = k-1
         endif
       enddo

@@ -6,20 +6,19 @@
 *** input:   filename       name of file containing background 
 ***                          distributions
 ***          nbins_angular  number of bins for angular distribution
-***          nbins_nchan    number of bins for nchan (energy) 
-***                          distribution
+***          nbins_ee       number of bins for energy estimator distribution
 ***          first, second  indexes between 1 and 3 indicating
 ***                          the identities of the first and second
-***                          blocks in the file (angular, nchan or 
-***                          number of events).  See nulike.h for
-***                          the key.
+***                          blocks in the file (angular, energy  
+***                          estimator or number of events).
+***                          See nucommon.h for the key.
 ***        
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
 *** Date: April 8, 2011
 *** Modified: Jun 6, 2014
 ***********************************************************************
 
-      subroutine nulike_bginit(filename, nbins_angular, nbins_nchan, 
+      subroutine nulike_bginit(filename, nbins_angular, nbins_ee, 
      & first, second, like)
 
       implicit none
@@ -28,7 +27,7 @@
       character (len=*) filename
       character (len=200) instring
       character (len=15) headerstring
-      integer nbins_angular, nbins_nchan, counts(3), IER
+      integer nbins_angular, nbins_ee, counts(3), IER
       integer i, j, dummyint, first, second, indices(3), like
       real*8 dummyfloat1, dummyfloat2
       real*8 BGangdist_phi_temp(max_nBinsBGAng)
@@ -45,8 +44,8 @@
         select case (indices(i))
           case(angular)
             counts(i) = nbins_angular
-          case(nchannels)
-            counts(i) = nbins_nchan
+          case(enrgyest)
+            counts(i) = nbins_ee
           case(events)
             counts(i) = 1
         end select
@@ -70,9 +69,9 @@
               BGangdist_phi_temp(j) = dummyfloat1
               BGangdist_prob_temp(j) = dummyfloat2
             else
-              !Read in observed distribution of nchan (energies)
-              BGnchandist_nchan(j,analysis) = dummyfloat1
-              BGnchandist_prob(j,analysis) = dummyfloat2
+              !Read in observed distribution of energy estimators (e.g. nchan)
+              BGeedist_ee(j,analysis) = dummyfloat1
+              BGeedist_prob(j,analysis) = dummyfloat2
             endif
           else
             FullSkyBG(analysis) = dummyint
@@ -91,18 +90,18 @@
       case (2012)
         !If the energy dispersion files don't go high or low enough in nchan
         !to cover the whole tabulated range in the BG file, mark them for extension.
-        if (nchan_min(analysis) .gt. BGnchandist_nchan(1,analysis)) 
-     &   nchan_min(analysis) = BGnchandist_nchan(1,analysis)
-        if (nchan_max(analysis) .lt. BGnchandist_nchan(nbins_nchan,analysis))
-     &   nchan_max(analysis) = BGnchandist_nchan(nbins_nchan,analysis)
+        if (ee_min(analysis) .gt. BGeedist_ee(1,analysis)) 
+     &   ee_min(analysis) = BGeedist_ee(1,analysis)
+        if (ee_max(analysis) .lt. BGeedist_ee(nbins_ee,analysis))
+     &   ee_max(analysis) = BGeedist_ee(nbins_ee,analysis)
         !Reset nnchan_total
-        nnchan_total(analysis) = nint(nchan_max(analysis) - nchan_min(analysis)) + 1
+        nnchan_total(analysis) = nint(ee_max(analysis) - ee_min(analysis)) + 1
         !Make sure we didn't break everything
-        if (nnchan_total(analysis) .gt. max_nnchan) then
+        if (nnchan_total(analysis) .gt. max_ncols) then
           write(*,*)
           write(*,*) 'Extension of histograms gives more nchan values'
           write(*,*) 'than nulike has been configured to handle.  '
-          write(*,*) 'Increase max_nnchan in nulike.h and recompile.'
+          write(*,*) 'Increase max_ncols in nucommon.h and recompile.'
           write(*,*)
           call exit(0)
         endif
@@ -161,9 +160,8 @@
         stop
       endif
 
-      !Make sure nchan histograms are properly normalised
-      BGnchandist_prob(:,analysis) = BGnchandist_prob(:,analysis)/
-     &                               sum(BGnchandist_prob(:,analysis))
+      !Make sure energy estimator histograms are properly normalised
+      BGeedist_prob(:,analysis) = BGeedist_prob(:,analysis)/sum(BGeedist_prob(:,analysis))
 
 
       end subroutine nulike_bginit

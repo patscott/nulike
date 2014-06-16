@@ -32,7 +32,7 @@
       external nuyield, nulike_sigintegrand, nulike_specangintegrand
  
       ! Short-circuit if the mass is too low to produce any observable events.
-      if (logmw .lt. effArea_logE(1,1,analysis)) then
+      if (logmw .lt. sens_logE(1,1,analysis)) then
         nulike_signal = 0.d0
         return
       endif
@@ -44,22 +44,22 @@
       ! 2012 likelihood, as per arXiv:1207.0810
       case (2012)
 
-        if (logmw .lt. effArea_logE(2,nBinsEA(analysis),analysis)) then
+        if (logmw .lt. sens_logE(2,nSensBins(analysis),analysis)) then
           upperLimit = logmw
         else
-          upperLimit = effArea_logE(2,nBinsEA(analysis),analysis)
+          upperLimit = sens_logE(2,nSensBins(analysis),analysis)
         endif
 
         ! Neutrinos
         ptypeshare = 1
         integral = nulike_simpson(nulike_sigintegrand,nuyield,
-     &   effArea_logE(1,1,analysis),upperLimit,eps2012)
+     &   sens_logE(1,1,analysis),upperLimit,eps2012)
         theta_Snu = integral * dlog(10.d0) * exp_time(analysis) * annrate
 
         ! Anti-neutrinos
         ptypeshare = 2
         integral = nulike_simpson(nulike_sigintegrand,nuyield,
-     &   effArea_logE(1,1,analysis),upperLimit,eps2012)
+     &   sens_logE(1,1,analysis),upperLimit,eps2012)
         theta_Snubar = integral * dlog(10.d0) * exp_time(analysis) * annrate
 
         ! Total
@@ -70,7 +70,7 @@
 
         eventnumshare = 0 ! Use effective area from previous tabulation.
         integral = nulike_simpson(nulike_specangintegrand,nuyield,
-     &   effArea_logE(1,1,analysis),logmw,eps2014)
+     &   sens_logE(1,1,analysis),logmw,eps2014)
         nulike_signal = integral * dlog(10.d0) * exp_time(analysis) * annrate
 
       case default

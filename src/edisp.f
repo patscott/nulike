@@ -4,30 +4,30 @@
 *** number of hit DOMs. 
 ***
 *** Input:	log10E	        log(neutrino energy/GeV)
-*** 		nchan		number of hit DOMs
-*** Output:                     energy dispersion (chan^-1)
+*** 		ee		value of the energy estimator (e.g. nchan)
+*** Output:                     energy dispersion (units of ee^-1)
 ***       
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
 *** Date: Apr 24, 2011
-*** Modified: Jun 7, 2014
+*** Modified: Jun 7, 15 2014
 ***********************************************************************
 
-      real*8 function nulike_edisp(log10E, nchan)
+      real*8 function nulike_edisp(log10E, ee)
 
       implicit none
       include 'nulike.h'
 
-      real*8 log10E, nchan
+      real*8 log10E, ee
       integer nchan_index, IER
 
-      if (nchan .lt. nchan_min(analysis) .or. nchan .gt. nchan_max(analysis)) then
-        write(*,*) 'Error in nulike_edisp: nchan outside'
-        write(*,*) 'tabulated range, nchan=',nchan,'.  Quitting...'
+      if (ee .lt. ee_min(analysis) .or. ee .gt. ee_max(analysis)) then
+        write(*,*) 'Error in nulike_edisp: energy estimator outside'
+        write(*,*) 'tabulated range: ee=',ee,'.  Quitting...'
         stop
       endif
 
-      nchan_index = nint(nchan) - nint(nchan_min(analysis)) + 1
-      if (hist_nchan(1,nchan_index,analysis) .ne. nchan) then
+      nchan_index = nint(ee) - nint(ee_min(analysis)) + 1
+      if (hist_nchan(1,nchan_index,analysis) .ne. nint(ee)) then
         stop'Something is wrong with nchan_index in nulike_edisp'
       endif
 

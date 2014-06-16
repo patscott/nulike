@@ -41,13 +41,14 @@ vpath %.h $(INC)
 
 # Sources/objects
 SOURCES = lngamma.f lambertw.f lambertw2.f lambertwln.f \
-dgamic.f lnpin.f lnpiln.f lnpinsum.f lnpilnsum.f \
-simpson.f lnpoisint.f anglike.f angres.f bgangpdf.f \
+flagblocks.f dgamic.f lnpin.f lnpiln.f lnpinsum.f lnpilnsum.f \
+simpson.f lnpoisint.f anglike.f angres.f bgangpdf.f partials.f \
 bginit.f bglikeprecomp.f bgpredinit.f bgspec.f bounds.f \
-dP_SdE.f dPhi_SdE.f eainit.f edisp.f edispinit.f effarea.f \
+dP_SdE.f dPhi_SdE.f sensinit.f edisp.f edispinit.f sens.f \
 eventinit.f init.f nlike.f psf.f pval.f analysis_map.f \
-sigintegrand.f signal.f specintegrand.f speclike.f \
-specanglike.f specangintegrand.f tabulated_weight.f
+sigintegrand.f signal.f specintegrand.f speclike.f credits.f \
+specanglike.f specangintegrand.f specanginit.f \
+tabulated_weight.f preparse_files.f
 OBJ = $(patsubst %.f,$(BUILD)/%.o,$(SOURCES)) $(BUILD)/tspack.o
 TSPACK_SOURCES = ENDSLP.f SIGS.f SNHCSH.f STORE.f \
 YPCOEF.f YPC1.f YPC1P.f YPC2.f YPC2P.f TSPSI.f \

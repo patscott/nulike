@@ -196,8 +196,8 @@
      &       spectralLikelihood = spectralLikelihood + nulike_speclike(
      &       events_nchan(j,analysis),theta_S,f_S,annrate,logmw,
      &       nulike_speclike_reset,
-     &       effArea_logE(1,1,analysis),
-     &       effArea_logE(2,nBinsEA(analysis),analysis),
+     &       sens_logE(1,1,analysis),
+     &       sens_logE(2,nSensBins(analysis),analysis),
      &       nuyield)
           enddo
         endif
@@ -210,7 +210,7 @@
           !Step through the individual events
           do j = 1, nEvents(analysis)          
             specAngLikelihood = specAngLikelihood + nulike_specanglike(j,
-     &       theta_S, f_S, annrate, logmw, effArea_logE(1,1,analysis), nuyield)
+     &       theta_S, f_S, annrate, logmw, sens_logE(1,1,analysis), nuyield)
           enddo
         endif
 

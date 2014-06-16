@@ -21,9 +21,9 @@
       real*8 log10E
       integer IER
       
-      call TSVAL1(nBinsEA(analysis),effArea_logEcentres(:,analysis),
-     & effArea_AngRes(:,analysis),effArea_AngResderivs(:,analysis),
-     & effArea_AngRessigma(:,analysis),0,1,log10E,nulike_angres,IER)
+      call TSVAL1(nSensBins(analysis),sens_logEcentres(:,analysis),
+     & sens_AngRes(:,analysis),sens_AngResderivs(:,analysis),
+     & sens_AngRessigma(:,analysis),0,1,log10E,nulike_angres,IER)
 
       if (IER .lt. 0) then
         write(*,*) 'TSVAL1 error from angular'

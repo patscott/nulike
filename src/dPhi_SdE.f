@@ -34,7 +34,7 @@
       include 'nulike.h'
 
       real*8 log10E, effArea, angLossFac
-      real*8 sigma, spec, nulike_effarea, nulike_angres
+      real*8 sigma, spec, nulike_sens, nulike_angres
       real*8 nuyield 
       integer ptype
       external nuyield
@@ -44,7 +44,7 @@
       spec = nuyield(log10E,ptype)
       
       !Obtain effective area for relevant species and energy; effArea in m^2
-      effArea = nulike_effarea(log10E, ptype)
+      effArea = nulike_sens(log10E, ptype)
 
       !Obtain angular resolution for nu and nubar with energy E; sigma in degrees
       sigma = nulike_angres(log10E)
