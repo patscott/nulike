@@ -22,6 +22,9 @@
       logical clusterdebug
       parameter(clusterdebug = .false.)
 
+      !Save bin number for other routines
+      nSensBins(analysis) = nbins
+
       !Open effective area/volume file for reading
       open(lun,file=filename, ACTION='READ')
 
@@ -57,6 +60,9 @@
       enddo
 
       close(lun)
+
+      !Set the minimum detectable energy (only used in 2014 partial likelihood calculation).
+      min_detectable_logE = sens_logE(1,1,analysis)
 
       !Calculate the percentage total systematic error from the effective 
       !area/volume estimation in each bin, as the quadrature sum of the true

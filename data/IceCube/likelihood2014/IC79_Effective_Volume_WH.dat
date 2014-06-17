@@ -8,11 +8,11 @@
 #    (equivalent 1 sigma) containment radius.
 #
 #The density block has the following content:
-#rho [H2O density in g/L] 
+#rho [H2O density in kg/m^3] 
 #The response block has the following column content:
 #B   [bin Nr.]
 #E   [E-nu-lower-bound] [E-nu-upper-bound]
-#V   [Veff(mu-)]        [Veff(mu+)]
+#V   [Veff(mu-) km^3]   [Veff(mu+) km^3]
 #err [syst.error]       [stat.error]
 #MAR [angular res.]
 ###--Density--

@@ -1,6 +1,7 @@
 ! This program prepares the partial likelihood data files used by nulike
 ! for computing the 2014 likelihood.  It requires Fortran 2003 for 
 ! parsing the command-line arguments, but the rest of nulike does not.
+! It requires nusigma for the neutrino-lepton interaction cross-section.
 !
 ! Author: Pat Scott patscott@phsyics.mcgill.ca
 ! Date: Jun 12 2014
@@ -12,8 +13,9 @@
       include 'nuprep.h'
 
       character (len=300) files(8)
-      real*8 phi_cut, lEmin, lEmax
+      real*8 phi_cut, lEmin, lEmax, Nudsdxdy
       integer i, gotarg, nE
+      external Nudsdxdy
 
       !Check that the correct number of arguments have been passed on the command line
       if (command_argument_count() .ne. 8) then
@@ -60,8 +62,11 @@
       read(files(7),*) lEmax
       read(files(8),*) phi_cut
 
+      !Initialise nusigma
+      call nusetup
+
       !Compute the partial likelihoods and output them in partialfile
       call nulike_partials(trim(files(1)),trim(files(2)),trim(files(3)),
-     & trim(files(4)),nE,lEmin,lEmax,phi_cut)
+     & trim(files(4)),nE,lEmin,lEmax,phi_cut, Nudsdxdy)
 
       end program nulike_prep

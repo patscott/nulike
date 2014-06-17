@@ -24,6 +24,24 @@
 ***			 based only on events with reconstructed 
 ***			 directions within this angle of the solar centre.
 ***			 [degrees]
+***   dsdxdy            differential cross-section function, with signature
+***                     Input:  real*8      E      Neutrino energy in GeV
+***                             real*8      x      Bjorken-x
+***                             real*8      y      Bjorken-y
+***                             integer     nu     Neutrino type
+***                                                 1 = nu_e
+***                                                 2 = nu_e-bar
+***                                                 3 = nu_mu
+***                                                 4 = nu_mu-bar
+***                                                 5 = nu_tau
+***                                                 6 = nu_tau-bar
+***                             character*1 targ   Target
+***                                                 'p' = proton
+***                                                 'n' = neutron 
+***                             character*2 int    Interaction type
+***                                                 'CC'=charged current 
+***                                                 'NC'=neutral current
+***                     Output: real*8 Differential cross section in cm^2 
 ***        
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
 *** Date: Jun 15 2014
@@ -31,7 +49,7 @@
 
 
       subroutine nulike_partials(eventfile, effvolfile, edispfile, 
-     & partialfile, nEnergies, logE_min, logE_max, phi_cut) 
+     & partialfile, nEnergies, logE_min, logE_max, phi_cut, dsdxdy) 
 
       implicit none
       include 'nucommon.h'
@@ -39,10 +57,12 @@
 
       character (len=*) eventfile, effvolfile, edispfile, partialfile
       real*8 phi_cut, ee_min, ee_max, exp_time, density, logE_min 
-      real*8 logE_max, working(2*max_nHistograms-2)
-      real*8 partial_likes(max_nPrecompE,max_nEvents,2)
+      real*8 logE_max, dsdxdy, working(2*max_nHistograms-2)
+      real*8 nulike_simpson, nulike_partintegrand1
+      real*8, allocatable :: partial_likes(:,:,:)
       integer like, ncols(max_nHistograms), nEvents_in_file 
       integer nEvents, nbins_effvol, nEnergies, i, IER
+      external dsdxdy, nulike_partintegrand1
 
       !Roll credits.
       call nulike_credits
@@ -56,6 +76,9 @@
 
       !Set the internal cut angle
       phi_max = phi_cut
+
+      !Set the lepton/neutino generation.  This must be elevated to a datafile input to support e and/or tau neutrinos.
+      leptypeshare = 2
 
       !Open event file, determine the total number of events, likelihood version
       call nulike_preparse_eventfile(eventfile, nEvents_in_file, exp_time, like)
@@ -76,6 +99,13 @@
       !Read in the actual energy estimator response histograms and rearrange them into energy dispersion estimators
       call nulike_edispinit(edispfile, nhist, ncols, ee_min, 2014)
     
+      !Work out how many partial likelihoods to output
+      allocate(partial_likes(nEnergies, nEvents, 2))
+
+      !Calculate neutron and proton number per m^3 in detector, scaled up by 10^5 for later unit conversion.
+      numdens_n = 8.d5 * density / m_water
+      numdens_p = 10.d5 * density / m_water
+
       !Step through the events and compute partial likelihoods for each one.
       do eventnumshare = 1, nEvents
 
@@ -108,26 +138,39 @@
 
         !Step through each energy
         do i = 1, nEnergies
-          Eshare = logE_min + dble(i-1)/dble(nEnergies-1)*(logE_max - logE_min)
-          !Iterate over CP eigenstates
-          do ptypeshare = 1, 2
-            !partial_likes(i,eventnumshare,ptype) = nulike_simpson()
-          enddo
+          log10Eshare = logE_min + dble(i-1)/dble(nEnergies-1)*(logE_max - logE_min)
+          Eshare = 10.d0**log10Eshare
+          write(*,*) '    Computing partial likelihoods for E = ',Eshare,' GeV'
+          !If the neutrino already has less energy than the lowest-E lepton that can be detected,
+          !we know the effective volume will always be zero and the partial likelihoods are zero.
+          if (log10Eshare .lt. min_detectable_logE) then
+            partial_likes(i,eventnumshare,:) = 0.d0
+          else !Otherwise, we might see some leptons, so iterate over CP eigenstates
+            do ptypeshare = 1, 2
+              partial_likes(i,eventnumshare,ptypeshare) = nulike_simpson(nulike_partintegrand1,
+     &         dsdxdy,0.d0,0.9999d0,eps_partials)
+            enddo
+          endif
+          write(*,*) '      Partial likelihood, nu:    ',partial_likes(i,eventnumshare,1)
+          write(*,*) '      Partial likelihood, nubar: ',partial_likes(i,eventnumshare,2)
         enddo
 
       enddo
 
-
       !Save auxiliary info about the partial likelihoods
       open(lun, file=partialfile//'.aux', action='WRITE')
+      write(lun, fmt=*) '#This file provides auxiliary information about partial likelihoods.'
+      write(lun, fmt=*) '#It was generated automatically by nulike_partials.'
       write(lun, fmt='(2I8,3E16.5)') nEvents, nEnergies, phi_cut, logE_min, logE_max
       close(lun)
 
       !Save partial likelihoods all in one hit.
-      !open(lun, file=partialfile, form='unformatted', action='WRITE', recl=nEvents*nEnergies*2*8)
-      !write(lun, rec=1) partial_likes(1:nEnergies,1:nEvents,:)
-      !close(lun)
+      open(lun, file=partialfile, form='unformatted', action='WRITE', recl=nEvents*nEnergies*2*8)
+      write(lun) partial_likes
+      close(lun)
       
+      deallocate(partial_likes)
+
       write(*,*)
       write(*,*) 'Done.'
       write(*,*)

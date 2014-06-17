@@ -30,9 +30,10 @@
      &                      '####--Nevents--'/))
 
       integer analysis, nAnalyses, ptypeshare, eventnumshare
-      real*8  Eshare
+      real*8  Eshare, min_detectable_logE
 
-      common /nu_comm/ analysis, nAnalyses, ptypeshare, eventnumshare, Eshare
+      common /nu_comm/ analysis, nAnalyses, ptypeshare, eventnumshare, 
+     & Eshare, min_detectable_logE
       save /nu_comm/
 
       ! This parameter will be initialized in a block data routine

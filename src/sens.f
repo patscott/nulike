@@ -5,7 +5,7 @@
 *** Input:	log10E	        log(neutrino energy/GeV)
 *** 		ptype	= 1	neutrinos
 ***			= 2	anti-neutrinos
-*** Output:                     effective area or volume (m^2 or m^3)
+*** Output:                     effective area or volume (m^2 or km^3)
 ***       
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
 *** Date: Apr 24, 2011
@@ -19,7 +19,14 @@
 
       real*8 log10E
       integer ptype, IER
-      
+ 
+      !Abort if outside the valid energy range.     
+      if (log10E .lt. sens_logE(1,1,analysis) .or.
+     &    log10E .gt. sens_logE(2,nSensBins(analysis),analysis) ) then
+        nulike_sens = 0.d0
+        return
+      endif
+
       !Choose relevant species
       if (ptype .eq. 1) then
 
