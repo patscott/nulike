@@ -29,12 +29,12 @@
 
       real*8 y, Elep, log10Elep, mlep2, phi_obs, phi_err, errlep, plep, philep_p, philep_n
       real*8 spnc, spcc, snnc, sncc, pcont, ncont, edisp, effvol, angloss, dsdxdy 
-      real*8 nulike_edisp, nulike_psf, nulike_sens, nulike_angres
+      real*8 nulike_edisp, nulike_psf, nulike_sens, nulike_angres, cosang
       integer ptype
       external dsdxdy
 
       Elep = Eshare * (1.d0 - y)                                               ! GeV
-      if (Elep .le. epsilon(Elep)) then                                        ! Abort if the lepton energy is zero.
+      if (Elep .le. 0.d0) then                                                 ! Abort if the lepton energy is zero.
         nulike_partintegrand2 = 0.d0                                                
         return
       endif
@@ -42,15 +42,15 @@
 
       !Effective volume
       effvol = nulike_sens(log10Elep, ptypeshare)                              ! km^3
-      if (effvol .le. epsilon(effvol)) then                                    ! Abort if effective volume is
-        nulike_partintegrand2 = 0.d0                                                
+      if (effvol .le. 0.d0) then                                               ! Abort if effective volume is
+        nulike_partintegrand2 = 0.d0                                           ! zero.      
         return
       endif
 
       !Energy dispersion
       edisp = nulike_edisp(log10Elep, events_ee(eventnumshare), 2014)          ! [ee]^-1
-      if (edisp .le. epsilon(effvol)) then                                     ! Abort if effective volume is
-        nulike_partintegrand2 = 0.d0                                                
+      if (edisp .le. epsilon(effvol)) then                                     ! Abort if energy dispersion is
+        nulike_partintegrand2 = 0.d0                                           ! zero.     
         return
       endif
 
@@ -71,15 +71,19 @@
       phi_err = events_cosphiErr(eventnumshare,analysis)                       ! Already in degrees.
 
       if (spnc .gt. 0.d0 .or. spcc .gt. 0.d0) then
-        philep_p = acos((Elep - m_p*xshare*y - mlep2/Eshare) / plep) * 180.d0/pi ! --> degrees
-        pcont = numdens_p * nulike_psf(phi_obs, philep_p, phi_max, phi_err) * (spnc + spcc) ! 1e-5 m^-3 cm^2 deg^-1
+        cosang = (Elep - m_p*xshare*y - mlep2/Eshare) / plep
+        if (cosang .gt. 1.d0) cosang = 1.d0 ! Fix floating-point errors (>1 is kinematically disallowed)
+        philep_p = acos(cosang) * 180.d0/pi ! --> degrees
+        pcont = numdens_p * nulike_psf(phi_obs, philep_p, phi_err) * (spnc + spcc) ! 1e-5 m^-3 cm^2 deg^-1
       else 
         pcont = 0.d0
       endif
 
       if (snnc .gt. 0.d0 .or. sncc .gt. 0.d0) then
-        philep_n = acos((Elep - m_n*xshare*y - mlep2/Eshare) / plep) * 180.d0/pi ! --> degrees
-        ncont = numdens_n * nulike_psf(phi_obs, philep_n, phi_max, phi_err) * (snnc + sncc) ! 1e-5 m^-3 cm^2 deg^-1
+        cosang = (Elep - m_n*xshare*y - mlep2/Eshare) / plep
+        if (cosang .gt. 1.d0) cosang = 1.d0 ! Fix floating-point errors (>1 is kinematically disallowed)
+        philep_n = acos(cosang) * 180.d0/pi ! --> degrees
+        ncont = numdens_n * nulike_psf(phi_obs, philep_n, phi_err) * (snnc + sncc) ! 1e-5 m^-3 cm^2 deg^-1
       else 
         ncont = 0.d0
       endif
@@ -87,15 +91,20 @@
       !Total
       nulike_partintegrand2 = edisp * effvol * angloss * (pcont + ncont)  ! km^3 1e-5 m^-3 cm^2 deg^-1 [ee]^-1-->m^2 deg^-1 [ee]^-1
 
+      !Debug
       if (nulike_partintegrand2 .ne. nulike_partintegrand2) then
-        write(*,*) spnc, spcc, snnc, sncc
-        write(*,*) Eshare,xshare,y,ptype
+        write(*,*) 'Printing debug info:'
+        write(*,*) Eshare,xshare,y
+        write(*,*) Elep, plep, mlep2
+        write(*,*) ptype,eventnumshare,leptypeshare
         write(*,*) edisp, effvol, angloss
-        write(*,*) pcont, ncont
-        write(*,*) phi_obs, philep_p, philep_n, phi_max, phi_err
-        write(*,*) Elep, lepmass(leptypeshare), plep, Eshare, mlep2, m_p, m_n
         write(*,*) (Elep - m_p*xshare*y - mlep2/Eshare) / plep
-        stop 'found NaN'
+        write(*,*) spnc, spcc, snnc, sncc
+        write(*,*) pcont, ncont
+        write(*,*) phi_obs, phi_max, phi_err
+        write(*,*) philep_n, philep_p
+        write(*,*) nulike_psf(phi_obs, philep_n, phi_err), nulike_psf(phi_obs, philep_p, phi_err)
+        stop 'NaN found in nulike_partintegrand2!'
       endif
 
       end function nulike_partintegrand2

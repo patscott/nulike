@@ -10,7 +10,6 @@
 *** 
 *** Input:	phi_obs	        observed angle (degrees)
 ***             phi_pred        predicted angle (degrees)
-***             phi_max         maximum angle considered (degrees)
 ***             sigma           angular error corresponding to 39.3%
 ***                             containment angle (degrees)
 ***          
@@ -20,21 +19,21 @@
 *** Date: May 6, 2011
 ***********************************************************************
 
-      real*8 function nulike_psf(phi_obs, phi_pred, phi_max, sigma)
+      real*8 function nulike_psf(phi_obs, phi_pred, sigma)
 
       implicit none
       include 'nulike.h'
 
-      real*8 phi_obs, phi_pred, sigma, sigma2, expo, diff
-      real*8 phi_max, prefac
+      real*8 phi_obs, phi_pred, sigma, sigma2, expo, diff, prefac
 
       sigma2 = sigma*sigma
-      diff = phi_max - phi_pred
-      expo = exp(-diff*diff / (2.d0 * sigma2))
-      prefac = (1.d0-expo)
+      diff = 180.d0 - phi_pred
+      expo = exp(-phi_pred*phi_pred / (2.d0 * sigma2))
+      expo = expo + exp(-diff*diff / (2.d0 * sigma2))
+      prefac = (2.d0-expo)
 
       diff = phi_obs - phi_pred
       expo = exp(-diff*diff / (2.d0 * sigma2))
       nulike_psf = expo*abs(diff)/(sigma2*prefac) 
- 
+
       end function nulike_psf

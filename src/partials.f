@@ -106,6 +106,8 @@
       numdens_n = 8.d5 * density / m_water
       numdens_p = 10.d5 * density / m_water
 
+      write(*,*) 'Computing partial likelihoods for ',nEvents,' events.'
+
       !Step through the events and compute partial likelihoods for each one.
       do eventnumshare = 1, nEvents
 
@@ -148,7 +150,7 @@
           else !Otherwise, we might see some leptons, so iterate over CP eigenstates
             do ptypeshare = 1, 2
               partial_likes(i,eventnumshare,ptypeshare) = nulike_simpson(nulike_partintegrand1,
-     &         dsdxdy,0.d0,1.d0,eps_partials)
+     &         dsdxdy,0.d0,0.9999d0,eps_partials)
             enddo
           endif
           write(*,*) '      Partial likelihood, nu:    ',partial_likes(i,eventnumshare,1)

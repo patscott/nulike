@@ -37,7 +37,7 @@
 
       !Calculate the signal part of the likelihood
       signalpartiallike = f_S*nulike_psf(acos(cosphi)*180.d0/pi, 
-     & 0.d0, phi_max_deg(analysis), parabsigma)
+     & 0.d0, parabsigma)
 
       !Calculate the background part of the likelihood
       bgpartiallike = (1.d0-f_S) * nulike_bgangpdf(cosphi)

@@ -1,5 +1,6 @@
 !=======================================================================
-!  Integrate function f between a and b using Simpson's rule.
+!  Integrate function f between a and b using Simpson's rule.  Second
+!  copy, just for safety's sake.
 !
 !  Input:  integrand f, auxilary function aux
 !          integration limits a and b
@@ -14,7 +15,7 @@
 !  Initially based on Paolo Gondolo's wxint.f routine.
 !=======================================================================
 
-      real*8 function nulike_simpson(f,aux,a,b,eps)
+      real*8 function nulike_simpson2(f,aux,a,b,eps)
       implicit none
 
       real*8 f,aux,a,b,tot,eps,st,os,ost,del,sum,x
@@ -22,7 +23,7 @@
       external f,aux
       parameter (jmax=25)
 
-      nulike_simpson=0.d0
+      nulike_simpson2=0.d0
       del=b-a
       ost=0.5*del*(f(a,aux)+f(b,aux))
       x=0.5*(b+a)
@@ -45,15 +46,15 @@
         jdid=j
         if (j.gt.6) then
            if (abs(tot-os).le.eps*abs(os)) then
-              nulike_simpson=tot
+              nulike_simpson2=tot
               return
            endif
      	endif
         os=tot
         ost=st
       enddo
-      write(*,*) '  Error in nulike_simpson: too many steps.'
+      write(*,*) '  Error in nulike_simpson2: too many steps.'
       write(*,*) '  Integral set to zero.'
-      nulike_simpson=0.0d0
+      nulike_simpson2=0.0d0
 
       end

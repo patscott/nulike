@@ -53,6 +53,7 @@
           case default
             stop 'Unrecognised likelihood type in nulike_eventinit.'
           end select
+          if (cosphiErr .eq. 0.d0) stop 'Error in event file: an event with phi_err=0!'
           events_cosphi(cutevents,analysis) = cosphi
           events_cosphiErr(cutevents,analysis) = cosphiErr
         endif

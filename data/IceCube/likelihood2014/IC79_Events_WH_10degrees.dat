@@ -28,7 +28,7 @@
 [En]  3
 [E]  14
 [cos(phi)]  0.992488
-[phi uncert]  0
+[phi uncert]  0.1
 ###
 [En]  4
 [E]  24
@@ -663,7 +663,7 @@
 [En]  130
 [E]  11
 [cos(phi)]  0.990071
-[phi uncert]  0
+[phi uncert]  0.1
 ###
 [En]  131
 [E]  18
@@ -998,7 +998,7 @@
 [En]  197
 [E]  15
 [cos(phi)]  0.996278
-[phi uncert]  0
+[phi uncert]  0.1
 ###
 [En]  198
 [E]  45.453
@@ -1033,7 +1033,7 @@
 [En]  204
 [E]  16
 [cos(phi)]  0.99197
-[phi uncert]  0
+[phi uncert]  0.1
 ###
 [En]  205
 [E]  55.341
@@ -1078,7 +1078,7 @@
 [En]  213
 [E]  11
 [cos(phi)]  0.999604
-[phi uncert]  0
+[phi uncert]  0.1
 ###
 [En]  214
 [E]  21.287
@@ -1168,7 +1168,7 @@
 [En]  231
 [E]  16.574
 [cos(phi)]  0.991265
-[phi uncert]  0
+[phi uncert]  0.1
 ###
 [En]  232
 [E]  14.574
@@ -1363,7 +1363,7 @@
 [En]  270
 [E]  12
 [cos(phi)]  0.998627
-[phi uncert]  0
+[phi uncert]  0.1
 ###
 [En]  271
 [E]  40.287
@@ -1768,7 +1768,7 @@
 [En]  351
 [E]  34
 [cos(phi)]  0.993959
-[phi uncert]  0
+[phi uncert]  0.1
 ###
 [En]  352
 [E]  9.722
@@ -2113,7 +2113,7 @@
 [En]  420
 [E]  35.314
 [cos(phi)]  0.988129
-[phi uncert]  0
+[phi uncert]  0.1
 ###
 [En]  421
 [E]  24
@@ -2318,7 +2318,7 @@
 [En]  461
 [E]  19.435
 [cos(phi)]  0.991098
-[phi uncert]  0
+[phi uncert]  0.1
 ###
 [En]  462
 [E]  20
@@ -2428,7 +2428,7 @@
 [En]  483
 [E]  17
 [cos(phi)]  0.988273
-[phi uncert]  0
+[phi uncert]  0.1
 ###
 [En]  484
 [E]  22
@@ -2583,7 +2583,7 @@
 [En]  514
 [E]  12.287
 [cos(phi)]  0.990698
-[phi uncert]  0
+[phi uncert]  0.1
 ###
 [En]  515
 [E]  39
@@ -2623,7 +2623,7 @@
 [En]  522
 [E]  11
 [cos(phi)]  0.994255
-[phi uncert]  0
+[phi uncert]  0.1
 ###
 [En]  523
 [E]  19.323
@@ -2838,7 +2838,7 @@
 [En]  565
 [E]  11
 [cos(phi)]  0.986799
-[phi uncert]  0
+[phi uncert]  0.1
 ###
 [En]  566
 [E]  16
@@ -2933,5 +2933,5 @@
 [En]  584
 [E]  20
 [cos(phi)]  0.993516
-[phi uncert]  0
+[phi uncert]  0.1
 ###
