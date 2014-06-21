@@ -248,7 +248,6 @@
 
       else                  !compute p-value with reference to background
 
-        theta_tot = theta_BG(analysis) + theta_S
         !p-value from Poissonian statistics
         if (.not. pvalBGPoisComputed(analysis)) call nulike_bglikeprecomp
         pvalue = nulike_pval(nEvents(analysis), theta_tot, theta_S)

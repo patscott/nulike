@@ -8,18 +8,18 @@
       program nulike_test
 
       implicit none
-      real*8 oh2,xf,dsrdomega                                 ! relic density
-      real*8 sigsip,sigsin,sigsdp,sigsdn                      ! nuclear scattering
-      real*8 dsntcapsuntab, ca                                ! capture rate 
-      real*8 tt_sun, annrate, nuyield                         ! capture rate
-      real*8 sigpred, bgpred, lnLike, pval, refLike, dof      ! neutrino likelihood
-      real*8 theoryError,phi_cut                              ! neutrino likelihood
-      integer totobs, likechoice                              ! neutrino likelihood
-      logical uselogNorm, pvalFromRef                         ! neutrino likelihood
-      logical BGLikePrecompute                                ! neutrino likelihood
-      character (len=256) iclike2012, iclike2014, experiment  ! neutrino likelihood
-      character (len=256) eventf, edispf, BGf, efareaf        ! neutrino likelihood
-      integer unphys,hwarning,iend,ierr,iwar,nfc              ! bookkeeping
+      real*8 oh2,xf,dsrdomega                                    ! relic density
+      real*8 sigsip,sigsin,sigsdp,sigsdn                         ! nuclear scattering
+      real*8 dsntcapsuntab, ca                                   ! capture rate 
+      real*8 tt_sun, annrate, nuyield                            ! capture rate
+      real*8 sigpred, bgpred, lnLike, pval, refLike, dof         ! neutrino likelihood
+      real*8 theoryError,phi_cut                                 ! neutrino likelihood
+      integer totobs, likechoice                                 ! neutrino likelihood
+      logical uselogNorm, pvalFromRef                            ! neutrino likelihood
+      logical BGLikePrecompute                                   ! neutrino likelihood
+      character (len=256) iclike2012, iclike2014, experiment     ! neutrino likelihood
+      character (len=256) eventf, edispf, BGf, efareaf, partiald ! neutrino likelihood
+      integer unphys,hwarning,iend,ierr,iwar,nfc                 ! bookkeeping
       external nuyield
 
       include 'dsio.h'
@@ -49,7 +49,7 @@
       iclike2012 = 'data/IceCube/likelihood2012/'
       iclike2014 = 'data/IceCube/likelihood2014/'
 
-      ! Here we use the IC-22 data that ships with nulike.
+      ! Here we use the IC-22 data that ship with nulike.
         experiment = 'IC-22'
         eventf  = trim(iclike2012)//'events_10deg_IC22.dat'
         BGf     = trim(iclike2012)//'BG_distributions_IC22.dat'
@@ -82,18 +82,24 @@
       edispf  = trim(iclike2012)//'energy_histograms_IC86_sim_dummy.dat'
 
       ! Set the analysis cut in degrees around the solar position for the IC86 prediction
-      phi_cut = 20.d0
+      phi_cut = 0.6d0!20.d0
 
       ! Initialise the IceCube data and calculations for the IC86 prediction. 
       call nulike_init(experiment, eventf, BGf, efareaf, edispf, 
      & phi_cut, theoryError, uselogNorm, BGLikePrecompute)
 
-      ! Here we use the IC79 WH data that ships with nulike.
-      !  experiment = 'IC-79 WH'
-      !  eventf  = trim(iclike2014)//'IC79_Events_WH_10degrees.dat'
-      !  BGf     = trim(iclike2014)//'IC79_Background_distributions_WH.dat'
-      !  efareaf = ignored
-      !  edispf  = ignored
+      ! Here we use the IC-79 WH data that ship with nulike
+      experiment = 'IC-79 WH'
+      eventf  = trim(iclike2014)//'IC79_Events_WH_10degrees.dat'
+      BGf     = trim(iclike2014)//'IC79_Background_distributions_WH.dat'
+      partiald= trim(iclike2014)//'IC79_Partial_Likelihoods_WH'
+      !efareaf = not needed in 2014-type analyses
+      !edispf  = ignored in 2014-type analyses
+      !phi_cut is ignored, as it is read in with the partial likelihoods
+
+      ! Initialise the IceCube data and calculations for the IC79 WH sample. 
+      call nulike_init(experiment, eventf, BGf, partiald, edispf, 
+     & phi_cut, theoryError, uselogNorm, BGLikePrecompute)
 
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       ! 2. DarkSUSY initialisation and model read-in

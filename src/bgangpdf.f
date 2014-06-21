@@ -24,7 +24,7 @@
      & BGangdist_sigma(:,analysis),0,1,cosphi,nulike_bgangpdf,IER)
 
       if (IER .lt. 0) then
-        write(*,*) 'TSVAL1 error from background spectral'
+        write(*,*) 'TSVAL1 error from background angular'
         write(*,*) 'distribution in nulike_bgangpdf, code:', IER
         stop
       endif

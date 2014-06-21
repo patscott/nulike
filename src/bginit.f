@@ -32,7 +32,9 @@
       real*8 dummyfloat1, dummyfloat2
       real*8 BGangdist_phi_temp(max_nBinsBGAng)
       real*8 BGangdist_prob_temp(max_nBinsBGAng)
-      real*8 working(2*nbins_angular-2), TSINTL
+      real*8 angworking(2*nbins_angular-2)
+      real*8 eeworking(2*nbins_ee-2), TSINTL
+
 
       !Open background file for reading
       open(lun,file=filename,ACTION='READ')
@@ -66,7 +68,8 @@
             read(lun, *) instring, dummyfloat1, dummyfloat2
             if (indices(i).eq.angular) then
               !Read in observed angular distribution of background events
-              BGangdist_phi_temp(j) = dummyfloat1
+              if (like .eq. 2012) BGangdist_phi_temp(j) = dummyfloat1
+              if (like .eq. 2014) BGangdist_phi_temp(j) = dummyfloat1-1 !FIXME this is a hack!!
               BGangdist_prob_temp(j) = dummyfloat2
             else
               !Read in observed distribution of energy estimators (e.g. nchan)
@@ -108,7 +111,15 @@
 
       !2014 likelihood, as per arXiv:141x.xxxx (Set up interpolation in distribution of the energy estimator.)
       case (2014)
-        !FIXME
+
+        !Set up interpolation in energy distribution.
+        call TSPSI(nbins_ee,BGeedist_ee(:,analysis),BGeedist_prob(:,analysis),2,0,.false.,.false.,
+     &   2*nbins_ee-2,eeworking,BGeedist_derivs(:,analysis),BGeedist_sigma(:,analysis),IER)
+        if (IER .lt. 0) then
+          write(*,*) 'TSPSI error from spectral distribution of'
+          write(*,*) 'background in nulike_bginit, code: ', IER 
+          stop
+        endif
 
       case default
         write(*,*) "Unrecognised likelihood version in nulike_bginit."
@@ -141,7 +152,7 @@
 
       !Initialise interpolator
       call TSPSI(nbins_angular,BGangdist_phi(:,analysis),BGangdist_prob(:,analysis),
-     & 2,0,.false.,.false.,2*nbins_angular-2,working,BGangdist_derivs(:,analysis),
+     & 2,0,.false.,.false.,2*nbins_angular-2,angworking,BGangdist_derivs(:,analysis),
      & BGangdist_sigma(:,analysis),IER)
       if (IER .lt. 0) then
         write(*,*) 'Error in nulike_bgnit: TSPSI failed with error'

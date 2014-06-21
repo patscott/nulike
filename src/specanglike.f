@@ -34,18 +34,18 @@
 
       integer event_number
       real*8 theta_S, f_S, annrate, logmw, logEmin, nuyield
-      real*8 bgpartial, sigpartial, cosphi, nchan, eps
+      real*8 bgpartial, sigpartial, cosphi, ee, eps
       real*8 nulike_bgangpdf, nulike_bgspec, nulike_specangintegrand
       real*8 nulike_simpson
       external nuyield, nulike_specangintegrand
-      parameter (eps = 1.d-4)
+      parameter (eps = 1.d-2)
 
       ! Retrieve the event info
       cosphi = events_cosphi(event_number,analysis)
-      nchan = events_nchan(event_number,analysis)
+      ee = events_ee(event_number,analysis)
 
       ! Include the background component
-      bgpartial = nulike_bgangpdf(cosphi) * nulike_bgspec(nchan,2014)
+      bgpartial = nulike_bgangpdf(cosphi) * nulike_bgspec(ee,2014)
 
       ! Include the signal component
       if (logEmin .gt. logmw) then
@@ -53,7 +53,9 @@
       else
         eventnumshare = event_number
         sigpartial = nulike_simpson(nulike_specangintegrand,nuyield,logEmin,logmw,eps)
+        !write(*,*) eventnumshare, sigpartial, exp_time(analysis), theta_S, annrate
         sigpartial = exp_time(analysis) / theta_S * annrate * dlog(10.d0) * sigpartial
+        !write(*,*) sigpartial
       endif
 
       ! Combine background and signal components

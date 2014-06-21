@@ -31,7 +31,7 @@
       if (eventnum .eq. 0) then 
 
         !Call interpolator to get effective area for this energy
-        call TSVAL1(nPrecompE(analysis),precomp_energies(:,analysis),
+        call TSVAL1(nPrecompE(analysis),precomp_log10E(:,analysis),
      &   precompEA_weights(:,ptype,analysis),
      &   precompEA_derivs(:,ptype,analysis),
      &   precompEA_sigma(:,ptype,analysis),
@@ -40,7 +40,7 @@
       else
 
         !Call interpolator for this event to get weight for this energy
-        call TSVAL1(nPrecompE(analysis),precomp_energies(:,analysis),
+        call TSVAL1(nPrecompE(analysis),precomp_log10E(:,analysis),
      &   precomp_weights(:,eventnum,ptype,analysis),
      &   precomp_derivs(:,eventnum,ptype,analysis),
      &   precomp_sigma(:,eventnum,ptype,analysis),
@@ -48,12 +48,16 @@
 
       endif
 
-      if (nulike_tabulated_weight .lt. 0.d0) nulike_tabulated_weight = 0.d0
-
       if (IER .lt. 0) then
         write(*,*) 'TSVAL1 error from weight or effective area'
         write(*,*) 'in nulike_tabulated_weight, code:', IER
         stop
+      endif
+
+      if (nulike_tabulated_weight - logZero .lt. epsilon(logZero)) then
+        nulike_tabulated_weight = 0.d0
+      else
+        nulike_tabulated_weight = 10.d0**nulike_tabulated_weight
       endif
 
       end function nulike_tabulated_weight

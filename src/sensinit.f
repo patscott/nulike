@@ -82,7 +82,7 @@
      & sens_nusigma(:,analysis),IER)
       if (IER .lt. 0) then
         write(*,*) 'Error in nulike_sensinit: TSPSI failed with error'
-        write(*,*) 'code',IER,' in setting up neutrino eff area/vol.'
+        write(*,*) 'code',IER,' in setting up nu/lepton effective area/vol.'
         stop
       endif
 

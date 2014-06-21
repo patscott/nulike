@@ -15,7 +15,6 @@
 
       implicit none
       include 'nulike.h'
-      include 'nuprep.h'
 
       character (len=*) filename
       character (len=20) instring, instring2
@@ -49,7 +48,7 @@
           case (2012)
             events_nchan(cutevents,analysis) = nint(ee)
           case (2014)
-            events_ee(cutevents) = ee
+            events_ee(cutevents,analysis) = ee
           case default
             stop 'Unrecognised likelihood type in nulike_eventinit.'
           end select

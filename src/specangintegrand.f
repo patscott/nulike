@@ -40,4 +40,6 @@
       !Weight by E to give full integrand
       nulike_specangintegrand = nulike_specangintegrand * 10.d0**log10E
 
+      !write(*,*) 10.d0**log10E, nulike_specangintegrand
+
       end function nulike_specangintegrand

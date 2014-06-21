@@ -28,7 +28,7 @@
       real*8 nuyield, upperLimit, theta_Snu, theta_Snubar, annrate
       real*8 nulike_specangintegrand, eps2012, eps2014
       integer like
-      parameter (eps2012 = 1.d-3, eps2014 = 1e-4)
+      parameter (eps2012 = 1.d-3, eps2014 = 1e-3)
       external nuyield, nulike_sigintegrand, nulike_specangintegrand
  
       ! Short-circuit if the mass is too low to produce any observable events.

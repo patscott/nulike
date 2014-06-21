@@ -31,7 +31,7 @@
 
       !Return low likelihood automatically if cosphi = 1.0 exactly
       if (cosphi .eq. 1.d0) then
-        nulike_anglike = bigBadLike
+        nulike_anglike = logZero
         return
       endif
 

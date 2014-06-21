@@ -5,7 +5,7 @@
 *** Input:	log10E	        log(neutrino energy/GeV)
 *** 		ptype	= 1	neutrinos
 ***			= 2	anti-neutrinos
-*** Output:                     effective area or volume (m^2 or km^3)
+*** Output:                     effective area (m^2) or volume (km^3)
 ***       
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
 *** Date: Apr 24, 2011

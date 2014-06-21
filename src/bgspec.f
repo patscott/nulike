@@ -16,20 +16,20 @@
       include 'nulike.h'
 
       real*8  ee
-      integer nchan_index, like
+      integer nchan_index, like, IER
 
-      if (ee .lt. ee_min(analysis) .or. ee .gt. ee_max(analysis)) then
-        write(*,*) 'Error in nulike_bgspec: energy estimator outside'
-        write(*,*) 'tabulated range: ee=',ee,'.  Quitting...'
-        stop
-      endif
-  
       ! Switch according to likelihood version.
       select case (like)
 
       ! 2012 likelihood, as per arXiv:1207.0810
       case (2012)
 
+        if (ee .lt. ee_min(analysis) .or. ee .gt. ee_max(analysis)) then
+          write(*,*) 'Error in nulike_bgspec: energy estimator outside'
+          write(*,*) 'tabulated range: ee=',ee,'.  Quitting...'
+          stop
+        endif
+  
         nchan_index = nint(ee) - nint(ee_min(analysis)) + 1 - nchan_hist2BGoffset(analysis)
         if (BGeedist_ee(nchan_index,analysis) .ne. ee) then
           write(*,*) BGeedist_ee(nchan_index,analysis), ee, nchan_index
@@ -41,9 +41,19 @@
       !2014 likelihood, as per arXiv:141x.xxxx
       case (2014)
 
-        !TSVAL1( 
-
-        !nulike_bgspec, IER)
+        !If the value of the energy estimator is outside the range of this histogram, return zero.
+        if (ee .lt. BGeedist_ee(1,analysis) .or. ee .gt. BGeedist_ee(nBinsBGE(analysis),analysis) ) then
+          nulike_bgspec = 0.d0
+        else !If the measured value of the energy estimator is in the range of this histogram, set the prob by interpolating.
+          call TSVAL1(nBinsBGE(analysis),BGeedist_ee(:,analysis),
+     &     BGeedist_prob(:,analysis),BGeedist_derivs(:,analysis),
+     &     BGeedist_sigma(:,analysis),0,1,ee,nulike_bgspec,IER)
+          if (IER .lt. 0) then
+            write(*,*) 'TSVAL1 error from background spectral'
+            write(*,*) 'distribution in nulike_bgspec, code:', IER
+            stop
+          endif
+        endif
 
       case default
         write(*,*) "Unrecognised likelihood version in nulike_bgspec."
@@ -51,7 +61,5 @@
         stop
 
       end select
-
-
 
       end function nulike_bgspec

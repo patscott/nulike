@@ -128,7 +128,7 @@ C                                        SIGN, SQRT
 C
 C***********************************************************
 C
-      INTEGER I, ICNT, IP1, LUN, NIT, NM1
+      INTEGER I, ICNT, IP1, LUN, NIT, NM1, NITSTEP, NITMAX
       DOUBLE PRECISION A, C1, C2, COSHM, COSHMM, D0, D1,
      .                 D1D2, D1PD2, D2, DMAX, DSIG, DSM, DX,
      .                 E, EMS, EMS2, F, F0, FMAX, FNEG, FP,

@@ -236,7 +236,7 @@
       PARAMETER(SQRTPI=1.7724538509055160d0)
       PARAMETER(SQRT2=1.4142135623730950d0)
       PARAMETER(SQRTHALF=0.70710678118654752d0)
-      
+
       ! Special case: theta = 0
       ! Note that r0 is irrelevant here as it is not needed in the
       ! recurrence relation
@@ -298,6 +298,8 @@
         lnI0 = lnI0 + LOG(r0)
       END IF
       
+      n=n !No-warn operation that should get optimised away.
+
       END SUBROUTINE recurrence_init
       
       
@@ -335,7 +337,7 @@
       REAL*8 sigma2,alpha,beta,eta,r,kappa,lambda,nkroot,w0,eps0,
      &       sigmau,sigmau2,u0,rho,Ainv
       REAL*8 lnC,g0,lnIu
-      REAL*8 lnIu1,lnIu2
+      !REAL*8 lnIu1,lnIu2
       REAL*8 lngamma
       REAL*8 SQRT2
       PARAMETER(SQRT2=1.4142135623730950d0)

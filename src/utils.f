@@ -1,5 +1,5 @@
 ***********************************************************************
-*** nulike_credits does just what you expect.
+*** nulike_utils contains various simple utility routines.
 ***        
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
 *** Date: Jun 15 2014
@@ -22,3 +22,25 @@
       credits_rolled = .true.
 
       end subroutine nulike_credits
+
+
+      character(len=6) function evnmshrfmt(i)
+
+      implicit none
+      integer i
+
+      if (i .ge. 100000) then
+        evnmshrfmt = '(I6)'
+      elseif (i .ge. 10000) then
+        evnmshrfmt = '(I5)'
+      elseif (i .ge. 1000) then
+        evnmshrfmt = '(I4)'
+      elseif (i .ge. 100) then
+        evnmshrfmt = '(I3)'
+      elseif (i .ge. 10) then
+        evnmshrfmt = '(I2)'
+      else
+        evnmshrfmt = '(I1)'
+      endif
+
+      end function

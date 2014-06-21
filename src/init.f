@@ -15,9 +15,11 @@
 ***   file3             If the eventfile indicates that the likelihood is
 ***                      2012 type: path to the file containing the IceCube
 ***                                 effective area and angular resolution.
-***                      2014 type: path to the file containing the partial
-***                                 angular and spectral likelihoods, as
-***                                 well as the the cutoff angle used.
+***                      2014 type: path to the folder containing the partial
+***                                 angular-spectral likelihoods, the
+***                                 effective area, the cut angle and all
+***                                 other parameters that they have been 
+***                                 computed with. 
 ***   nchandistfile     If the eventfile indicates that the likelihood is
 ***                      2012 type: path to the file containing distributions
 ***                                 of the number of DOMs in the IceCube   
@@ -58,7 +60,7 @@
 
       character (len=*) analysis_name, eventfile, BGfile, file3, nchandistfile
       integer nnchan(max_nHistograms)
-      integer BGfirst, BGsecond, nulike_amap, nBinsBGE
+      integer BGfirst, BGsecond, nulike_amap
       real*8 phi_cut, theoryError, cosphimax, dummy
       logical BGLikePrecompute, uselogNorm
       external nulike_amap
@@ -95,7 +97,7 @@
 
       !Open background file, determine numbers of bins for angular 
       !and nchan distributions, and which comes first
-      call nulike_preparse_bgfile(BGfile, nBinsBGAng(analysis), nBinsBGE, BGfirst, BGsecond)
+      call nulike_preparse_bgfile(BGfile, nBinsBGAng(analysis), nBinsBGE(analysis), BGfirst, BGsecond)
 
 
       !Switch according to likelihood version.
@@ -120,7 +122,7 @@
         nnchan_total(analysis) = nint(ee_max(analysis) - ee_max(analysis)) + 1
       
         !Read in the actual background data
-        call nulike_bginit(BGfile, nBinsBGAng(analysis), nBinsBGE, BGfirst, BGsecond, 2012)
+        call nulike_bginit(BGfile, nBinsBGAng(analysis), nBinsBGE(analysis), BGfirst, BGsecond, 2012)
 
         !Read in the actual nchan response histograms and rearrange them into energy dispersion estimators
         call nulike_edispinit(nchandistfile, nHistograms(analysis), nnchan, ee_min(analysis), 2012)
@@ -133,7 +135,7 @@
         cosphimax = dcos(phi_max_deg(analysis)*pi/180.d0)
 
         !Read in the actual background data
-        call nulike_bginit(BGfile, nBinsBGAng(analysis), nBinsBGE, BGfirst, BGsecond, 2014)
+        call nulike_bginit(BGfile, nBinsBGAng(analysis), nBinsBGE(analysis), BGfirst, BGsecond, 2014)
 
       case default
         write(*,*) "Unrecognised likelihood version in nulike_init."
