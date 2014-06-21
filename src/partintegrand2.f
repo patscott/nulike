@@ -29,7 +29,7 @@
 
       real*8 y, Elep, log10Elep, mlep2, phi_obs, phi_err, errlep, plep, philep_p, philep_n
       real*8 spnc, spcc, snnc, sncc, pcont, ncont, edisp, effvol, angloss, dsdxdy 
-      real*8 nulike_edisp, nulike_psf, nulike_sens, nulike_angres, cosang, rabbit(500)
+      real*8 nulike_edisp, nulike_psf, nulike_sens, nulike_angres, cosang
       integer ptype
       external dsdxdy
 
