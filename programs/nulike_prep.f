@@ -10,9 +10,8 @@
 
       implicit none
       include 'nucommon.h'
-      include 'nuprep.h'
 
-      character (len=300) files(8)
+      character (len=nulike_clen) files(8)
       real*8 phi_cut, lEmin, lEmax, Nudsdxdy
       integer i, gotarg, nE
       external Nudsdxdy

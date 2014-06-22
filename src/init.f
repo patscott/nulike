@@ -58,7 +58,7 @@
       implicit none
       include 'nulike.h'
 
-      character (len=*) analysis_name, eventfile, BGfile, file3, nchandistfile
+      character (len=nulike_clen) analysis_name, eventfile, BGfile, file3, nchandistfile
       integer nnchan(max_nHistograms)
       integer BGfirst, BGsecond, nulike_amap
       real*8 phi_cut, theoryError, cosphimax, dummy
@@ -138,7 +138,7 @@
         call nulike_bginit(BGfile, nBinsBGAng(analysis), nBinsBGE(analysis), BGfirst, BGsecond, 2014)
 
       case default
-        write(*,*) "Unrecognised likelihood version in nulike_init."
+        write(*,*) "Unrecognised likelihood version in nulike_init: ", likelihood_version(analysis)
         write(*,*) "Quitting..."
         stop
 

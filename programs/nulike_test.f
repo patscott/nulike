@@ -8,6 +8,15 @@
       program nulike_test
 
       implicit none
+      !Nulike include
+      include 'nucommon.h'
+      !DarkSUSY includes
+      include 'dsio.h'
+      include 'dsidtag.h'
+      include 'dsntcom.h'
+      include 'dsdirver.h'
+      include 'dswacom.h'
+
       real*8 oh2,xf,dsrdomega                                    ! relic density
       real*8 sigsip,sigsin,sigsdp,sigsdn                         ! nuclear scattering
       real*8 dsntcapsuntab, ca                                   ! capture rate 
@@ -17,16 +26,11 @@
       integer totobs, likechoice                                 ! neutrino likelihood
       logical uselogNorm, pvalFromRef                            ! neutrino likelihood
       logical BGLikePrecompute                                   ! neutrino likelihood
-      character (len=256) iclike2012, iclike2014, experiment     ! neutrino likelihood
-      character (len=256) eventf, edispf, BGf, efareaf, partiald ! neutrino likelihood
+      character (len=nulike_clen) iclike2012, iclike2014         ! neutrino likelihood
+      character (len=nulike_clen) experiment, eventf, edispf     ! neutrino likelihood
+      character (len=nulike_clen) BGf, efareaf, partiald         ! neutrino likelihood
       integer unphys,hwarning,iend,ierr,iwar,nfc                 ! bookkeeping
       external nuyield
-
-      include 'dsio.h'
-      include 'dsidtag.h'
-      include 'dsntcom.h'
-      include 'dsdirver.h'
-      include 'dswacom.h'
 
 
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -66,8 +70,7 @@
       ! the number of neutrino events
       uselogNorm = .true.
 
-      ! Choose whether to precompute the background p-value in the case where Poissonian 
-      ! statistics is used.
+      ! Choose whether to precompute the background p-value
       BGLikePrecompute = .true.
 
       ! Initialise the IceCube data and calculations for IC22. 

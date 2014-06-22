@@ -84,7 +84,7 @@
       real*8 deltalnlike, mwimp, annrate, specAngLikelihood, nulike_signal
       real*8 nulike_specanglike
       logical pvalFromRef, nulike_speclike_reset, doProfiling
-      character (len=*) analysis_name,pref,f1,f2,f3,f4
+      character (len=nulike_clen) analysis_name,pref,f1,f2,f3,f4
       external nuyield
       !Hidden option for doing speed profiling
       parameter (doProfiling = .false.)

@@ -14,11 +14,18 @@ LIB=lib
 PROGS=programs
 TSPACK=contrib/TSPACK
 
-# Define fortran compiler and options
-FF=ifort
+# Define fortran compiler and options: intel
+#FF=ifort
+#FOPT=-O -extend_source -warn all -check all
+#MODULE=module
+# Define fortran compiler and options: gnu
+FF=gfortran
+FOPT=-O -ffixed-line-length-none -Wall -fcheck=all
+MODULE=J
+
+# Set internal compile commands
 FC=$(FF)
-FOPT=-O -extend_source -I$(INC) -module $(BUILD) -fPIC -warn all -check all
-FFLAGS=$(FOPT) -c
+FFLAGS=$(FOPT) -I$(INC) -$(MODULE) $(BUILD) -fPIC
 
 # DarkSUSY location, library name and include path
 DSLIBDIR = ../iclike2/lib
@@ -61,14 +68,14 @@ default: libnulike.a
 all : $(OBJ) libnulike.a libnulike.so nulike_prep nulike_test
 
 $(BUILD)/%.o : $(SRC)/%.F $(INC_DEP)
-	$(FC) $(FFLAGS) src/$< -o $@
+	$(FC) $(FFLAGS) -c src/$< -o $@
 
 $(BUILD)/%.o : $(SRC)/%.f $(INC_DEP)
-	$(FC) $(FFLAGS) $< -o $@
+	$(FC) $(FFLAGS) -c $< -o $@
 
 $(BUILD)/tspack.o : $(TSPACK_FULL_SOURCES)
 	cat $(TSPACK_FULL_SOURCES) > tspack.f
-	$(FC) $(FFLAGS) tspack.f -o $(BUILD)/tspack.o
+	$(FC) $(FFLAGS) -c tspack.f -o $(BUILD)/tspack.o
 	rm tspack.f
 
 libnulike.a : $(OBJ)
@@ -78,10 +85,10 @@ libnulike.so : $(OBJ)
 	$(FC) -shared -o $(LIB)/$@ $(OBJ)
 
 nulike_prep : libnulike.a $(PROGS)/nulike_prep.f
-	$(FC) $(FOPT) -I$(NUSIGINC) -o $@ $(PROGS)/nulike_prep.f -L$(NUSIGDIR) -static -l$(NUSIGNAME) -L$(LIB) -static -lnulike -lgfortran
+	$(FC) $(FFLAGS) -I$(NUSIGINC) -o $@ $(PROGS)/nulike_prep.f -L$(NUSIGDIR) -static -l$(NUSIGNAME) -L$(LIB) -static -lnulike -lgfortran
 
 nulike_test : libnulike.a $(PROGS)/nulike_test.f
-	$(FF) $(FOPT) -I$(DSLIBINC) -o $@ $(PROGS)/nulike_test.f -L$(DSLIBDIR) -static -l$(DSLIBNAME) -lHB -lFH -L$(LIB) -static -lnulike -lisospin
+	$(FF) $(FFLAGS) -I$(DSLIBINC) -o $@ $(PROGS)/nulike_test.f -L$(DSLIBDIR) -static -l$(DSLIBNAME) -lHB -lFH -L$(LIB) -static -lnulike -lisospin
 
 clean : 
 	rm -f $(BUILD)/* tspack.f Key.dat nulike_test nulike_prep

@@ -12,7 +12,7 @@
       include 'nucommon.h'
 
       integer nchan_maxallowed
-      parameter(nchan_maxallowed =100) !Maximum value of nchan
+      parameter(nchan_maxallowed = 100) !Maximum value of nchan
 
       real*8 effZero, logZero
       parameter(effZero = 1.d-100)
