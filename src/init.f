@@ -59,11 +59,13 @@
       include 'nulike.h'
 
       character (len=nulike_clen) analysis_name, eventfile, BGfile, file3, nchandistfile
-      integer nnchan(max_nHistograms)
+      integer nnchan(max_nHistograms), nAnalyses
       integer BGfirst, BGsecond, nulike_amap
       real*8 phi_cut, theoryError, cosphimax, dummy
       logical BGLikePrecompute, uselogNorm
       external nulike_amap
+      data nAnalyses /0/
+      save nAnalyses
 
       !Roll credits.
       call nulike_credits
@@ -84,7 +86,7 @@
       nAnalyses = nAnalyses + 1
       analysis = nAnalyses
       analysis_name_array(analysis) = trim(analysis_name)
-      
+
       !Choose whether to have a Gaussian distribution for the assumed PDF of 
       !systematic errors on the effective area/volume or a log-normal distribution
       sysErrDist_logNorm(analysis) = uselogNorm

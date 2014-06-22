@@ -17,7 +17,7 @@
       character(len=*) analysis_name
       integer i
 
-      do i = 1, nAnalyses
+      do i = 1, max_analyses
         if (trim(analysis_name_array(i)) .eq. trim(analysis_name)) then
           nulike_amap = i
           return

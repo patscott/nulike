@@ -32,11 +32,11 @@
      &                      '####--Nchan--  ',
      &                      '####--Nevents--'/))
 
-      integer analysis, nAnalyses, ptypeshare, eventnumshare
+      integer analysis, ptypeshare, eventnumshare
       real*8  Eshare, min_detectable_logE
       real*8  events_ee(max_nEvents,max_analyses)
 
-      common /nu_comm/ analysis, nAnalyses, ptypeshare, eventnumshare, 
+      common /nu_comm/ analysis, ptypeshare, eventnumshare, 
      & Eshare, min_detectable_logE, events_ee
       save /nu_comm/
 
