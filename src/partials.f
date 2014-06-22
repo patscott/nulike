@@ -72,7 +72,6 @@
       call nulike_credits
 
       !Only compile one set of partial likelihoods at a time.
-      nAnalyses = 1
       analysis = 1
 
       !Set the internal cut angle

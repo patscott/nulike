@@ -36,8 +36,7 @@
       real*8  Eshare, min_detectable_logE
       real*8  events_ee(max_nEvents,max_analyses)
 
-      common /nu_comm/ analysis, ptypeshare, eventnumshare, 
-     & Eshare, min_detectable_logE, events_ee
+      common /nu_comm/ Eshare, min_detectable_logE, events_ee, analysis, ptypeshare, eventnumshare
       save /nu_comm/
 
       ! This parameter will be initialized in a block data routine
