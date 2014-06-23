@@ -14,7 +14,7 @@
       implicit none
       include 'nulike.h'
       
-      character(len=*) analysis_name
+      character(len=nulike_clen) analysis_name
       integer i
 
       do i = 1, max_analyses

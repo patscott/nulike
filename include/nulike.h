@@ -18,7 +18,7 @@
       parameter(effZero = 1.d-100)
       parameter(logZero = log10(effZero))
 
-      character (len=100) analysis_name_array(max_analyses)
+      character (len=nulike_clen) analysis_name_array(max_analyses)
       integer likelihood_version(max_analyses)
       logical sysErrDist_logNorm(max_analyses)
       real*8 phi_max_deg(max_analyses)

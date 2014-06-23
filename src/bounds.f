@@ -84,14 +84,10 @@
       real*8 deltalnlike, mwimp, annrate, specAngLikelihood, nulike_signal
       real*8 nulike_specanglike
       logical pvalFromRef, nulike_speclike_reset, doProfiling
-      character (len=nulike_clen) analysis_name,pref,f1,f2,f3,f4
+      character (len=nulike_clen) analysis_name
       external nuyield
       !Hidden option for doing speed profiling
       parameter (doProfiling = .false.)
-      parameter (pref = 'data/IceCube/likelihood2014/')
-      parameter (f1 = pref//'events_10deg_IC79.dat')
-      parameter (f2 = pref//'BG_distributions_IC79.dat')
-      parameter (f3 = 'dummy', f4 = 'dummy')
         
 
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -107,13 +103,17 @@
         stop
       endif
      
-      !If nulike_init has not yet been called, call it with the default IC-79 options and use that analysis.
-      if (.not. nulike_init_called) call nulike_init(analysis_name,f1,f2,f3,f4,20.d0,0.05d0,.true.,.true.)
+      !If nulike_init has not yet been called, quit.
+      if (.not. nulike_init_called) then
+        write(*,*) "Please call nulike_init before nulike_bounds."
+        write(*,*) 'Quitting...'
+        stop
+      endif
       
       !Look up the analysis requested by the user.
       analysis = nulike_amap(analysis_name)
       if (analysis .eq. 0) then
-        write(*,*) "Analysis '"//analysis_name//"' requested of nulike_bounds"
+        write(*,*) "Analysis '"//trim(analysis_name)//"' requested of nulike_bounds"
         write(*,*) 'is not one of the ones that has already been loaded.'
         write(*,*) 'Quitting...'
         stop
@@ -122,7 +122,7 @@
       !Make sure the user has not tried to use the 2014 like with only angular or only spectral likelihood.
       if (likelihood_version(analysis) .eq. 2014 .and. 
      & (liketype .eq. 2 .or. liketype .eq. 3) ) then
-        write(*,*) "Analysis '"//analysis_name//"' requested of nulike_bounds"
+        write(*,*) "Analysis '"//trim(analysis_name)//"' requested of nulike_bounds"
         write(*,*) 'uses the 2014 likelihood, which is incompatible with liketype = ',liketype
         write(*,*) 'Quitting...'
         stop

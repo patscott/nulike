@@ -56,7 +56,7 @@ eventinit.f init.f nlike.f psf.f pval.f analysis_map.f \
 sigintegrand.f signal.f specintegrand.f speclike.f utils.f \
 partials.f specanglike.f specangintegrand.f specanginit.f \
 tabulated_weight.f preparse_files.f partintegrand1.f \
-partintegrand2.f
+partintegrand2.f d1mach.f
 OBJ = $(patsubst %.f,$(BUILD)/%.o,$(SOURCES)) $(BUILD)/tspack.o
 TSPACK_SOURCES = ENDSLP.f SIGS.f SNHCSH.f STORE.f \
 YPCOEF.f YPC1.f YPC1P.f YPC2.f YPC2P.f TSPSI.f \
