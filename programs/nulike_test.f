@@ -188,10 +188,10 @@
         ! considering only the number count, not the spectral or angular information.
         ! If you're only interested in p-values, not likelihoods, use likechoice = 1, as
         ! this is the fastest.
-        !likechoice = 1		! Number of events only
-        !likechoice = 2		! Number of events and event arrival angles
-        !likechoice = 3		! Number of events and energy estimator (for IceCube, this is nchan = number of hit DOMs)
-        likechoice = 4		! Number of events, event arrival angles and energy estimator
+        !likechoice = 1	! Number of events only
+        !likechoice = 2	! Number of events and event arrival angles
+        !likechoice = 3	! Number of events and energy estimator (for IceCube, this is nchan = number of hit DOMs)
+        likechoice = 4  ! Number of events, event arrival angles and energy estimator
 
         ! Choose whether to calculate the p value relative to a reference value of 
         ! the likelihood or to the background

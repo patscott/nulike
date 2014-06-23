@@ -20,6 +20,7 @@
       character (len=20) instring, instring2
       integer totalevents, cutevents, savedevents, j, like
       real*8 cosphimin, cosphi, cosphierr, ee
+      data savedevents /0/
 
       !Save the current number of events for later comparison if it is already set.
       if (like .eq. 2014) savedevents = cutevents

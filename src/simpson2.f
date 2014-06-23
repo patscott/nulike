@@ -49,7 +49,7 @@
               nulike_simpson2=tot
               return
            endif
-     	endif
+        endif
         os=tot
         ost=st
       enddo
