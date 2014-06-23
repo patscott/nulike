@@ -24,7 +24,7 @@
       implicit none
       include 'nulike.h'
 
-      real*8 log10E
+      real*8 log10E, nulike_tabulated_weight_a(1)
       integer ptype, eventnum, IER
 
 
@@ -35,7 +35,8 @@
      &   precompEA_weights(:,ptype,analysis),
      &   precompEA_derivs(:,ptype,analysis),
      &   precompEA_sigma(:,ptype,analysis),
-     &   0,1,log10E,nulike_tabulated_weight,IER)
+     &   0,1,log10E,nulike_tabulated_weight_a,IER)
+        nulike_tabulated_weight = nulike_tabulated_weight_a(1)
 
       else
 
@@ -44,7 +45,8 @@
      &   precomp_weights(:,eventnum,ptype,analysis),
      &   precomp_derivs(:,eventnum,ptype,analysis),
      &   precomp_sigma(:,eventnum,ptype,analysis),
-     &   0,1,log10E,nulike_tabulated_weight,IER)
+     &   0,1,log10E,nulike_tabulated_weight_a,IER)
+        nulike_tabulated_weight = nulike_tabulated_weight_a(1)
 
       endif
 

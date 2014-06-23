@@ -18,7 +18,7 @@
       include 'nulike.h'
       include 'nuprep.h'
 
-      real*8 log10E, ee
+      real*8 log10E, ee, nulike_edisp_a(1)
       integer nchan_index, IER, like
 
       !Switch according to likelihood version.
@@ -40,13 +40,15 @@
 
         call TSVAL1(nHistograms(analysis),hist_logEcentres(:,analysis),
      &   hist_prob(:,nchan_index,analysis),hist_derivs(:,nchan_index,analysis),
-     &   hist_sigma(:,nchan_index,analysis),0,1,log10E,nulike_edisp,IER)
+     &   hist_sigma(:,nchan_index,analysis),0,1,log10E,nulike_edisp_a,IER)
+        nulike_edisp = nulike_edisp_a(1)
 
       !2014 likelihood, as per arXiv:141x.xxxx
       case (2014)
 
         call TSVAL1(nhist,hist_logEnergies,hist_single_ee_prob,
-     &   hist_single_ee_derivs,hist_single_ee_sigma,0,1,log10E,nulike_edisp,IER)
+     &   hist_single_ee_derivs,hist_single_ee_sigma,0,1,log10E,nulike_edisp_a,IER)
+        nulike_edisp = nulike_edisp_a(1)
 
       case default
         write(*,*) "Unrecognised likelihood version in nulike_init."

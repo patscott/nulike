@@ -17,7 +17,7 @@
       implicit none
       include 'nulike.h'
 
-      real*8 log10E
+      real*8 log10E, log10E_a(1), nulike_sens_a(1)
       integer ptype, IER
  
       !Abort if outside the valid energy range.     
@@ -27,20 +27,24 @@
         return
       endif
 
+      log10E_a(1) = log10E
+
       !Choose relevant species
       if (ptype .eq. 1) then
 
         !neutrinos
         call TSVAL1(nSensBins(analysis),sens_logEcentres(:,analysis),
      &   sens_nu(:,analysis),sens_nuderivs(:,analysis),
-     &   sens_nusigma(:,analysis),0,1,log10E,nulike_sens,IER)
+     &   sens_nusigma(:,analysis),0,1,log10E_a,nulike_sens_a,IER)
+        nulike_sens = nulike_sens_a(1)
 
       else if (ptype .eq. 2) then
 
         !anti-neutrinos
         call TSVAL1(nSensBins(analysis),sens_logEcentres(:,analysis),
      &   sens_nubar(:,analysis),sens_nubarderivs(:,analysis),
-     &   sens_nubarsigma,0,1,log10E,nulike_sens,IER)
+     &   sens_nubarsigma,0,1,(/log10E/),nulike_sens_a,IER)
+        nulike_sens = nulike_sens_a(1)
 
       else
 

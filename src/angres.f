@@ -18,17 +18,19 @@
       implicit none
       include 'nulike.h'
 
-      real*8 log10E
+      real*8 log10E, nulike_angres_a(1)
       integer IER
       
       call TSVAL1(nSensBins(analysis),sens_logEcentres(:,analysis),
      & sens_AngRes(:,analysis),sens_AngResderivs(:,analysis),
-     & sens_AngRessigma(:,analysis),0,1,log10E,nulike_angres,IER)
+     & sens_AngRessigma(:,analysis),0,1,log10E,nulike_angres_a,IER)
 
       if (IER .lt. 0) then
         write(*,*) 'TSVAL1 error from angular'
         write(*,*) 'resolution in nulike_angres, code:', IER
         stop
       endif
+
+      nulike_angres = nulike_angres_a(1)
 
       end function nulike_angres

@@ -15,7 +15,7 @@
       implicit none
       include 'nulike.h'
 
-      real*8  ee
+      real*8  ee, ee_a(1), nulike_bgspec_a(1)
       integer nchan_index, like, IER
 
       ! Switch according to likelihood version.
@@ -45,14 +45,16 @@
         if (ee .lt. BGeedist_ee(1,analysis) .or. ee .gt. BGeedist_ee(nBinsBGE(analysis),analysis) ) then
           nulike_bgspec = 0.d0
         else !If the measured value of the energy estimator is in the range of this histogram, set the prob by interpolating.
+          ee_a(1) = ee
           call TSVAL1(nBinsBGE(analysis),BGeedist_ee(:,analysis),
      &     BGeedist_prob(:,analysis),BGeedist_derivs(:,analysis),
-     &     BGeedist_sigma(:,analysis),0,1,ee,nulike_bgspec,IER)
+     &     BGeedist_sigma(:,analysis),0,1,ee_a,nulike_bgspec_a,IER)
           if (IER .lt. 0) then
             write(*,*) 'TSVAL1 error from background spectral'
             write(*,*) 'distribution in nulike_bgspec, code:', IER
             stop
           endif
+          nulike_bgspec = nulike_bgspec_a(1)
         endif
 
       case default

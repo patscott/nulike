@@ -892,6 +892,7 @@
       PARAMETER(MAX_ITERATIONS=8,MAX_BISECTIONS=40)
       INTEGER NDEBUG
       PARAMETER(NDEBUG=100)
+      DATA deltay /0/
       
       !WRITE(*,'(A,6(G))') 'findzero arguments:',alpha,r,eta,yi,ymin,ymax
       
