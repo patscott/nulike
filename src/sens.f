@@ -43,13 +43,14 @@
         !anti-neutrinos
         call TSVAL1(nSensBins(analysis),sens_logEcentres(:,analysis),
      &   sens_nubar(:,analysis),sens_nubarderivs(:,analysis),
-     &   sens_nubarsigma,0,1,(/log10E/),nulike_sens_a,IER)
+     &   sens_nubarsigma,0,1,log10E_a,nulike_sens_a,IER)
         nulike_sens = nulike_sens_a(1)
 
       else
 
         write(*,*) 'Error in nulike_sens:'
         write(*,*) 'unrecognised ptype; quitting...'
+        stop
 
       endif
 

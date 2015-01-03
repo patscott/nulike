@@ -32,10 +32,11 @@
         write(*,*) '       hit in the IceCube detector) for neutrinos of'
         write(*,*) '       different energies.'
         write(*,*)
-        write(*,*) '   f4  path to the file to be created or overwritten'
+        write(*,*) '   f4  path to the folder in which to save the files' 
         write(*,*) '       with the results of the partial likelihood'
-        write(*,*) '       calculation.'
-        write(*,*)
+        write(*,*) '       calculation.  If the folder does not exist, the'
+        write(*,*) '       user must first create it.'
+        write(*,*) 
         write(*,*) '  nE   number of neutrino energies to tabluate the'
         write(*,*) '       partial likelihoods for.'
         write(*,*)

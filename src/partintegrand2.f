@@ -79,7 +79,7 @@
 
         if (pcont .gt. 0.d0) then
           cosang = (Elep - m_p*xshare*y - 0.5d0*mlep2/Eshare) / plep           ! Cosine of lepton scattering angle
-          if (cosang .gt. 1.d0) cosang = 1.d0                                  ! Fix floating-point errors (>1 is kinematically disallowed)
+          if (cosang .gt. 1.d0) cosang = 1.d0                                  ! Fix floating-pt errs (>1 kinematically disallowed)
           philep_p = acos(cosang) * 180.d0/pi                                  ! --> degrees
           pcont = pcont * nulike_psf(phi_obs, philep_p, phi_err)               ! 1e-5 m^-3 cm^2 deg^-1
         else 
@@ -88,7 +88,7 @@
 
         if (ncont .gt. 0.d0) then
           cosang = (Elep - m_n*xshare*y - 0.5d0*mlep2/Eshare) / plep           ! Cosine of lepton scattering angle
-          if (cosang .gt. 1.d0) cosang = 1.d0                                  ! Fix floating-point errors (>1 is kinematically disallowed)
+          if (cosang .gt. 1.d0) cosang = 1.d0                                  ! Fix floating-pt errs (>1 kinematically disallowed)
           philep_n = acos(cosang) * 180.d0/pi                                  ! --> degrees
           ncont = ncont * nulike_psf(phi_obs, philep_n, phi_err)               ! 1e-5 m^-3 cm^2 deg^-1
         else 

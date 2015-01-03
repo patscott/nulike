@@ -121,6 +121,7 @@
       open(lun2, file=partialfolder//'/partlikes.aux', action='WRITE')
       write(lun2, fmt=*) '#This file provides auxiliary information about partial likelihoods.'
       write(lun2, fmt=*) '#It was generated automatically by nulike_partials.'
+      write(lun2, fmt=*) '# #events #energies, phi_cut, log10E_min, log10E_max'
       write(lun2, fmt='(A1,2I8,3E16.5)') ' ', nEvents, nEnergies, phi_cut, logE_min, logE_max
       close(lun2)
 

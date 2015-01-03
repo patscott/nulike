@@ -1,7 +1,13 @@
 # Makefile for nulike.  
-# Author: Pat Scott, patscott@physics.mcgill.ca
+#
+# Author: Pat Scott
+# p.scott@imperial.ac.uk
+#
 # This is a pretty simple program, so just change the
-# makefile by hand to suit your system.
+# makefile by hand to suit your system, or call
+# it from another makefile, overriding the variables
+# FF, FOPT and MODULE.
+#
 # Note that the test program requires DarkSUSY,
 # and the preparatory program requires nusigma.
 # Just compiling the library requires neither.
@@ -16,11 +22,11 @@ TSPACK=contrib/TSPACK
 
 # Define fortran compiler and options: intel
 FF=ifort
-FOPT=-O -extend_source -warn all -check all
+FOPT=-O -extend_source -warn all -check all #(contributed numerical routines cause warnings)
 MODULE=module
 # Define fortran compiler and options: gnu
 #FF=gfortran
-#FOPT=-O -ffixed-line-length-none -Wall -fcheck=all
+#FOPT=-O -ffixed-line-length-none # -Wall -fcheck=all #(contributed numerical routines cause warnings)
 #MODULE=J
 
 # Set internal compile commands
