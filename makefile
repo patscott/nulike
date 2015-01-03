@@ -47,8 +47,9 @@ INC_DEP = nulike.h
 vpath %.h $(INC)
 
 # Sources/objects
-SOURCES = dgamic.f lngamma.f lambertw.f lambertw2.f lambertwln.f \
-flagblocks.f lnpin.f lnpiln.f lnpinsum.f lnpilnsum.f \
+F90SOURCES = cons.f90 incgam.f90 marcumq.f90
+SOURCES = besi0.f dgamic.f lngamma.f lambertw.f lambertw2.f \
+lambertwln.f flagblocks.f lnpin.f lnpiln.f lnpinsum.f lnpilnsum.f \
 simpson.f simpson2.f lnpoisint.f anglike.f angres.f bgangpdf.f \
 bginit.f bglikeprecomp.f bgpredinit.f bgspec.f bounds.f \
 dP_SdE.f dPhi_SdE.f sensinit.f edisp.f edispinit.f sens.f \
@@ -57,7 +58,7 @@ sigintegrand.f signal.f specintegrand.f speclike.f utils.f \
 partials.f specanglike.f specangintegrand.f specanginit.f \
 tabulated_weight.f preparse_files.f partintegrand1.f \
 partintegrand2.f d1mach.f
-OBJ = $(BUILD)/tspack.o $(patsubst %.f,$(BUILD)/%.o,$(SOURCES)) 
+OBJ = $(BUILD)/tspack.o $(patsubst %.f90,$(BUILD)/%.o,$(F90SOURCES)) $(patsubst %.f,$(BUILD)/%.o,$(SOURCES)) 
 TSPACK_SOURCES = ENDSLP.f SIGS.f SNHCSH.f STORE.f \
 YPCOEF.f YPC1.f YPC1P.f YPC2.f YPC2P.f TSPSI.f \
 INTRVL.f HVAL.f HPVAL.f TSINTL.f HPPVAL.f TSVAL1.f
@@ -67,10 +68,10 @@ default: libnulike.a
 
 all : $(OBJ) libnulike.a libnulike.so nulike_prep nulike_test
 
-$(BUILD)/%.o : $(SRC)/%.F $(INC_DEP)
-	$(FC) $(FFLAGS) -c src/$< -o $@
-
 $(BUILD)/%.o : $(SRC)/%.f $(INC_DEP)
+	$(FC) $(FFLAGS) -c $< -o $@
+
+$(BUILD)/%.o : $(SRC)/%.f90 $(INC_DEP)
 	$(FC) $(FFLAGS) -c $< -o $@
 
 $(BUILD)/tspack.o : $(TSPACK_FULL_SOURCES)
