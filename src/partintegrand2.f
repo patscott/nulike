@@ -95,16 +95,23 @@
           philep_p = acos(cosang) * 180.d0/pi                                  ! --> degrees
           !Angular loss factor
           arg1 = philep_p*philep_p / twoerrlep2                                ! dimensionless
-          !write(*,*) philep_p, errlep, arg1, arg2, arg3
           call marcum(1.d0,arg1,arg2,pupper,q,ierr1)
+          if (arg1 .lt. 1.d5 .and. arg2 .lt. 1.d5) then
+            call marcum(1.d0,arg1,arg2,pupper,q,ierr1)
+          else ! If either arg is huge, the PSF width is tiny compared to either the lepton angle or the size of the cut cone,
+               ! so the PSF is either fully in or fully out of the cut cone.
+            if (arg1 .gt. arg2) then
+              pupper = 0.d0 ! Lepton angle is bigger than cut cone --> psf outside cut cone
+            else 
+              pupper = 1.d0 ! Lepton angle is less than cut cone --> psf fully inside cut cone.
+            endif
+          endif
           if (arg3 .lt. 1.d5) then
             call marcum(1.d0,arg1,arg3,plower,q,ierr2)
           else
             plower = 1.d0
           endif
           angloss = pupper/plower                                              ! dimensionless
-          !write(*,*) angloss, pupper, plower 
-          !write(*,*) 
           !Likelihood
           pcont = pcont * angloss * nulike_offctrpsf(phi_obs, philep_p, phi_err) ! 1e-5 m^-3 cm^2 deg^-1
         else 
@@ -118,11 +125,20 @@
           philep_n = acos(cosang) * 180.d0/pi                                  ! --> degrees
           !Angular loss factor
           arg1 = philep_n*philep_n / twoerrlep2                                ! dimensionless
-          call marcum(1.d0,arg1,arg2,pupper,q,ierr3)
+          if (arg1 .lt. 1.d5 .and. arg2 .lt. 1.d5) then
+            call marcum(1.d0,arg1,arg2,pupper,q,ierr3)
+          else ! If either arg is huge, the PSF width is tiny compared to either the lepton angle or the size of the cut cone,
+               ! so the PSF is either fully in or fully out of the cut cone.
+            if (arg1 .gt. arg2) then
+              pupper = 0.d0 ! Lepton angle is bigger than cut cone --> psf outside cut cone
+            else 
+              pupper = 1.d0 ! Lepton angle is less than cut cone --> psf fully inside cut cone.
+            endif
+          endif
           if (arg3 .lt. 1.d5) then
-            call marcum(1.d0,arg1,arg3,plower,q,ierr2)
+            call marcum(1.d0,arg1,arg3,plower,q,ierr4)
           else
-            plower = 1.d0
+            plower = 1.d0 ! If upper cutoff is huge, there is no renormalisation needed.
           endif
           angloss = pupper/plower                                              ! dimensionless
           !Likelihood

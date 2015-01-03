@@ -61,6 +61,18 @@
 
       close(lun)
 
+      !Fix up the end bins
+      if (nbins .lt. max_nSensBins) sens_AngRes(nbins+1:,analysis) = sens_AngRes(nbins,analysis)
+
+      if (any(sens_AngRes(:,analysis) .lt. 1.d2*epsilon(0.d0))) then
+        write(*,*)
+        write(*,*) "Error: your effective volume file contains mean angular"
+        write(*,*) "error values approximately equal to or less than zero."
+        write(*,*) "You cannot have zero mean angular errors.  Please fix this."
+        write(*,*)
+        stop
+      endif
+
       !Set the minimum detectable energy (only used in 2014 partial likelihood calculation).
       min_detectable_logE = sens_logE(1,1,analysis)
 
