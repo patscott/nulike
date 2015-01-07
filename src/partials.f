@@ -61,7 +61,7 @@
       character (len=6) eventstring, evnmshrfmt
       real*8 phi_cut, ee_min, ee_max, exp_time, density, logE_min 
       real*8 logE_max, dsdxdy, working(2*max_nHistograms-2)
-      real*8 nulike_simpson, nulike_partintegrand1
+      real*8 nulike_simpson1, nulike_partintegrand1
       real*8 partial_likes(nEnergies,2)
       real*8 nEvents2, nEnergies2, phi_cut2, logE_min2, logE_max2
       integer like, ncols(max_nHistograms), nEvents_in_file 
@@ -139,7 +139,7 @@
           partial_likes(i,:) = 0.d0
         else !Otherwise, we might see some leptons, so iterate over CP eigenstates
           do ptypeshare = 1, 2
-            partial_likes(i,ptypeshare) = nulike_simpson(nulike_partintegrand1,
+            partial_likes(i,ptypeshare) = nulike_simpson1(nulike_partintegrand1,
      &       dsdxdy,0.d0,0.9999999999d0,eps_partials) !x=1 contribution is tiny and causes issues for CTEQ6 DIS PDFs
           enddo
         endif
@@ -214,7 +214,7 @@
             partial_likes(i,:) = 0.d0
           else !Otherwise, we might see some leptons, so iterate over CP eigenstates
             do ptypeshare = 1, 2
-              partial_likes(i,ptypeshare) = nulike_simpson(nulike_partintegrand1,
+              partial_likes(i,ptypeshare) = nulike_simpson1(nulike_partintegrand1,
      &         dsdxdy,0.d0,0.9999999999d0,eps_partials) !x=1 contribution is tiny and causes issues for CTEQ6 DIS PDFs
             enddo
           endif

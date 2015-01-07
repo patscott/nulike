@@ -19,18 +19,21 @@
 *** Date: Apr 24, 2011
 ***********************************************************************
 
-      real*8 function nulike_sigintegrand(log10E,nuyield)
+      real*8 function nulike_sigintegrand(log10E,nuyield,context)
+
+      use iso_c_binding, only: c_ptr
 
       implicit none
       include 'nulike.h'
 
       real*8 log10E, nulike_dPhi_SdE, nuyield
+      type(c_ptr) context
       external nuyield
 
       !Return either predicted differential neutrino or
       !anti-neutrino signal in IceCube, depending on 
       !ptypeshare
       nulike_sigintegrand = nulike_dPhi_SdE(log10E,ptypeshare,
-     & nuyield)*10.d0**log10E
+     & nuyield,context)*10.d0**log10E
 
       end function nulike_sigintegrand

@@ -12,6 +12,7 @@
 ***        nuyield       Name of a function that takes arguments 
 ***                       real*8   log10E  log_10(E_nu / GeV)
 ***                       integer  ptype   1=nu, 2=nubar
+***                       c_ptr    context A void C pointer that can be used for callback
 ***                      and returns
 ***                       real*8   differential neutrino flux at the detector
 ***                                (m^-2 GeV^-1 annihilation^-1)
@@ -47,6 +48,8 @@
 ***                      from the minimum (i.e. the number of free parameters
 ***                      in a scan minus the number profiled over).
 ***
+***        context       A c_ptr passed in to nuyield when it is called
+***
 ***                              
 *** output: Nsignal_predicted  Predicted number of signal events within 
 ***                      phi_cut (includes solar coronal BG)
@@ -70,7 +73,10 @@
 
       subroutine nulike_bounds(analysis_name, mwimp, annrate, 
      & nuyield, Nsignal_predicted, NBG_expected, Ntotal_observed, 
-     & lnlike, pvalue, liketype, pvalFromRef, referenceLike, dof)
+     & lnlike, pvalue, liketype, pvalFromRef, referenceLike, dof,
+     & context)
+
+      use iso_c_binding, only: c_ptr
 
       implicit none
       include 'nulike.h'
@@ -85,6 +91,7 @@
       real*8 nulike_specanglike
       logical pvalFromRef, nulike_speclike_reset, doProfiling
       character (len=nulike_clen) analysis_name
+      type(c_ptr) context
       external nuyield
       !Hidden option for doing speed profiling
       parameter (doProfiling = .false.)
@@ -143,7 +150,7 @@
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       !Calculate signal counts and spectrum. 
-      theta_S = nulike_signal(nuyield, annrate, logmw, likelihood_version(analysis))
+      theta_S = nulike_signal(nuyield, context, annrate, logmw, likelihood_version(analysis))
       !Calculate the total predicted number of events
       theta_tot = theta_BG(analysis) + theta_S
       !Calculate the signal fraction.
@@ -198,19 +205,19 @@
      &       nulike_speclike_reset,
      &       sens_logE(1,1,analysis),
      &       sens_logE(2,nSensBins(analysis),analysis),
-     &       nuyield)
+     &       nuyield, context)
           enddo
         endif
         specAngLikelihood = angularLikelihood + spectralLikelihood
 
-      !2014 likelihood, as per arXiv:141x.xxxx
+      !2014 likelihood, as per arXiv:150x.xxxx
       case (2014)
         specAngLikelihood = 0.d0
         if (liketype .eq. 4) then
           !Step through the individual events
           do j = 1, nEvents(analysis)          
             specAngLikelihood = specAngLikelihood + nulike_specanglike(j,
-     &       theta_S, f_S, annrate, logmw, sens_logE(1,1,analysis), nuyield)
+     &       theta_S, f_S, annrate, logmw, sens_logE(1,1,analysis), nuyield, context)
           enddo
         endif
 

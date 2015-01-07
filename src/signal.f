@@ -6,6 +6,8 @@
 ***                             the differential neutrino flux
 ***                             at the detector in units of m^-2 GeV^-1
 ***                             annihilation^-1
+***             context         A c_ptr passed in to nuyield when it is
+***                             called
 ***             annrate         Annihilation rate (s^-1) 
 ***             logmw           log_10(m_WIMP / GeV)
 ***             like            Likelihood version (2012 or 2014)
@@ -19,7 +21,9 @@
 ***********************************************************************
 
 
-      double precision function nulike_signal(nuyield, annrate, logmw, like)
+      double precision function nulike_signal(nuyield, context, annrate, logmw, like)
+
+      use iso_c_binding, only: c_ptr
 
       implicit none
       include 'nulike.h'
@@ -28,6 +32,7 @@
       real*8 nuyield, upperLimit, theta_Snu, theta_Snubar, annrate
       real*8 nulike_specangintegrand, eps2012, eps2014
       integer like
+      type(c_ptr) context
       parameter (eps2012 = 1.d-3, eps2014 = 1e-3)
       external nuyield, nulike_sigintegrand, nulike_specangintegrand
  
@@ -52,13 +57,13 @@
 
         ! Neutrinos
         ptypeshare = 1
-        integral = nulike_simpson(nulike_sigintegrand,nuyield,
+        integral = nulike_simpson(nulike_sigintegrand,nuyield,context,
      &   sens_logE(1,1,analysis),upperLimit,eps2012)
         theta_Snu = integral * dlog(10.d0) * exp_time(analysis) * annrate
 
         ! Anti-neutrinos
         ptypeshare = 2
-        integral = nulike_simpson(nulike_sigintegrand,nuyield,
+        integral = nulike_simpson(nulike_sigintegrand,nuyield,context,
      &   sens_logE(1,1,analysis),upperLimit,eps2012)
         theta_Snubar = integral * dlog(10.d0) * exp_time(analysis) * annrate
 
@@ -69,7 +74,7 @@
       case (2014)
 
         eventnumshare = 0 ! Use effective area from previous tabulation.
-        integral = nulike_simpson(nulike_specangintegrand,nuyield,
+        integral = nulike_simpson(nulike_specangintegrand,nuyield,context,
      &   sens_logE(1,1,analysis),logmw,eps2014)
         nulike_signal = integral * dlog(10.d0) * exp_time(analysis) * annrate
 

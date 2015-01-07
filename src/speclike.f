@@ -22,6 +22,8 @@
 ***                     the differential neutrino flux
 ***                     at the detector in units of m^-2 GeV^-1 
 ***                     annihilation^-1
+***         context    A c_ptr passed in to nuyield when it is called
+***
 *** output:            ln(Likelihood / chan^-1)
 ***       
 *** Author: Pat Scott (patscott@physics.mcgill.ca)
@@ -31,7 +33,9 @@
 ***********************************************************************
 
       double precision function nulike_speclike(nchan,theta_S,
-     & f_S,annrate,logmw,reset,logEmin,logEmax,nuyield)
+     & f_S,annrate,logmw,reset,logEmin,logEmax,nuyield,context)
+
+      use iso_c_binding, only: c_ptr
 
       implicit none
       include 'nulike.h'
@@ -42,6 +46,7 @@
       real*8 nulike_specintegrand, eps, logEmin, logEmax
       real*8 savedSpecLikes(nchan_maxallowed), nuyield, logmw
       integer nchan_int
+      type(c_ptr) context
       parameter (eps = 1.d-2)
       external nuyield, nulike_specintegrand
       save savedSpecLikeFlags, savedSpecLikes
@@ -78,7 +83,7 @@
         endif
 
         !Find the part of the spectral likelihood associated with the signal
-        integral = nulike_simpson(nulike_specintegrand,nuyield,
+        integral = nulike_simpson(nulike_specintegrand,nuyield,context,
      &   logEmin,upperLimit,eps)
 
       else

@@ -7,6 +7,8 @@
 
       program nulike_test
 
+      use iso_c_binding, only: C_NULL_PTR
+
       implicit none
       !Nulike include
       include 'nucommon.h'
@@ -206,7 +208,7 @@
    
         ! Finally use nulike to get signal and background predictions, number of observed events, likelihood and p-value
         call nulike_bounds(experiment, wamwimp, annrate, nuyield, sigpred, bgpred, 
-     &   totobs, lnLike, pval, likechoice, pvalFromRef, refLike, dof)
+     &   totobs, lnLike, pval, likechoice, pvalFromRef, refLike, dof, C_NULL_PTR)
      
         write(*,*) '  Predicted signal events:    ', sigpred
         write(*,*) '  Total predicted events:     ', sigpred+bgpred
@@ -225,12 +227,15 @@
       end program nulike_test
 
 
-      ! Function returning neutrino flux at detector for 2012 likelihood.
-      real*8 function nuyield(log10E,ptype)
+      ! Function returning neutrino flux at detector.
+      real*8 function nuyield(log10E,ptype,context)
+      use iso_c_binding, only: c_ptr
       implicit none
       real*8 log10E, dsntmuonyield
       integer ptype, istat
       external dsntmuonyield
+      type(c_ptr) context, dummy
+      if (.false.) dummy = context
       nuyield = 1.d-30 * dsntmuonyield(10.d0**log10E,10.d0,'su',3,1,ptype,istat)
       end
 
