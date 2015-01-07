@@ -91,7 +91,7 @@
       real*8 nulike_specanglike
       logical pvalFromRef, nulike_speclike_reset, doProfiling
       character (len=nulike_clen) analysis_name
-      type(c_ptr) context
+      type(c_ptr), value :: context
       external nuyield
       !Hidden option for doing speed profiling
       parameter (doProfiling = .false.)

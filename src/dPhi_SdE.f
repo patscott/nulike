@@ -38,10 +38,18 @@
 
       real*8 log10E, effArea, angLossFac
       real*8 sigma, spec, nulike_sens, nulike_angres
-      real*8 nuyield 
       integer ptype
       type(c_ptr) context
-      external nuyield
+
+      interface
+        real*8 function nuyield(log10E,ptype,context)
+          use iso_c_binding, only: c_ptr
+          implicit none
+          real*8 log10E
+          integer ptype
+          type(c_ptr), value :: context
+        end function nuyield
+      end interface
 
       !Obtain differential neutrino or anti-neutrino 
       !flux spectrum as it arrives at the detector; spec in m^-2 GeV^-1 annihilation^-1

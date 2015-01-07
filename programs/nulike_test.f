@@ -234,7 +234,8 @@
       real*8 log10E, dsntmuonyield
       integer ptype, istat
       external dsntmuonyield
-      type(c_ptr) context, dummy
+      type(c_ptr), value :: context
+      type(c_ptr) :: dummy
       if (.false.) dummy = context
       nuyield = 1.d-30 * dsntmuonyield(10.d0**log10E,10.d0,'su',3,1,ptype,istat)
       end
