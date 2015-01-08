@@ -27,7 +27,7 @@
       use iso_c_binding, only: c_ptr
 
       implicit none
-      include 'nulike.h'
+      include 'nulike_internal.h'
 
       real*8 log10E, nulike_dP_SdE, edisp, specpdf
       real*8 nulike_edisp, nuyield

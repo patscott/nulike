@@ -14,7 +14,7 @@
       real*8 function nulike_bgangpdf(cosphi)
 
       implicit none
-      include 'nulike.h'
+      include 'nulike_internal.h'
 
       real*8 cosphi, CosToInvDeg, nulike_bgangpdf_a(1)
       integer IER

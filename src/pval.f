@@ -15,7 +15,7 @@
       double precision function nulike_pval(ntot,theta_tot,theta_sig)
 
       implicit none
-      include 'nulike.h'
+      include 'nulike_internal.h'
 
       integer ntot
       real*8 theta_tot, theta_sig, sigma, lnpval, lnpin, lngesum

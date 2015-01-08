@@ -23,7 +23,7 @@
       real*8 function nulike_psf(phi_obs, phi_pred, sigma)
 
       implicit none
-      include 'nulike.h'
+      include 'nulike_internal.h'
 
       real*8 phi_obs, phi_pred, sigma, sigma2, expo, diff, prefac
 

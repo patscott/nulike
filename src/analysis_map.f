@@ -12,7 +12,7 @@
       integer function nulike_amap(analysis_name)
 
       implicit none
-      include 'nulike.h'
+      include 'nulike_internal.h'
       
       character(len=nulike_clen) analysis_name
       integer i

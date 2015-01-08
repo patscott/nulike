@@ -38,7 +38,7 @@
       use iso_c_binding, only: c_ptr
 
       implicit none
-      include 'nulike.h'
+      include 'nulike_internal.h'
      
       logical reset, savedSpecLikeFlags(nchan_maxallowed)
       real*8 nchan, theta_S, f_S, annrate, nulike_simpson, upperLimit

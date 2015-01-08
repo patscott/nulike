@@ -14,7 +14,7 @@
       subroutine nulike_eventinit(filename, totalevents, cutevents, cosphimin, like)
 
       implicit none
-      include 'nulike.h'
+      include 'nulike_internal.h'
 
       character (len=*) filename
       character (len=20) instring, instring2

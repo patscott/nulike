@@ -29,7 +29,7 @@
       use MarcumQ
 
       implicit none
-      include 'nulike.h'
+      include 'nulike_internal.h'
 
       real*8 phi_obs, phi_pred, pred2, sigma, sigma2, expo 
       real*8 bess, p, q, besi0, arg3

@@ -22,7 +22,7 @@
      & first, second, like)
 
       implicit none
-      include 'nulike.h'
+      include 'nulike_internal.h'
 
       character (len=*) filename
       character (len=200) instring

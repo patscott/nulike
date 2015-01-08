@@ -71,35 +71,54 @@
 ***********************************************************************
 
 
-      subroutine nulike_bounds(analysis_name, mwimp, annrate, 
+      subroutine nulike_bounds(analysis_name_in, mwimp, annrate, 
      & nuyield, Nsignal_predicted, NBG_expected, Ntotal_observed, 
      & lnlike, pvalue, liketype, pvalFromRef, referenceLike, dof,
-     & context)
+     & context) bind(c)
 
-      use iso_c_binding, only: c_ptr
-
+      use iso_c_binding, only: c_ptr, c_char, c_double, c_int, c_bool
+      
       implicit none
-      include 'nulike.h'
+      include 'nulike_internal.h'
 
-      integer Ntotal_observed, liketype, j
+      integer(c_int), intent(inout) :: Ntotal_observed
+      integer(c_int), intent(in) :: liketype
+      real(c_double), intent(inout) :: Nsignal_predicted, NBG_expected, lnlike, pvalue
+      real(c_double), intent(in) :: referenceLike, dof, mwimp, annrate
+      logical(c_bool), intent(in) :: pvalFromRef
+      character(kind=c_char), dimension(nulike_clen), intent(inout) :: analysis_name_in
+      type(c_ptr), intent(inout) :: context
+
+      integer j
       integer counted1, counted2, countrate, nulike_amap
-      real*8 Nsignal_predicted, NBG_expected, nulike_pval, theta_S
-      real*8 lnlike, pvalue, referenceLike, dof, DGAMIC, DGAMMA, nuyield
+      real*8 nulike_pval, theta_S, DGAMIC, DGAMMA
       real*8 nLikelihood, angularLikelihood, spectralLikelihood, logmw
       real*8 theta_tot, f_S, nulike_anglike, nulike_speclike, nulike_nlike
-      real*8 deltalnlike, mwimp, annrate, specAngLikelihood, nulike_signal
-      real*8 nulike_specanglike
-      logical pvalFromRef, nulike_speclike_reset, doProfiling
-      character (len=nulike_clen) analysis_name
-      type(c_ptr), value :: context
-      external nuyield
+      real*8 deltalnlike, specAngLikelihood, nulike_signal, nulike_specanglike
+      logical nulike_speclike_reset, doProfiling
+      character(len=nulike_clen) analysis_name
       !Hidden option for doing speed profiling
       parameter (doProfiling = .false.)
         
+      interface
+        real(c_double) function nuyield(log10E,ptype,context) bind(c)
+          use iso_c_binding, only: c_ptr, c_double, c_int
+          implicit none
+          real(c_double), intent(in) :: log10E
+          integer(c_int), intent(in) :: ptype
+          type(c_ptr), intent(inout) :: context
+        end function
+      end interface
+
 
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       ! 1. Initialisation
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      analysis_name = analysis_name_in(1)
+      do j = 1, nulike_clen
+        analysis_name = analysis_name(1:j-1)//analysis_name_in(j)
+      enddo
 
       if (doProfiling) call system_clock(counted1,countrate)
 

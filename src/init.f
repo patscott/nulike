@@ -56,7 +56,7 @@
      & BGLikePrecompute)
 
       implicit none
-      include 'nulike.h'
+      include 'nulike_internal.h'
 
       character (len=nulike_clen) analysis_name, eventfile, BGfile, file3, nchandistfile
       integer nnchan(max_nHistograms), nAnalyses

@@ -22,7 +22,7 @@
       real*8 function nulike_tabulated_weight(log10E,ptype,eventnum)
 
       implicit none
-      include 'nulike.h'
+      include 'nulike_internal.h'
 
       real*8 log10E, nulike_tabulated_weight_a(1)
       integer ptype, eventnum, IER

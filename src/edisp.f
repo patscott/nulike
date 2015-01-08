@@ -15,7 +15,7 @@
       real*8 function nulike_edisp(log10E, ee, like)
 
       implicit none
-      include 'nulike.h'
+      include 'nulike_internal.h'
       include 'nuprep.h'
 
       real*8 log10E, ee, nulike_edisp_a(1)

@@ -13,7 +13,7 @@
       real*8 function nulike_bgspec(ee,like)
 
       implicit none
-      include 'nulike.h'
+      include 'nulike_internal.h'
 
       real*8  ee, ee_a(1), nulike_bgspec_a(1)
       integer nchan_index, like, IER

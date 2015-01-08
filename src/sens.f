@@ -15,7 +15,7 @@
       real*8 function nulike_sens(log10E, ptype)
 
       implicit none
-      include 'nulike.h'
+      include 'nulike_internal.h'
 
       real*8 log10E, log10E_a(1), nulike_sens_a(1)
       integer ptype, IER

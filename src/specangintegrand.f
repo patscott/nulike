@@ -24,18 +24,21 @@
 ***********************************************************************
 
 
-      real*8 function nulike_specangintegrand(log10E,nuyield)
+      real*8 function nulike_specangintegrand(log10E,nuyield,context)
+
+      use iso_c_binding, only: c_ptr
 
       implicit none
-      include 'nulike.h'
+      include 'nulike_internal.h'
 
       real*8 log10E, nuyield, nulike_tabulated_weight
+      type(c_ptr) context
       external nuyield
 
       !Scale neutrino and anti-neutrino yields by saved weights.
       nulike_specangintegrand =  
-     & nuyield(log10E,1)*nulike_tabulated_weight(log10E,1,eventnumshare) +
-     & nuyield(log10E,2)*nulike_tabulated_weight(log10E,2,eventnumshare)
+     & nuyield(log10E,1,context)*nulike_tabulated_weight(log10E,1,eventnumshare) +
+     & nuyield(log10E,2,context)*nulike_tabulated_weight(log10E,2,eventnumshare)
 
       !Weight by E to give full integrand
       nulike_specangintegrand = nulike_specangintegrand * 10.d0**log10E

@@ -10,7 +10,7 @@
       subroutine nulike_bgpredinit(cosphimax)
 
       implicit none
-      include 'nulike.h'
+      include 'nulike_internal.h'
 
       integer IER
       real*8 cosphimax, TSINTL

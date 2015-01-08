@@ -21,21 +21,4 @@
       save /nulike_credit_flag/
       external nulike_credit_flagblock
 
-      interface
-        subroutine nulike_bounds(analysis_name, mwimp, annrate, 
-     &   nuyield, Nsignal_predicted, NBG_expected, Ntotal_observed, 
-     &   lnlike, pvalue, liketype, pvalFromRef, referenceLike, dof,
-     &   context)
-          use iso_c_binding, only: c_ptr
-          implicit none
-          include "nuconst.h"
-          integer Ntotal_observed, liketype
-          real*8 Nsignal_predicted, NBG_expected, lnlike, pvalue, referenceLike, dof, nuyield, mwimp, annrate
-          logical pvalFromRef
-          character (len=nulike_clen) analysis_name
-          type(c_ptr), value :: context
-          external nuyield
-        end subroutine
-      end interface
-
-!*************************** end of nulike.h *****************************
+!*************************** end of nucommon.h **************************

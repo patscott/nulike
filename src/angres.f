@@ -16,7 +16,7 @@
       real*8 function nulike_angres(log10E)
 
       implicit none
-      include 'nulike.h'
+      include 'nulike_internal.h'
 
       real*8 log10E, nulike_angres_a(1)
       integer IER

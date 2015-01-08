@@ -22,7 +22,7 @@
      & tau)
 
       implicit none
-      include 'nulike.h'
+      include 'nulike_internal.h'
 
       integer n_tot
       real*8 theta_tot,theta_sig,sigma_eps

@@ -26,7 +26,7 @@
       use MarcumQ
 
       implicit none
-      include 'nulike.h'
+      include 'nulike_internal.h'
       include 'nuprep.h'
 
       real*8 y, Elep, log10Elep, mlep2, phi_obs, phi_err, errlep, plep, philep_p, philep_n

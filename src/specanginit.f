@@ -17,7 +17,7 @@
       subroutine nulike_specanginit(dirname, n_events, phi_cut, n_energies)
 
       implicit none
-      include 'nulike.h'
+      include 'nulike_internal.h'
 
       character (len=*) dirname
       character (len=6) eventstring, evnmshrfmt
@@ -110,7 +110,7 @@
       function nulike_read_weights(local_lun, filename, n_energies)
 
       implicit none
-      include 'nulike.h'
+      include 'nulike_internal.h'
       real*8 nulike_read_weights(n_energies,2)
       character (len=*) filename
       integer local_lun, n_energies

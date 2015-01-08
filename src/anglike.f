@@ -24,7 +24,7 @@
      & parabsigma,f_S)
 
       implicit none
-      include 'nulike.h'
+      include 'nulike_internal.h'
 
       real*8 cosphi, parabsigma, f_S
       real*8 signalpartiallike,bgpartiallike,nulike_psf,nulike_bgangpdf

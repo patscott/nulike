@@ -34,7 +34,7 @@
       use iso_c_binding, only: c_ptr
 
       implicit none
-      include 'nulike.h'
+      include 'nulike_internal.h'
 
       integer event_number
       real*8 theta_S, f_S, annrate, logmw, logEmin, nuyield
