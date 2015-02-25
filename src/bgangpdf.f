@@ -13,6 +13,8 @@
 
       real*8 function nulike_bgangpdf(cosphi)
 
+      use iso_c_binding, only: c_ptr
+
       implicit none
       include 'nulike_internal.h'
 

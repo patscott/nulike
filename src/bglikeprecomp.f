@@ -9,6 +9,8 @@
 
       subroutine nulike_bglikeprecomp
 
+      use iso_c_binding, only: c_ptr
+
       implicit none
       include 'nulike_internal.h'
 

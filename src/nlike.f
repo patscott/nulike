@@ -21,6 +21,8 @@
       real*8 function nulike_nlike(n_tot,theta_tot,theta_sig,sigma_eps,
      & tau)
 
+      use iso_c_binding, only: c_ptr
+
       implicit none
       include 'nulike_internal.h'
 

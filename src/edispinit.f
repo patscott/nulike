@@ -20,6 +20,8 @@
       subroutine nulike_edispinit(filename, nhgms, nbins_ee,
      & min_ee, like)
 
+      use iso_c_binding, only: c_ptr
+
       implicit none
       include 'nulike_internal.h'
       include 'nuprep.h'

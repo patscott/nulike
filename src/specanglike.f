@@ -32,6 +32,8 @@
      & f_S,annrate,logmw,logEmin,nuyield,context)
 
       use iso_c_binding, only: c_ptr
+      use Precision_Model
+      use CUI
 
       implicit none
       include 'nulike_internal.h'
@@ -39,11 +41,21 @@
       integer event_number
       real*8 theta_S, f_S, annrate, logmw, logEmin, nuyield
       real*8 bgpartial, sigpartial, cosphi, ee, eps
-      real*8 nulike_bgangpdf, nulike_bgspec, nulike_specangintegrand
-      real*8 nulike_simpson
+      real*8 nulike_bgangpdf, nulike_bgspec, SAbsErr, SVertices(1,2)
+      integer IER, SRgType
       type(c_ptr) context
       external nuyield, nulike_specangintegrand
-      parameter (eps = 1.d-2)
+      parameter (eps = 5.d-3, SRgType = HyperQuad)
+
+      interface
+        function nulike_specangintegrand(NumFun,X) result(Value)
+          use iso_c_binding, only: c_ptr
+          include 'nulike_internal.h'
+          integer, intent(in) :: NumFun
+          real*8, intent(in) :: X(:)
+          real*8 :: Value(NumFun)
+        end function nulike_specangintegrand
+      end interface
 
       ! Retrieve the event info
       cosphi = events_cosphi(event_number,analysis)
@@ -57,10 +69,16 @@
         sigpartial = 0.d0
       else
         eventnumshare = event_number
-        sigpartial = nulike_simpson(nulike_specangintegrand,nuyield,context,logEmin,logmw,eps)
-        !write(*,*) eventnumshare, sigpartial, exp_time(analysis), theta_S, annrate
+        IER = 0
+        SVertices(1,:) = (/logEmin, logmw/)
+        call CUBATR(1,nulike_specangintegrand,SVertices,SRgType,
+     &   sigpartial,SAbsErr,IER,MaxPts=5000000,EpsRel=eps,Job=2,Key=2)
+        if (IER .ne. 0) then
+          write(*,*) 'Error raised by CUBATR in nulike_specanglike: ', IER 
+          stop
+        endif
+        call CUBATR()
         sigpartial = exp_time(analysis) / theta_S * annrate * dlog(10.d0) * sigpartial
-        !write(*,*) sigpartial
       endif
 
       ! Combine background and signal components

@@ -24,24 +24,48 @@
       double precision function nulike_signal(nuyield, context, annrate, logmw, like)
 
       use iso_c_binding, only: c_ptr
+      use Precision_Model
+      use CUI
 
       implicit none
       include 'nulike_internal.h'
 
-      real*8 integral, nulike_simpson, nulike_sigintegrand, logmw
-      real*8 nuyield, upperLimit, theta_Snu, theta_Snubar, annrate
-      real*8 nulike_specangintegrand, eps2012, eps2014
-      integer like
+      real*8 integral, logmw, nuyield, upperLimit, theta_Snu, theta_Snubar, annrate
+      real*8 eps2012, eps2014, SAbsErr, SVertices(1,2)
+      integer like, IER, SRgType
       type(c_ptr) context
-      parameter (eps2012 = 1.d-3, eps2014 = 1e-3)
-      external nuyield, nulike_sigintegrand, nulike_specangintegrand, nulike_simpson
- 
+      parameter (eps2012 = 2.d-3, eps2014 = 1.d-3, SRgType = HyperQuad)
+      external nuyield, nulike_sigintegrand, nulike_specangintegrand
+       
+      interface
+        function nulike_sigintegrand(NumFun,X) result(Value)
+          use iso_c_binding, only: c_ptr
+          include 'nulike_internal.h'
+          integer, intent(in) :: NumFun
+          real*8, intent(in) :: X(:)
+          real*8 :: Value(NumFun)
+        end function nulike_sigintegrand
+      end interface
+
+      interface
+        function nulike_specangintegrand(NumFun,X) result(Value)
+          use iso_c_binding, only: c_ptr
+          include 'nulike_internal.h'
+          integer, intent(in) :: NumFun
+          real*8, intent(in) :: X(:)
+          real*8 :: Value(NumFun)
+        end function nulike_specangintegrand
+      end interface
+
       ! Short-circuit if the mass is too low to produce any observable events.
       if (logmw .lt. sens_logE(1,1,analysis)) then
         nulike_signal = 0.d0
         return
       endif
       
+      ! Set the global context pointers unable to be passed through CUBPACK
+      context_shared = context
+      nuyield_ptr => nuyield
 
       ! Switch according to likelihood version.
       select case (like)
@@ -57,25 +81,46 @@
 
         ! Neutrinos
         ptypeshare = 1
-        integral = nulike_simpson(nulike_sigintegrand,nuyield,context,
-     &   sens_logE(1,1,analysis),upperLimit,eps2012)
+        IER = 0
+        SVertices(1,:) = (/sens_logE(1,1,analysis), upperLimit/)
+        call CUBATR(1,nulike_sigintegrand,SVertices,SRgType,
+     &   integral,SAbsErr,IER,MaxPts=5000000,EpsRel=eps2012,Job=2,Key=2)
+        if (IER .ne. 0) then
+          write(*,*) 'Error raised by CUBATR in nulike_signal: ', IER 
+          stop
+        endif
+        call CUBATR()
         theta_Snu = integral * dlog(10.d0) * exp_time(analysis) * annrate
 
         ! Anti-neutrinos
         ptypeshare = 2
-        integral = nulike_simpson(nulike_sigintegrand,nuyield,context,
-     &   sens_logE(1,1,analysis),upperLimit,eps2012)
+        IER = 0
+        SVertices(1,:) = (/sens_logE(1,1,analysis), upperLimit/)
+        call CUBATR(1,nulike_sigintegrand,SVertices,SRgType,
+     &   integral,SAbsErr,IER,MaxPts=5000000,EpsRel=eps2012,Job=2,Key=2)
+        if (IER .ne. 0) then
+          write(*,*) 'Error raised by CUBATR in nulike_signal: ', IER 
+          stop
+        endif
+        call CUBATR()
         theta_Snubar = integral * dlog(10.d0) * exp_time(analysis) * annrate
 
         ! Total
         nulike_signal = theta_Snu + theta_Snubar 
 
-      !2014 likelihood, as per arXiv:141x.xxxx
+      !2014 likelihood, as per arXiv:150x.xxxxx
       case (2014)
 
         eventnumshare = 0 ! Use effective area from previous tabulation.
-        integral = nulike_simpson(nulike_specangintegrand,nuyield,context,
-     &   sens_logE(1,1,analysis),logmw,eps2014)
+        IER = 0
+        SVertices(1,:) = (/sens_logE(1,1,analysis), logmw/)
+        call CUBATR(1,nulike_specangintegrand,SVertices,SRgType,
+     &   integral,SAbsErr,IER,MaxPts=5000000,EpsRel=eps2014,Job=2,Key=2)
+        if (IER .ne. 0) then
+          write(*,*) 'Error raised by CUBATR in nulike_signal: ', IER 
+          stop
+        endif
+        call CUBATR()
         nulike_signal = integral * dlog(10.d0) * exp_time(analysis) * annrate
 
       case default

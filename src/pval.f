@@ -14,6 +14,8 @@
 
       double precision function nulike_pval(ntot,theta_tot,theta_sig)
 
+      use iso_c_binding, only: c_ptr
+
       implicit none
       include 'nulike_internal.h'
 

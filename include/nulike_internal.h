@@ -7,7 +7,7 @@
 !***                           nulike.h                               ***
 !***         this piece of code is needed as a separate file          ***
 !----------------------------------------------------------------------c
-!  author: Pat Scott (patscott@physics.mcgill.ca), March 26 2011, June 3, 6 2014
+!  author: Pat Scott (p.scott@imperial.ac.uk), March 26 2011, June 3, 6 2014
 
       include 'nucommon.h'
 
@@ -82,7 +82,20 @@
 
       real*8  thetashare, annrateshare, nchanshare
 
-      common /nulike_comm/ events_nchan, events_cosphi,
+      type(c_ptr) context_shared
+
+      abstract interface 
+        real*8 function nuyield_signature (log10E,ptype,context)
+          use iso_c_binding, only: c_ptr
+          real*8 log10E
+          integer ptype
+          type(c_ptr) context
+        end function nuyield_signature
+      end interface
+      procedure (nuyield_signature), pointer :: nuyield_ptr
+
+      common /nulike_comm/ context_shared, nuyield_ptr, 
+     & events_nchan, events_cosphi,
      & events_cosphiErr, sens_logE,sens_nu,theta_BG, BGeedist_prob,
      & sens_logEcentres, sens_nuderivs, sens_nubarderivs,
      & sens_AngResderivs, sens_nusigma, sens_nubarsigma,

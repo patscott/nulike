@@ -13,6 +13,8 @@
 
       subroutine nulike_eventinit(filename, totalevents, cutevents, cosphimin, like)
 
+      use iso_c_binding, only: c_ptr
+
       implicit none
       include 'nulike_internal.h'
 

@@ -17,8 +17,8 @@
       write(*,*) '**********************************************************'
       write(*,*) '*                    nulike '//version//'            *'
       write(*,*) '*               Pat Scott, Chris Savage                  *'
-      write(*,*) '*         JCAP (2012) 11:057, arXiv:1207.0810)           *'
-      write(*,*) '*         JCAP (2015) xx:xxx, arXiv:150y.yyyy)           *'
+      write(*,*) '*         JCAP (2012) 11:057, arXiv:1207.0810            *'
+      write(*,*) '*         JCAP (2015) xx:xxx, arXiv:150y.yyyyy           *'
       write(*,*) '**********************************************************'
       credits_rolled = .true.
 

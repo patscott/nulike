@@ -7,7 +7,7 @@
 !***                           nuprep.h                               ***
 !***         this piece of code is needed as a separate file          ***
 !----------------------------------------------------------------------c
-!  author: Pat Scott (patscott@physics.mcgill.ca), June 12, 2014
+!  author: Pat Scott (p.scott@imperial.ac.uk), June 12, 2014
 
 
       real*8 m_water !Mass of a single water molecule, in kg
@@ -21,7 +21,7 @@
       parameter (m_n = 0.939566d0)
       parameter (lepmass = (/0.510999d-3,0.105658d0,1.77682d0/))
 
-      real*8 phi_max, numdens_n, numdens_p, xshare, log10Eshare
+      real*8 phi_max, numdens_n, numdens_p
       real*8 hist_ee_flip(max_ncols,max_nHistograms)
       real*8 hist_prob_flip(max_ncols,max_nHistograms)
       real*8 hist_derivs_flip(max_ncols,max_nHistograms)
@@ -33,11 +33,20 @@
 
       integer nhist, leptypeshare
 
+      abstract interface
+        real*8 function func (E,x,y,nu,targ,interaction)
+          real*8 E, x, y
+          integer nu
+          character*1 targ
+          character*2 interaction
+        end function func
+      end interface
+      procedure (func), pointer :: dsdxdy_ptr
+
       common /nu_prep_comm/ hist_ee_flip, hist_prob_flip,
      & hist_derivs_flip, hist_sigma_flip, hist_single_ee_prob,
      & hist_single_ee_derivs, hist_single_ee_sigma, hist_logEnergies,
-     & phi_max, numdens_n, numdens_p, xshare, log10Eshare, nhist,
-     & leptypeshare
+     & phi_max, numdens_n, numdens_p, nhist, leptypeshare, dsdxdy_ptr
       save /nu_prep_comm/
 
 

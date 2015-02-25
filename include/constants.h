@@ -1,4 +1,4 @@
-    ! Begin file constants
+  ! Begin file constants
     REAL(r8), PARAMETER :: lnsqrttwopi=0.9189385332046727418_r8     ! log(sqrt(2*pi))
     REAL(r8), PARAMETER :: sqrttwopi=2.5066282746310005024_r8       ! sqrt(2*pi)
     REAL(r8), PARAMETER :: eulmasc=0.5772156649015328606_r8         ! Euler-Mascheroni constant

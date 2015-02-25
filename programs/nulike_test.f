@@ -96,17 +96,17 @@
      & phi_cut, theoryError, uselogNorm, BGLikePrecompute)
 
       ! Here we use the IC-79 WH data that ship with nulike
-!      experiment = 'IC-79 WH'
-!      eventf  = trim(iclike2014)//'IC79_Events_WH_10degrees.dat'
-!      BGf     = trim(iclike2014)//'IC79_Background_distributions_WH.dat'
-!      partiald= trim(iclike2014)//'IC79_Partial_Likelihoods_WH'
+      experiment = 'IC-79 WH'
+      eventf  = trim(iclike2014)//'IC79_Events_WH_10degrees.dat'
+      BGf     = trim(iclike2014)//'IC79_Background_distributions_WH.dat'
+      partiald= trim(iclike2014)//'partials'
       !efareaf = not needed in 2014-type analyses
       !edispf  = ignored in 2014-type analyses
       !phi_cut is ignored, as it is read in with the partial likelihoods
 
       ! Initialise the IceCube data and calculations for the IC79 WH sample. 
-!      call nulike_init(experiment, eventf, BGf, partiald, edispf, 
-!     & phi_cut, theoryError, uselogNorm, BGLikePrecompute)
+      call nulike_init(experiment, eventf, BGf, partiald, edispf, 
+     & phi_cut, theoryError, uselogNorm, BGLikePrecompute)
 
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       ! 2. DarkSUSY initialisation and model read-in

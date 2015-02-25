@@ -19,6 +19,9 @@
       integer angular, enrgyest, events, lun, lun2
       parameter(angular = 1, enrgyest = 2, events = 3, lun = 20, lun2 = 21)
 
+      integer Simplex, HyperQuad
+      parameter (Simplex = 1, HyperQuad = 2)
+
       real*8 pi
       parameter (pi=3.141592653589793238d0)
 

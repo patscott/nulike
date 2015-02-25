@@ -3,7 +3,7 @@
 ! parsing the command-line arguments, but the rest of nulike does not.
 ! It requires nusigma for the neutrino-lepton interaction cross-section.
 !
-! Author: Pat Scott patscott@phsyics.mcgill.ca
+! Author: Pat Scott p.scott@imperial.ac.uk
 ! Date: Jun 12 2014
 
       program nulike_prep

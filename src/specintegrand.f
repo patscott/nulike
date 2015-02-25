@@ -3,42 +3,43 @@
 *** signal component of the spectral likelihood in nulike_speclike.
 *** This routine is used only with the 2012 likelihood.
 ***
-*** Input:		log10E       log10(neutrino energy/GeV)
-***                     nuyield      external double function that returns
-***                                  the differential muon/neutrino flux
-***                                  at the detector in units of m^-2 
-***                                  GeV^-1 annihilation^-1
-***                     context      A c_ptr passed in to nuyield when it is called
-*** Hidden Input:	nchanshare   number of hit DOMs for this event
-***                     thetashare   total number of predicted signal 
-***                                  events (nu + nubar) 
-*** Output:             integrand    (chan^-1)
+*** Input:		NumFun       =1
+***               X(1)         log10(neutrino energy/GeV)
+*** Hidden input: nuyield_ptr  external double function that returns
+***                             the differential muon/neutrino flux
+***                             at the detector in units of m^-2 
+***                             GeV^-1 annihilation^-1
+***               context_shared A c_ptr passed in to nuyield when it is called
+***         	nchanshare   number of hit DOMs for this event
+***               thetashare   total number of predicted signal 
+***                             events (nu + nubar) 
+*** Output:       integrand    (chan^-1)
 ***
 *** Note that the factor of ln(10) in the logarithmic integral has
 *** been left for post-multiplication in order to increase efficiency.      
 ***
-*** Author: Pat Scott (patscott@physics.mcgill.ca)
+*** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Apr 2011
 *** Modified: March 6, 2014
 ***********************************************************************
 
-      real*8 function nulike_specintegrand(log10E,nuyield,context)
+      function nulike_specintegrand(NumFun,X) result(Value)
 
       use iso_c_binding, only: c_ptr
 
       implicit none
       include 'nulike_internal.h'
 
-      real*8 log10E, nulike_dP_SdE, edisp, specpdf
-      real*8 nulike_edisp, nuyield
-      type(c_ptr) context
-      external nuyield
+      integer, intent(in) :: NumFun
+      real*8, intent(in) :: X(:)
+      real*8 :: Value(NumFun)
+      real*8 nulike_dP_SdE, edisp, specpdf, nulike_edisp
 
       !Return energy dispersion
-      edisp = nulike_edisp(log10E,nchanshare,likelihood_version(analysis))
+      edisp = nulike_edisp(X(1),nchanshare,likelihood_version(analysis))
       !Return spectral probability distribution function
-      specpdf = nulike_dP_SdE(log10E,thetashare,nuyield,context)
+      specpdf = nulike_dP_SdE(X(1),thetashare,nuyield_ptr,context_shared)
       !Put them together, weight by E to give full integrand
-      nulike_specintegrand = specpdf * edisp * 10.d0**log10E
+      Value(1) = specpdf * edisp * 10.d0**X(1)
 
       end function nulike_specintegrand

@@ -36,25 +36,40 @@
      & f_S,annrate,logmw,reset,logEmin,logEmax,nuyield,context)
 
       use iso_c_binding, only: c_ptr
+      use Precision_Model
+      use CUI
 
       implicit none
       include 'nulike_internal.h'
      
       logical reset, savedSpecLikeFlags(nchan_maxallowed)
-      real*8 nchan, theta_S, f_S, annrate, nulike_simpson, upperLimit
+      real*8 nchan, theta_S, f_S, annrate, upperLimit
       real*8 signalpartiallike, bgpartiallike, integral, nulike_bgspec
-      real*8 nulike_specintegrand, eps, logEmin, logEmax
+      real*8 eps, logEmin, logEmax
       real*8 savedSpecLikes(nchan_maxallowed), nuyield, logmw
-      integer nchan_int
+      real*8 SAbsErr, SVertices(1,2)
+      integer nchan_int, IER, SRgType
       type(c_ptr) context
-      parameter (eps = 1.d-2)
+      parameter (eps = 1.d-2, SRgType = HyperQuad)
       external nuyield, nulike_specintegrand
       save savedSpecLikeFlags, savedSpecLikes
-      
+
+      interface
+        function nulike_specintegrand(NumFun,X) result(Value)
+          use iso_c_binding, only: c_ptr
+          include 'nulike_internal.h'
+          integer, intent(in) :: NumFun
+          real*8, intent(in) :: X(:)
+          real*8 :: Value(NumFun)
+        end function nulike_specintegrand
+      end interface
+
       nchan_int = nint(nchan)
       nchanshare = nchan
       thetashare = theta_S
       annrateshare = annrate
+      context_shared = context
+      nuyield_ptr => nuyield
 
       if (nchan_int .gt. nchan_maxallowed) 
      & stop 'nchan > nchan_maxallowed in nulike_speclike'
@@ -83,8 +98,15 @@
         endif
 
         !Find the part of the spectral likelihood associated with the signal
-        integral = nulike_simpson(nulike_specintegrand,nuyield,context,
-     &   logEmin,upperLimit,eps)
+        IER = 0
+        SVertices(1,:) = (/logEmin, upperLimit/)
+        call CUBATR(1,nulike_specintegrand,SVertices,SRgType,
+     &   integral,SAbsErr,IER,MaxPts=5000000,EpsRel=eps,Job=2,Key=2)
+        if (IER .ne. 0) then
+          write(*,*) 'Error raised by CUBATR in nulike_speclike: ', IER 
+          stop
+        endif
+        call CUBATR()
 
       else
 

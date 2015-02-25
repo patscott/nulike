@@ -55,6 +55,8 @@
      & file3, nchandistfile, phi_cut, theoryError, uselogNorm, 
      & BGLikePrecompute)
 
+      use iso_c_binding, only: c_ptr
+
       implicit none
       include 'nulike_internal.h'
 

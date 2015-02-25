@@ -15,6 +15,8 @@
 
       real*8 function nulike_angres(log10E)
 
+      use iso_c_binding, only: c_ptr
+
       implicit none
       include 'nulike_internal.h'
 

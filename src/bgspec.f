@@ -12,6 +12,8 @@
 
       real*8 function nulike_bgspec(ee,like)
 
+      use iso_c_binding, only: c_ptr
+
       implicit none
       include 'nulike_internal.h'
 

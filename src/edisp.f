@@ -14,6 +14,8 @@
 
       real*8 function nulike_edisp(log10E, ee, like)
 
+      use iso_c_binding, only: c_ptr
+
       implicit none
       include 'nulike_internal.h'
       include 'nuprep.h'

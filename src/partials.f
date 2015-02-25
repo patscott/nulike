@@ -44,13 +44,17 @@
 ***                                                 'NC'=neutral current
 ***                     Output: real*8 Differential cross section in cm^2 
 ***        
-*** Author: Pat Scott (patscott@physics.mcgill.ca)
+*** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Jun 15 2014
 ***********************************************************************
 
 
       subroutine nulike_partials(eventfile, effvolfile, edispfile, 
      & partialfolder, nEnergies, logE_min, logE_max, phi_cut, dsdxdy) 
+
+      use iso_c_binding, only: c_ptr
+      use Precision_Model
+      use CUI
 
       implicit none
       include 'nucommon.h'
@@ -59,14 +63,24 @@
       character (len=*) eventfile, effvolfile, edispfile, partialfolder
       character (len=100) instring
       character (len=6) eventstring, evnmshrfmt
-      real*8 phi_cut, ee_min, ee_max, exp_time, density, logE_min 
-      real*8 logE_max, dsdxdy, working(2*max_nHistograms-2)
-      real*8 nulike_simpson1, nulike_partintegrand1
-      real*8 partial_likes(nEnergies,2)
+      real*8 phi_cut, ee_min, ee_max, exp_time, density, log10E 
+      real*8 logE_min, logE_max, working(2*max_nHistograms-2)
+      real*8 partial_likes(nEnergies,2), dsdxdy
       real*8 nEvents2, nEnergies2, phi_cut2, logE_min2, logE_max2
+      real*8 SAbsErr, SValue, SVertices(2,3)
       integer like, ncols(max_nHistograms), nEvents_in_file 
-      integer nEvents, nbins_effvol, nEnergies, i, IER
-      external dsdxdy, nulike_partintegrand1
+      integer nEvents, nbins_effvol, nEnergies, i, IER, SRgType
+      interface
+        function nulike_partials_handoff(NumFun,X) result(Value)
+        use iso_c_binding, only: c_ptr
+        include 'nulike_internal.h'
+        include 'nuprep.h'
+        integer, intent(in) :: NumFun
+        double precision, intent(in) :: X(:)
+        double precision :: Value(NumFun)
+        end function nulike_partials_handoff
+      end interface
+      external dsdxdy, nulike_partials_handoff
 
       !Roll credits.
       call nulike_credits
@@ -79,6 +93,17 @@
 
       !Set the lepton/neutino generation.  This must be elevated to a datafile input to support e and/or tau neutrinos.
       leptypeshare = 2
+
+      !Set the differential cross-section function pointer
+      dsdxdy_ptr => dsdxdy
+
+      !Set the limits of integration in x and y. The x=1 contribution is tiny and causes issues for CTEQ6 DIS PDFs.
+      SVertices(:,1) = (/0.9999999999d0, 0.d0/)
+      SVertices(:,2) = (/0.9999999999d0, 1.d0/)
+      SVertices(:,3) = (/0.d0,           0.d0/)
+
+      !Set the integration adaptive shape type
+      SRgType = HyperQuad
 
       !Open event file, determine the total number of events, likelihood version
       call nulike_preparse_eventfile(eventfile, nEvents_in_file, exp_time, like)
@@ -130,17 +155,24 @@
       eventnumshare = 0
       !Step through each energy
       do i = 1, nEnergies
-        log10Eshare = logE_min + dble(i-1)/dble(nEnergies-1)*(logE_max - logE_min)
-        Eshare = 10.d0**log10Eshare
+        log10E = logE_min + dble(i-1)/dble(nEnergies-1)*(logE_max - logE_min)
+        Eshare = 10.d0**log10E
         write(*,*) '    Computing effective areas for E = ',Eshare,' GeV'
         !If the neutrino already has less energy than the lowest-E lepton that can be detected,
         !we know the effective volume will always be zero and the efffective area is zero.
-        if (log10Eshare .lt. min_detectable_logE) then
+        if (log10E .lt. min_detectable_logE) then
           partial_likes(i,:) = 0.d0
         else !Otherwise, we might see some leptons, so iterate over CP eigenstates
           do ptypeshare = 1, 2
-            partial_likes(i,ptypeshare) = nulike_simpson1(nulike_partintegrand1,
-     &       dsdxdy,0.d0,0.9999999999d0,eps_partials) !x=1 contribution is tiny and causes issues for CTEQ6 DIS PDFs
+            IER = 0
+            call CUBATR(2,nulike_partials_handoff,SVertices,SRgType,
+     &       SValue,SAbsErr,IER,MaxPts=5000000,EpsAbs=1.d-50,EpsRel=eps_partials,Job=11)
+            if (IER .ne. 0) then
+              write(*,*) 'Error raised by CUBATR in nulike_partials: ', IER 
+              stop
+            endif
+            call CUBATR()
+            partial_likes(i,ptypeshare) = SValue
           enddo
         endif
         write(*,*) '      Effective area (m^2), nu:    ',partial_likes(i,1)
@@ -205,17 +237,24 @@
 
         !Step through each energy
         do i = 1, nEnergies
-          log10Eshare = logE_min + dble(i-1)/dble(nEnergies-1)*(logE_max - logE_min)
-          Eshare = 10.d0**log10Eshare
+          log10E = logE_min + dble(i-1)/dble(nEnergies-1)*(logE_max - logE_min)
+          Eshare = 10.d0**log10E
           write(*,*) '    Computing partial likelihoods for E = ',Eshare,' GeV'
           !If the neutrino already has less energy than the lowest-E lepton that can be detected,
           !we know the effective volume will always be zero and the partial likelihoods are zero.
-          if (log10Eshare .lt. min_detectable_logE) then
+          if (log10E .lt. min_detectable_logE) then
             partial_likes(i,:) = 0.d0
           else !Otherwise, we might see some leptons, so iterate over CP eigenstates
             do ptypeshare = 1, 2
-              partial_likes(i,ptypeshare) = nulike_simpson1(nulike_partintegrand1,
-     &         dsdxdy,0.d0,0.9999999999d0,eps_partials) !x=1 contribution is tiny and causes issues for CTEQ6 DIS PDFs
+              IER = 0
+              call CUBATR(2,nulike_partials_handoff,SVertices,SRgType,
+     &         SValue,SAbsErr,IER,MaxPts=5000000,EpsAbs=1.d-50,EpsRel=eps_partials,Job=11)
+              if (IER .ne. 0) then
+                write(*,*) 'Error raised by CUBATR in nulike_partials: ', IER 
+                stop
+              endif
+              call CUBATR()
+              partial_likes(i,ptypeshare) = SValue
             enddo
           endif
           write(*,*) '      Partial likelihood, nu:    ',partial_likes(i,1)
@@ -243,3 +282,28 @@
       stop ' Please create it and try again.'
 
       end subroutine nulike_partials
+
+
+      function nulike_partials_handoff(NumFun,X) result(Value)
+
+      use iso_c_binding, only: c_ptr
+
+      implicit none
+      include 'nulike_internal.h'
+      include 'nuprep.h'
+
+      integer, intent(in) :: NumFun
+      double precision, intent(in) :: X(:)
+      double precision :: Value(NumFun)
+      double precision :: nulike_partintegrand
+      external nulike_partintegrand
+
+      if (associated(dsdxdy_ptr)) then 
+        Value(1) = nulike_partintegrand(X(1), X(2), dsdxdy_ptr, eventnumshare,
+     &   Eshare, ptypeshare, leptypeshare)
+      else
+        stop('Cannot call nulike_partials_handoff without setting dsdxdy_ptr')
+      endif 
+
+      end function nulike_partials_handoff
+

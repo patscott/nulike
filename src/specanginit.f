@@ -16,6 +16,8 @@
 
       subroutine nulike_specanginit(dirname, n_events, phi_cut, n_energies)
 
+      use iso_c_binding, only: c_ptr
+
       implicit none
       include 'nulike_internal.h'
 
@@ -108,6 +110,8 @@
  
       !Does the reading-in of the weights from a binary file created by nulike_partials  
       function nulike_read_weights(local_lun, filename, n_energies)
+
+      use iso_c_binding, only: c_ptr
 
       implicit none
       include 'nulike_internal.h'
