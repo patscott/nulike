@@ -60,7 +60,7 @@
      & 2,0,.false.,.false.,2*n_energies-2,working,precompEA_derivs(:,1,analysis),
      & precompEA_sigma(:,1,analysis),IER)
       if (IER .lt. 0) then
-        write(*,*) 'Error in nulike_specang: TSPSI failed with error'
+        write(*,*) 'Error in nulike_specanginit: TSPSI failed with error'
         write(*,*) 'code',IER,' in setting up neutrino effective area.'
         stop
       endif
@@ -70,7 +70,7 @@
      & 2,0,.false.,.false.,2*n_energies-2,working,precompEA_derivs(:,2,analysis),
      & precompEA_sigma(:,2,analysis),IER)
       if (IER .lt. 0) then
-        write(*,*) 'Error in nulike_specang: TSPSI failed with error'
+        write(*,*) 'Error in nulike_specanginit: TSPSI failed with error'
         write(*,*) 'code',IER,' in setting up nubar effective area.'
         stop
       endif
@@ -88,7 +88,7 @@
      &   2,0,.false.,.false.,2*n_energies-2,working,precomp_derivs(:,i,1,analysis),
      &   precomp_sigma(:,i,1,analysis),IER)
         if (IER .lt. 0) then
-          write(*,*) 'Error in nulike_specang: TSPSI failed with error'
+          write(*,*) 'Error in nulike_specanginit: TSPSI failed with error'
           write(*,*) 'code',IER,' in setting up neutrino effective area.'
           stop
         endif
@@ -98,7 +98,7 @@
      &   2,0,.false.,.false.,2*n_energies-2,working,precomp_derivs(:,i,2,analysis),
      &   precomp_sigma(:,i,2,analysis),IER)
         if (IER .lt. 0) then
-          write(*,*) 'Error in nulike_specang: TSPSI failed with error'
+          write(*,*) 'Error in nulike_specanginit: TSPSI failed with error'
           write(*,*) 'code',IER,' in setting up neutrino effective area.'
           stop
         endif

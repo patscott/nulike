@@ -10,8 +10,8 @@
 
         subroutine nulike_bounds(analysis_name_in, mwimp, annrate, 
      &   nuyield, Nsignal_predicted, NBG_expected, Ntotal_observed, 
-     &   lnlike, pvalue, liketype, pvalFromRef, referenceLike, dof,
-     &   context)  BIND(C)
+     &   lnlike, pvalue, liketype, fastlike, pvalFromRef, referenceLike,
+     &   dof, context)  BIND(C)
           use iso_c_binding, only: c_ptr, c_char, c_double, c_int, c_bool
           implicit none
           include "nuconst.h"
@@ -19,7 +19,7 @@
           integer(c_int), intent(in) :: liketype
           real(c_double), intent(inout) :: Nsignal_predicted, NBG_expected, lnlike, pvalue
           real(c_double), intent(in) :: referenceLike, dof, mwimp, annrate
-          logical(c_bool), intent(in) :: pvalFromRef
+          logical(c_bool), intent(in) :: fastlike, pvalFromRef
           character(kind=c_char), dimension(nulike_clen), intent(inout):: analysis_name_in
           type(c_ptr), intent(inout) :: context
 

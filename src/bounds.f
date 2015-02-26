@@ -25,6 +25,9 @@
 ***                             = number of lit DOMs)
 ***                        4 => Number of events, event arrival angles and 
 ***                             energy estimator
+***        fastlike      In the case of liketype=4 with the 2014 likelihood, 
+***                      do a faster, less accurate calculation of the spectral-angular
+***                      part of the likelihood.  
 ***
 ***        pvalFromRef   T => calculate the p-value with reference to a user-
 ***                           specified likelihood, assuming that the log-
@@ -73,8 +76,8 @@
 
       subroutine nulike_bounds(analysis_name_in, mwimp, annrate, 
      & nuyield, Nsignal_predicted, NBG_expected, Ntotal_observed, 
-     & lnlike, pvalue, liketype, pvalFromRef, referenceLike, dof,
-     & context) bind(c)
+     & lnlike, pvalue, liketype, fastlike, pvalFromRef, referenceLike,
+     & dof, context) bind(c)
 
       use iso_c_binding, only: c_ptr, c_char, c_double, c_int, c_bool
       
@@ -85,11 +88,11 @@
       integer(c_int), intent(in) :: liketype
       real(c_double), intent(inout) :: Nsignal_predicted, NBG_expected, lnlike, pvalue
       real(c_double), intent(in) :: referenceLike, dof, mwimp, annrate
-      logical(c_bool), intent(in) :: pvalFromRef
+      logical(c_bool), intent(in) :: fastlike, pvalFromRef
       character(kind=c_char), dimension(nulike_clen), intent(inout) :: analysis_name_in
       type(c_ptr), intent(inout) :: context
 
-      integer j
+      integer i,j
       integer counted1, counted2, countrate, nulike_amap
       real*8 nulike_pval, theta_S, DGAMIC, DGAMMA
       real*8 nLikelihood, angularLikelihood, spectralLikelihood, logmw
@@ -233,10 +236,10 @@
       case (2014)
         specAngLikelihood = 0.d0
         if (liketype .eq. 4) then
-          !Step through the individual events
           do j = 1, nEvents(analysis)          
             specAngLikelihood = specAngLikelihood + nulike_specanglike(j,
-     &       theta_S, f_S, annrate, logmw, sens_logE(1,1,analysis), nuyield, context)
+     &       theta_S, f_S, annrate, logmw, sens_logE(1,1,analysis), 
+     &       nuyield, context, fastlike)
           enddo
         endif
 

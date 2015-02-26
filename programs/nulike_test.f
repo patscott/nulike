@@ -28,6 +28,7 @@
       integer totobs, likechoice                                 ! neutrino likelihood
       logical uselogNorm                                         ! neutrino likelihood
       logical(c_bool) pvalFromRef                                ! neutrino likelihood
+      logical(c_bool) use_fast_likelihood                        ! neutrino likelihood
       logical BGLikePrecompute                                   ! neutrino likelihood
       type(c_ptr) ptr                                            ! neutrino likelihood
       character (len=nulike_clen) iclike2012, iclike2014         ! neutrino likelihood
@@ -53,7 +54,7 @@
       ! 2012 likelihood (Scott, Savage, Edsjö & IceCube Collab 2012, 
       ! JCAP 11:057, arXiv:1207.0810).
       ! The likelihood2014 folder contains data files designed for use with the
-      ! 2014 likelihood (IceCube Collab 2014, JCAP xx:xxx, arXiv:14xx.xxxx).
+      ! 2014 likelihood (IceCube Collab 2015, JCAP xx:xxx, arXiv:15xx.xxxxx).
       iclike2012 = 'data/IceCube/likelihood2012/'
       iclike2014 = 'data/IceCube/likelihood2014/'
 
@@ -197,6 +198,10 @@
         !likechoice = 3	! Number of events and energy estimator (for IceCube, this is nchan = number of hit DOMs)
         likechoice = 4  ! Number of events, event arrival angles and energy estimator
 
+        ! Choose whether to do the spectral-angular part of the 2014 likelihood calculation using fast
+        ! interpolation or slower, more accurate, explicit integration.
+        use_fast_likelihood = .true.
+
         ! Choose whether to calculate the p value relative to a reference value of 
         ! the likelihood or to the background
         pvalFromRef = .false.
@@ -213,7 +218,8 @@
 
         ! Finally use nulike to get signal and background predictions, number of observed events, likelihood and p-value
         call nulike_bounds(experiment, wamwimp, annrate, nuyield_test, sigpred, bgpred, 
-     &   totobs, lnLike, pval, likechoice, pvalFromRef, refLike, dof, ptr)
+     &   totobs, lnLike, pval, likechoice, use_fast_likelihood, pvalFromRef,
+     &   refLike, dof, ptr)
      
         write(*,*) '  Predicted signal events:    ', sigpred
         write(*,*) '  Total predicted events:     ', sigpred+bgpred
