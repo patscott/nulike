@@ -18,7 +18,7 @@
 ***         sigma               angular error corresponding to 39.3%
 ***                             containment angle (degrees)
 ***          
-*** Output:			PSF (degrees^-1)
+*** Output:	PSF (degrees^-1)
 ***       
 *** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Jan 2, 2015 
@@ -46,13 +46,13 @@
         p = 1.d0
       else
         call marcum(1.d0,arg1,arg3,p,q,ierr)
+        if (ierr .gt. 1) then
+          write(*,*) 'phi_obs, phi_pred, sigma:',phi_obs, phi_pred, sigma
+          write(*,*) 'ierr = ',ierr
+          stop 'Catastrophic error when calling marcum in nulike_offctrpsf!'
+        endif
       endif
-      nulike_offctrpsf = phi_obs * expo * bess / p
 
-      if (ierr .gt. 1) then
-        write(*,*) 'phi_obs, phi_pred, sigma:',phi_obs, phi_pred, sigma
-        write(*,*) 'ierr = ',ierr
-        stop 'Catastrophic error when calling marcum in nulike_offctrpsf!'
-      endif
+      nulike_offctrpsf = phi_obs * expo * bess / p
 
       end function nulike_offctrpsf
