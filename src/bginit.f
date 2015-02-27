@@ -70,8 +70,7 @@
             read(lun, *) instring, dummyfloat1, dummyfloat2
             if (indices(i).eq.angular) then
               !Read in observed angular distribution of background events
-              if (like .eq. 2012) BGangdist_phi_temp(j) = dummyfloat1
-              if (like .eq. 2014) BGangdist_phi_temp(j) = dummyfloat1-1 !FIXME this is a hack!!
+              BGangdist_phi_temp(j) = dummyfloat1
               BGangdist_prob_temp(j) = dummyfloat2
             else
               !Read in observed distribution of energy estimators (e.g. nchan)
