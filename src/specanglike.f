@@ -53,7 +53,6 @@
       type(c_ptr) context
       external nuyield, TSINTL, nulike_specangintegrand
 
-
       interface
         function nulike_specangintegrand(NumFun,X) result(Value)
           use iso_c_binding, only: c_ptr
@@ -123,6 +122,10 @@
             stop
           endif
 
+        else
+         
+          sigpartial = 0.d0
+
         endif
                     
         ! Do the likelihood calculation using a proper integration
@@ -138,6 +141,10 @@
             stop
           endif
           call CUBATR()
+
+        else
+        
+          sigpartial_accurate = 0.d0
 
         endif
 

@@ -22,14 +22,14 @@
       parameter (lepmass = (/0.510999d-3,0.105658d0,1.77682d0/))
 
       real*8 phi_max, numdens_n, numdens_p
-      real*8 hist_ee_flip(max_ncols,max_nHistograms)
-      real*8 hist_prob_flip(max_ncols,max_nHistograms)
-      real*8 hist_derivs_flip(max_ncols,max_nHistograms)
-      real*8 hist_sigma_flip(max_ncols,max_nHistograms)
-      real*8 hist_single_ee_prob(max_nHistograms)
-      real*8 hist_single_ee_derivs(max_nHistograms)
-      real*8 hist_single_ee_sigma(max_nHistograms)
-      real*8 hist_logEnergies(max_nHistograms)
+      real*8 hist_ee_flip(max_ncols,max_nHistograms+2)
+      real*8 hist_prob_flip(max_ncols,max_nHistograms+2)
+      real*8 hist_derivs_flip(max_ncols,max_nHistograms+2)
+      real*8 hist_sigma_flip(max_ncols,max_nHistograms+2)
+      real*8 hist_single_ee_prob(max_nHistograms+2)
+      real*8 hist_single_ee_derivs(max_nHistograms+2)
+      real*8 hist_single_ee_sigma(max_nHistograms+2)
+      real*8 hist_logEnergies(max_nHistograms+2)
 
       integer nhist, leptypeshare
 

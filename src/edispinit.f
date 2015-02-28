@@ -28,12 +28,20 @@
 
       character (len=*) filename
       character (len=20) instring
-      integer nhgms, nbins_ee(nhgms), dummyint, i, j, k
+      integer nhgms, nbins_ee(nhgms+2), dummyint, i, j, k
       integer like, IER
-      real*8  hist_ee_temp(max_nHistograms, max_ncols)
-      real*8  hist_prob_temp(max_nHistograms, max_ncols)
-      real*8  working(2*nHistograms(analysis)-2), min_ee
+      real*8  hist_ee_temp(max_nHistograms+2, max_ncols)
+      real*8  hist_prob_temp(max_nHistograms+2, max_ncols)
+      real*8  working(2*nHistograms(analysis)+2), min_ee
       real*8  working2(2*max_ncols-2)
+
+      !Increment the number of histograms by two, in order to allow for end-padding
+      nhgms = nhgms + 2
+      do i = nhgms-1, 2, -1
+        nbins_ee(i) = nbins_ee(i-1)
+      enddo
+      nbins_ee(nhgms) = nbins_ee(nhgms-1)
+      nbins_ee(1) = nbins_ee(2)
 
       !Read in ee response distribution for each incoming neutrino energy band
       open(lun,file=filename, ACTION='READ')
@@ -45,7 +53,7 @@
       enddo
 
       !Read actual data
-      do i = 1, nhgms
+      do i = 2, nhgms-1
         read(lun, *) instring, hist_logE(1,i,analysis), hist_logE(2,i,analysis)
         hist_logEcentres(i,analysis) = 0.5d0*(hist_logE(1,i,analysis)+
      &   hist_logE(2,i,analysis))
@@ -54,11 +62,27 @@
      &     hist_ee_temp(i,j), hist_prob_temp(i,j)
         enddo
         read(lun,*) instring
-        if (i .ne. nhgms) read(lun,*) instring
+        if (i .ne. nhgms-1) read(lun,*) instring
       enddo
 
+      !Close the data file
       close(lun)
 
+      !Fill in the end histograms
+      hist_logE(1,1,analysis) = hist_logE(1,2,analysis)
+      hist_logE(2,1,analysis) = hist_logE(1,2,analysis)
+      hist_logEcentres(1,analysis)  = hist_logE(1,2,analysis)
+      do j = 1, nbins_ee(1)
+        hist_ee_temp(1,j) = hist_ee_temp(2,j)
+        hist_prob_temp(1,j) = hist_prob_temp(2,j)
+      enddo
+      hist_logE(1,nhgms,analysis) = hist_logE(2,nhgms-1,analysis)
+      hist_logE(2,nhgms,analysis) = hist_logE(2,nhgms-1,analysis)
+      hist_logEcentres(nhgms,analysis)  = hist_logE(2,nhgms-1,analysis)
+      do j = 1, nbins_ee(nhgms)
+        hist_ee_temp(nhgms,j) = hist_ee_temp(nhgms-1,j)
+        hist_prob_temp(nhgms,j) = hist_prob_temp(nhgms-1,j)
+      enddo
 
       !Switch according to likelihood version.
       select case (like)
@@ -108,7 +132,6 @@
         hist_ee_flip = transpose(hist_ee_temp)
         hist_prob_flip = transpose(hist_prob_temp)
         hist_logEnergies = hist_logEcentres(:,analysis)
-
 
         !Set up interpolation within each energy histogram, for later seeding of event-specific energy dispersion estimator
         do i = 1, nhgms

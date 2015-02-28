@@ -62,7 +62,7 @@
 
       character (len=nulike_clen) analysis_name, eventfile, BGfile, file3, nchandistfile
       integer nnchan(max_nHistograms), nAnalyses
-      integer BGfirst, BGsecond, nulike_amap
+      integer BGfirst, BGsecond, nulike_amap, nbins
       real*8 phi_cut, theoryError, cosphimax, dummy
       logical BGLikePrecompute, uselogNorm
       external nulike_amap
@@ -115,9 +115,9 @@
         cosphimax = dcos(phi_cut*pi/180.d0)
 
         !Open neutrino effective area file and determine number of bins
-        call nulike_preparse_effarea_or_volume(file3,nSensBins(analysis), dummy, 2012)
+        call nulike_preparse_effarea_or_volume(file3, nbins, dummy, 2012)
         !Read in the actual effective area and PSF data.
-        call nulike_sensinit(file3,nSensBins(analysis))
+        call nulike_sensinit(file3, nbins)
 
         !Open file of nchan response histograms (energy dispersions), determine how many histograms
         !and how many bins in each histogram.

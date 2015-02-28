@@ -64,11 +64,11 @@
       character (len=100) instring
       character (len=6) eventstring, evnmshrfmt
       real*8 phi_cut, ee_min, ee_max, exp_time, density, log10E 
-      real*8 logE_min, logE_max, working(2*max_nHistograms-2)
+      real*8 logE_min, logE_max, working(2*max_nHistograms+2)
       real*8 partial_likes(nEnergies,2), dsdxdy
       real*8 nEvents2, nEnergies2, phi_cut2, logE_min2, logE_max2
       real*8 SAbsErr, SValue, SVertices(2,3)
-      integer like, ncols(max_nHistograms), nEvents_in_file 
+      integer like, ncols(max_nHistograms+2), nEvents_in_file 
       integer nEvents, nbins_effvol, nEnergies, i, IER, SRgType
       interface
         function nulike_partials_handoff(NumFun,X) result(Value)

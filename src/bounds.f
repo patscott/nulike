@@ -92,7 +92,7 @@
       character(kind=c_char), dimension(nulike_clen), intent(inout) :: analysis_name_in
       type(c_ptr), intent(inout) :: context
 
-      integer i,j
+      integer j
       integer counted1, counted2, countrate, nulike_amap
       real*8 nulike_pval, theta_S, DGAMIC, DGAMMA
       real*8 nLikelihood, angularLikelihood, spectralLikelihood, logmw
