@@ -32,7 +32,7 @@
       integer like, IER
       real*8  hist_ee_temp(max_nHistograms+2, max_ncols)
       real*8  hist_prob_temp(max_nHistograms+2, max_ncols)
-      real*8  working(2*nHistograms(analysis)+2), min_ee
+      real*8  working(2*nhgms+2), min_ee
       real*8  working2(2*max_ncols-2)
 
       !Increment the number of histograms by two, in order to allow for end-padding
@@ -90,6 +90,8 @@
       !2012 likelihood, as per arXiv:1207.0810
       case (2012)
 
+        nHistograms(analysis) = nhgms
+
         !Arrange histograms so they all cover the same range in nchan
         hist_prob(:,:,analysis) = 0.d0
         do k = 1, nnchan_total(analysis)
@@ -115,8 +117,8 @@
         !Set up interpolation in each nchan across energy histograms for use as energy dispersion estimator
         do i = 1, nnchan_total(analysis)
  
-          call TSPSI(nHistograms(analysis),hist_logEcentres(:,analysis),hist_prob(:,i,analysis),
-     &     2,0,.false.,.false.,2*nHistograms(analysis)-2,working,hist_derivs(:,i,analysis),
+          call TSPSI(nhgms,hist_logEcentres(:,analysis),hist_prob(:,i,analysis),
+     &     2,0,.false.,.false.,2*nhgms-2,working,hist_derivs(:,i,analysis),
      &     hist_sigma(:,i,analysis),IER)
           if (IER .lt. 0) then
             write(*,*) 'Error in nulike_edispinit: TSPSI failed with error'

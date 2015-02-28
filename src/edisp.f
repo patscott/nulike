@@ -7,7 +7,7 @@
 *** 		ee		value of the energy estimator (e.g. nchan)
 *** Output:                     energy dispersion (units of ee^-1)
 ***       
-*** Author: Pat Scott (patscott@physics.mcgill.ca)
+*** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Apr 24, 2011
 *** Modified: Jun 7, 15 2014
 ***********************************************************************
@@ -45,7 +45,13 @@
      &   hist_sigma(:,nchan_index,analysis),0,1,log10E,nulike_edisp_a,IER)
         nulike_edisp = nulike_edisp_a(1)
 
-      !2014 likelihood, as per arXiv:141x.xxxx
+        if (log10E .lt. hist_logEcentres(1,analysis)) then
+          nulike_edisp = hist_prob(1,nchan_index,analysis)
+        else if (log10E .gt. hist_logEcentres(nHistograms(analysis),analysis)) then
+          nulike_edisp = hist_prob(nHistograms(analysis),nchan_index,analysis)
+        endif
+
+      !2014 likelihood, as per arXiv:150x.xxxxx
       case (2014)
 
         call TSVAL1(nhist,hist_logEnergies,hist_single_ee_prob,

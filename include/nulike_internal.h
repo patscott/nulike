@@ -27,7 +27,7 @@
 
       integer nSensBins(max_analyses)
       integer nBinsBGAng(max_analyses), nBinsBGE(max_analyses)
-      integer nEvents(max_analyses), nEvents_in_file(max_analyses)
+      integer nEvents(max_analyses)
       integer nHistograms(max_analyses), nnchan_total(max_analyses)
       real*8  ee_min(max_analyses), ee_max(max_analyses) 
 
@@ -109,7 +109,7 @@
      & precomp_sigma, precompEA_weights, precompEA_derivs, 
      & precompEA_sigma, ee_min, ee_max, nchanshare,
      & BGeedist_derivs, BGeedist_sigma,
-     & nBinsBGE, nBinsBGAng, nEvents, nEvents_in_file,
+     & nBinsBGE, nBinsBGAng, nEvents,
      & nSensBins, nPrecompE, nHistograms, nnchan_total,
      & nchan_hist2BGoffset, FullSkyBG,
      & pvalBGPoisComputed, sysErrDist_logNorm,

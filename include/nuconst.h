@@ -11,10 +11,10 @@
       parameter(max_nSensBins   = 50)   !Maximum number of bins in the effective area or volume
       parameter(max_nBinsBGAng  = 180)  !Maximum number of angular bins in the background
       parameter(max_nBinsBGE    = 100)  !Maximum number of spectral bins in the background
-      parameter(max_nEvents     = 2000) !Maximum number of events for any analysis
+      parameter(max_nEvents     = 5000) !Maximum number of events for any analysis
       parameter(max_nHistograms = 20)   !Max number of energy windows to give the energy dispersion in
       parameter(max_ncols       = 80)   !Max number of columns (entries) in a single energy-window histogram
-      parameter(max_analyses    = 15)   !Maximum number of analyses that can be loaded up
+      parameter(max_analyses    = 5)    !Maximum number of analyses that can be loaded up simultaneously
 
       integer angular, enrgyest, events, lun, lun2
       parameter(angular = 1, enrgyest = 2, events = 3, lun = 20, lun2 = 21)

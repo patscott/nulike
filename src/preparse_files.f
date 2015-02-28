@@ -70,14 +70,6 @@
 
 30    close(lun)
       
-      if (nevents .gt. max_nEvents) then
-        write(*,*) 'Event file '//trim(eventfile)//' contains more'
-        write(*,*) 'events than nulike has been configured to '
-        write(*,*) 'handle.  Increase max_nEvents in nucommon.h and' 
-        write(*,*) 'recompile.'
-        stop
-      endif
-
       end subroutine nulike_preparse_eventfile
 
 
@@ -149,7 +141,7 @@
         write(*,*) 'Background file contains more data than'
         write(*,*) 'nulike has been configured to handle.'
         write(*,*) 'Increase max_nBinsBGE or max_nBinsBGAng'
-        write(*,*) 'in nucommon.h and recompile.'
+        write(*,*) 'in nuconst.h and recompile.'
         stop
       endif
 
@@ -223,7 +215,7 @@
       if (nbins .gt. max_nSensBins) then
         write(*,*) 'Effective area/volume file contains more bins than'
         write(*,*) 'nulike has been configured to handle.'
-        write(*,*) 'Increase max_nSensBins in nucommon.h and' 
+        write(*,*) 'Increase max_nSensBins in nuconst.h and' 
         write(*,*) 'recompile.'
         stop
       endif
@@ -239,7 +231,7 @@
       include 'nucommon.h'
       character (len=*) edispfile
       character (len=30) instring, instring2
-      integer nhist, ncol(max_nHistograms), like, IFAIL, dummy
+      integer nhist, ncol(max_nHistograms+2), like, IFAIL, dummy
       real*8 ee, ee_max, ee_min
 
       open(lun,file=edispfile,IOSTAT=IFAIL, ACTION='READ')
@@ -298,7 +290,7 @@
         write(*,*) 'Neutrino telescope energy dispersion histogram'
         write(*,*) 'file contains more histograms than nulike has'
         write(*,*) 'been configured to handle. Increase '
-        write(*,*) 'max_nHistograms in nucommon.h and recompile.'
+        write(*,*) 'max_nHistograms in nuconst.h and recompile.'
         stop
       endif
 
@@ -310,7 +302,7 @@
         write(*,*) 'Neutrino telescope energy dispersion histogram'
         write(*,*) 'file contains more energy estimator values'
         write(*,*) 'than nulike has been configured to handle.' 
-        write(*,*) 'Increase max_ncols in nucommon.h and recompile.'
+        write(*,*) 'Increase max_ncols in nuconst.h and recompile.'
         stop
       endif
 
