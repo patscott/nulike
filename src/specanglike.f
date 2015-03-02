@@ -51,12 +51,10 @@
       logical(c_bool), intent(in) :: fast_likelihood
       logical, save :: revert_to_accurate_likelihood
       type(c_ptr) context
-      external nuyield, TSINTL, nulike_specangintegrand
+      external nuyield, TSINTL
 
       interface
         function nulike_specangintegrand(NumFun,X) result(Value)
-          use iso_c_binding, only: c_ptr
-          include 'nulike_internal.h'
           integer, intent(in) :: NumFun
           real*8, intent(in) :: X(:)
           real*8 :: Value(NumFun)

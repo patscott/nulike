@@ -51,13 +51,11 @@
       integer nchan_int, IER, SRgType
       type(c_ptr) context
       parameter (eps = 1.d-2, SRgType = HyperQuad)
-      external nuyield, nulike_specintegrand
+      external nuyield
       save savedSpecLikeFlags, savedSpecLikes
 
       interface
         function nulike_specintegrand(NumFun,X) result(Value)
-          use iso_c_binding, only: c_ptr
-          include 'nulike_internal.h'
           integer, intent(in) :: NumFun
           real*8, intent(in) :: X(:)
           real*8 :: Value(NumFun)

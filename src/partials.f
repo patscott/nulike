@@ -72,15 +72,12 @@
       integer nEvents, nbins_effvol, nEnergies, i, IER, SRgType
       interface
         function nulike_partials_handoff(NumFun,X) result(Value)
-        use iso_c_binding, only: c_ptr
-        include 'nulike_internal.h'
-        include 'nuprep.h'
         integer, intent(in) :: NumFun
         double precision, intent(in) :: X(:)
         double precision :: Value(NumFun)
         end function nulike_partials_handoff
       end interface
-      external dsdxdy, nulike_partials_handoff
+      external dsdxdy
 
       !Roll credits.
       call nulike_credits

@@ -35,12 +35,10 @@
       integer like, IER, SRgType
       type(c_ptr) context
       parameter (eps2012 = 1.d-2, eps2014 = 3.d-2, SRgType = HyperQuad)
-      external nuyield, nulike_sigintegrand, nulike_specangintegrand
-       
+      external nuyield
+      
       interface
         function nulike_sigintegrand(NumFun,X) result(Value)
-          use iso_c_binding, only: c_ptr
-          include 'nulike_internal.h'
           integer, intent(in) :: NumFun
           real*8, intent(in) :: X(:)
           real*8 :: Value(NumFun)
@@ -49,8 +47,6 @@
 
       interface
         function nulike_specangintegrand(NumFun,X) result(Value)
-          use iso_c_binding, only: c_ptr
-          include 'nulike_internal.h'
           integer, intent(in) :: NumFun
           real*8, intent(in) :: X(:)
           real*8 :: Value(NumFun)
