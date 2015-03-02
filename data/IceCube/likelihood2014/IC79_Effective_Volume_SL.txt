@@ -1,0 +1,194 @@
+#This file contains the following instrument response data for IceCube-79 SL data sample:
+# 1. Mean density of water/ice molecules in the detector.
+# 2. Muon/anti-muon effective volume, for a point-source search 
+#    towards the Sun, averaged over one austral winter.
+# 3. Statistical and systematic errors in each energy bin at the 1 sigma 
+#    level, as a percentage of the effective volume in that bin.  
+# 4. Mean angular error within each energy bin, given as the 39.3% 
+#    (equivalent 1 sigma) containment radius.
+#
+#The density block has the following content:
+#rho [H2O density in kg/m^3]
+#The response block has the following column content:
+#B   [bin Nr.]
+#E   [E-nu-lower-bound] [E-nu-upper-bound]
+#V   [Veff(mu-) km^3]   [Veff(mu+) km^3]
+#err [syst.error]       [stat.error]
+#MAR [angular res.]
+###--Density--
+rho   920.00
+###--Response--
+B     0
+E     5   5.63652
+V     0.000376688   3.07453e-05
+err   54   13.2202
+MAR   36.1904
+####
+B     1
+E     5.63652   6.35408
+V     0.000327426   4.91947e-05
+err   54   12.7278
+MAR   37.7382
+####
+B     2
+E     6.35408   7.16298
+V     0.000478301   6.57892e-05
+err   54   11.901
+MAR   38.9782
+####
+B     3
+E     7.16298   8.07486
+V     0.000433163   5.84237e-05
+err   54   10.4376
+MAR   33.5499
+####
+B     4
+E     8.07486   9.10282
+V     0.000488592   5.71344e-05
+err   54   9.04646
+MAR   31.8294
+####
+B     5
+E     9.10282   10.2617
+V     0.000737392   8.38513e-05
+err   54   8.78664
+MAR   26.9672
+####
+B     6
+E     10.2617   11.568
+V     0.000625935   0.000138375
+err   54   6.79808
+MAR   24.2829
+####
+B     7
+E     11.568   13.0407
+V     0.000746371   0.000178156
+err   54   6.15652
+MAR   21.6427
+####
+B     8
+E     13.0407   14.7008
+V     0.000910158   0.000241054
+err   54   5.18734
+MAR   20.2633
+####
+B     9
+E     14.7008   16.5723
+V     0.00105319   0.000325659
+err   54   4.84348
+MAR   16.1449
+####
+B     10
+E     16.5723   18.682
+V     0.00126871   0.000394578
+err   54   4.59202
+MAR   14.1651
+####
+B     11
+E     18.682   21.0603
+V     0.0015129   0.000468814
+err   54   4.18667
+MAR   12.3743
+####
+B     12
+E     21.0603   23.7414
+V     0.0016479   0.000616928
+err   25   3.85214
+MAR   11.5317
+####
+B     13
+E     23.7414   26.7637
+V     0.0022611   0.000757553
+err   25   4.36485
+MAR   9.5957
+####
+B     14
+E     26.7637   30.1709
+V     0.00162261   0.000843634
+err   25   3.95884
+MAR   7.8154
+####
+B     15
+E     30.1709   34.0118
+V     0.00226342   0.000949212
+err   25   3.91042
+MAR   7.12224
+####
+B     16
+E     34.0118   38.3416
+V     0.00235635   0.00101973
+err   25   4.43032
+MAR   6.58548
+####
+B     17
+E     38.3416   43.2227
+V     0.00220141   0.00111424
+err   25   4.447
+MAR   5.32076
+####
+B     18
+E     43.2227   48.7251
+V     0.00239024   0.00106891
+err   25   4.97574
+MAR   4.51285
+####
+B     19
+E     48.7251   54.928
+V     0.00216891   0.00122272
+err   25   5.01583
+MAR   3.96089
+####
+B     20
+E     54.928   61.9206
+V     0.0019347   0.00110191
+err   21   5.49563
+MAR   3.32065
+####
+B     21
+E     61.9206   69.8034
+V     0.00165296   0.000931353
+err   21   6.15909
+MAR   3.23602
+####
+B     22
+E     69.8034   78.6896
+V     0.00139125   0.000810696
+err   21   7.34617
+MAR   3.00446
+####
+B     23
+E     78.6896   88.7072
+V     0.00094484   0.000636935
+err   21   9.24285
+MAR   3.68038
+####
+B     24
+E     88.7072   100
+V     0.000879979   0.000464316
+err   21   10.4644
+MAR   3.1091
+####
+B     25
+E     100   112.73
+V     0.000484112   0.0005556
+err   21   12.8856
+MAR   3.10419
+####
+B     26
+E     112.73   127.082
+V     0.000461391   0.000447644
+err   21   14.2124
+MAR   2.91461
+####
+B     27
+E     127.082   143.26
+V     0.000549965   0.000246896
+err   21   18.9562
+MAR   3.41748
+####
+B     28
+E     143.26   161.497
+V     0.000348797   0.000413895
+err   21   18.806
+MAR   2.80801
+####
