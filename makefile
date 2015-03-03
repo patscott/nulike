@@ -27,8 +27,8 @@ DSLIBINC = ../gambit/extras/DarkSUSY/DarkSUSY/include
 DSLIBNAME = darksusy
 
 # nusigma location and library name
-NUSIGDIR = ../nusigma-1.17-pyr/lib
-NUSIGINC = ../nusigma-1.17-pyr/inc
+NUSIGDIR = ../nusigma/lib
+NUSIGINC = ../nusigma/inc
 NUSIGNAME = nusigma
 
 # Define library-making options
@@ -56,7 +56,7 @@ vpath %.h $(INC)
 # Sources/objects
 F90SOURCES = cons.f90 incgam.f90 marcumq.f90
 
-SOURCES = besi0.f dgamic.f lngamma.f lambertw.f lambertw2.f \
+SOURCES = expbesi0.f dgamic.f lngamma.f lambertw.f lambertw2.f \
 lambertwln.f flagblocks.f lnpin.f lnpiln.f lnpinsum.f lnpilnsum.f \
 lnpoisint.f anglike.f angres.f bgangpdf.f bginit.f bglikeprecomp.f \
 bgpredinit.f bgspec.f bounds.f dP_SdE.f dPhi_SdE.f sensinit.f \

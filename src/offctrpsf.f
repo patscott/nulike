@@ -32,15 +32,13 @@
       implicit none
       include 'nulike_internal.h'
 
-      real*8 phi_obs, phi_pred, pred2, sigma, sigma2, expo 
-      real*8 bess, p, q, besi0, arg1, arg3
+      real*8 phi_obs, phi_pred, sigma, sigma2, expbesi0, expbess  
+      real*8 p, q, arg1, arg3
       integer ierr
-
+      
       sigma2 = sigma*sigma
-      pred2 = phi_pred*phi_pred
-      expo = exp(-(pred2 + phi_obs*phi_obs) / (2.d0 * sigma2))
-      bess = besi0(phi_pred * phi_obs / sigma2)
-      arg1 = 0.5d0*pred2/sigma2
+      expbess = expbesi0(phi_pred,phi_obs,sigma2)
+      arg1 = 0.5d0*phi_pred*phi_pred/sigma2
       arg3 = 1.62d4/sigma2
       if (arg3 .gt. 1.d4 .or. (arg1 .eq. 0.d0 .and. arg3 .gt. 5.d2)) then
         p = 1.d0
@@ -53,6 +51,6 @@
         endif
       endif
 
-      nulike_offctrpsf = phi_obs * expo * bess / p
+      nulike_offctrpsf = phi_obs * expbess / p
 
       end function nulike_offctrpsf
