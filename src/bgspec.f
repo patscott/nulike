@@ -57,6 +57,9 @@
             stop
           endif
           nulike_bgspec = nulike_bgspec_a(1)
+          if (nulike_bgspec .lt. 0.d0) then
+            nulike_bgspec = 0.d0
+          endif
         endif
 
       case default

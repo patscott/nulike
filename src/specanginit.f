@@ -79,7 +79,7 @@
       do i = 1, n_events
 
         !Open and read in from the event file
-        write(eventstring,fmt=evnmshrfmt(eventnumshare)) i
+        write(eventstring,fmt=evnmshrfmt(i)) i
         precomp_weights(1:n_energies,i,:,analysis) = 
      &   nulike_read_weights(lun, trim(dirname)//'/partlike_event'//trim(eventstring)//'.dat', n_energies)
 
