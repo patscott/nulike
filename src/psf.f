@@ -16,7 +16,7 @@
 ***          
 *** Output:			PSF (degrees^-1)
 ***       
-*** Author: Pat Scott (patscott@physics.mcgill.ca)
+*** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: May 6, 2011
 ***********************************************************************
 

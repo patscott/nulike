@@ -2,7 +2,7 @@
 *** These routines pre-parse various data files and return basic info
 *** about them.
 ***
-*** Author: Pat Scott (patscott@physics.mcgill.ca)
+*** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: June 15 2014
 ***********************************************************************
 

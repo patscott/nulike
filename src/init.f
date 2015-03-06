@@ -45,7 +45,7 @@
 ***                      p-value for each model when nulike_bounds is called
 ***                      with pvalFromRef = F.     
 ***        
-*** Author: Pat Scott (patscott@physics.mcgill.ca)
+*** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Mar 20, 2011
 *** Modified: Mar, Jun 2014
 ***********************************************************************

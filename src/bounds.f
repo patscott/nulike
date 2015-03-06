@@ -66,7 +66,7 @@
 ***
 ***         pvalue       derived p-value for chosen model
 ***        
-*** Author: Pat Scott (patscott@physics.mcgill.ca)
+*** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Mar 20, 2011
 *** Updated: Jul 21, 2011
 ***          Mar 6, 2014

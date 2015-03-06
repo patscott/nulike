@@ -42,7 +42,7 @@
 ! 
 !    Created by Chris Savage (savage@fysik.su.se)
 !    2011/11/02
-!    Minor modifications by Pat Scott (patscott@physics.mcgill.ca)
+!    Minor modifications by Pat Scott (p.scott@imperial.ac.uk)
 !    2011/12/02
 ! 
 !=======================================================================

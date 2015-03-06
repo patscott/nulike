@@ -1,7 +1,7 @@
 ***********************************************************************
 *** nulike_utils contains various simple utility routines.
 ***        
-*** Author: Pat Scott (patscott@physics.mcgill.ca)
+*** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Jun 15 2014
 ***********************************************************************
 

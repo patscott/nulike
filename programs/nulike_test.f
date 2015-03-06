@@ -58,6 +58,8 @@
       iclike2012 = 'data/IceCube/likelihood2012/'
       iclike2014 = 'data/IceCube/likelihood2014/'
 
+      !!!!!!!!!!!! 2012 likelihoods !!!!!!!!!!!!!!!!!!!
+
       ! Here we use the IC-22 data that ship with nulike.
         experiment = 'IC-22'
         eventf  = trim(iclike2012)//'events_10deg_IC22.dat'
@@ -96,19 +98,31 @@
       call nulike_init(experiment, eventf, BGf, efareaf, edispf, 
      & phi_cut, theoryError, uselogNorm, BGLikePrecompute)
 
+      !!!!!!!!!!!!!!!! 2014 likelihoods !!!!!!!!!!!!!!!!!!!
+
+      !efareaf is not needed in 2014-type analyses.
+      !edispf is ignored in 2014-type analyses.
+      !phi_cut is ignored in 2-14-type analyses, as it is read in with the partial likelihoods.
+
       ! Here we use the IC-79 SL data that ship with nulike
       experiment = 'IC-79 SL'
       eventf  = trim(iclike2014)//'IC79_Events_SL_llhInput_60Deg.txt'
       BGf     = trim(iclike2014)//'IC79_Background_distributions_SL.txt'
       partiald= trim(iclike2014)//'IC79_Partial_Likelihoods_SL'
-      !efareaf = not needed in 2014-type analyses
-      !edispf  = ignored in 2014-type analyses
-      !phi_cut is ignored, as it is read in with the partial likelihoods
 
-      ! Initialise the IceCube data and calculations for the IC79 WH sample. 
+      ! Initialise the IceCube data and calculations for the IC79 SL sample. 
       call nulike_init(experiment, eventf, BGf, partiald, edispf, 
      & phi_cut, theoryError, uselogNorm, BGLikePrecompute)
 
+      ! Here we use the IC-79 WL data that ship with nulike
+      experiment = 'IC-79 WL'
+      eventf  = trim(iclike2014)//'IC79_Events_WL_llhInput_60Deg.txt'
+      BGf     = trim(iclike2014)//'IC79_Background_distributions_WL.txt'
+      partiald= trim(iclike2014)//'IC79_Partial_Likelihoods_WL'
+
+      ! Initialise the IceCube data and calculations for the IC79 WL sample. 
+      call nulike_init(experiment, eventf, BGf, partiald, edispf, 
+     & phi_cut, theoryError, uselogNorm, BGLikePrecompute)
 
 
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

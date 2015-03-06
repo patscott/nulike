@@ -2,7 +2,7 @@
 !************************************************************************
 !***                           nucommon.h                             ***
 !----------------------------------------------------------------------c
-!  author: Pat Scott (patscott@physics.mcgill.ca), June 12, 2014
+!  author: Pat Scott (p.scott@imperial.ac.uk), June 12, 2014
 
       include "nuconst.h"
 

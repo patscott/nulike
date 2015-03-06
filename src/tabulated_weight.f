@@ -14,7 +14,7 @@
 ***                                  eventnum > 0 => weighting for event
 ***                                   eventnum (m^2 chan^-1 degrees^-1 )
 ***
-*** Author: Pat Scott (patscott@physics.mcgill.ca)
+*** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Jun 8, 2014
 ***********************************************************************
 

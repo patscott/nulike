@@ -7,7 +7,7 @@
 ***			= 2	anti-neutrinos
 *** Output:                     effective area (m^2) or volume (km^3)
 ***       
-*** Author: Pat Scott (patscott@physics.mcgill.ca)
+*** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Apr 24, 2011
 *** Modified: Jun 6 2014
 ***********************************************************************

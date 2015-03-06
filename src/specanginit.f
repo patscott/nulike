@@ -10,7 +10,7 @@
 ***         nenergies    number of energies for which partial likelihoods
 ***                       are to be read in for each event.
 ***        
-*** Author: Pat Scott (patscott@physics.mcgill.ca)
+*** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Jun 15 2014
 ***********************************************************************
 

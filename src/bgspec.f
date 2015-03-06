@@ -5,7 +5,7 @@
 *** Input:	ee	value of the energy estimator (e.g. nchan)
 *** Output:             pdf (units of estimator^-1)
 ***       
-*** Author: Pat Scott (patscott@physics.mcgill.ca)
+*** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Apr 24, 2011
 *** Modified: Jun 6, 2014
 ***********************************************************************

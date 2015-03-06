@@ -6,7 +6,7 @@
 ***          cosphimin    cosine(cutoff angle above which events will 
 ***                       be ignored)
 ***        
-*** Author: Pat Scott (patscott@physics.mcgill.ca)
+*** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: April 8, 2011
 *** Modified: March 5, June 15 2014
 ***********************************************************************

@@ -5,7 +5,7 @@
 *** input:  analysis_name  name of the analysis
 *** output:                index of the analysis
 ***       
-*** Author: Pat Scott (patscott@physics.mcgill.ca)
+*** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Jun 6, 2014
 ***********************************************************************
 

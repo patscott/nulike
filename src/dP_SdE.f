@@ -14,7 +14,7 @@
 ***
 *** Output:               differential probability (GeV^-1)
 ***       
-*** Author: Pat Scott (patscott@physics.mcgill.ca)
+*** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Apr 24, 2011
 *** Modified: March 6, 2014
 ***********************************************************************

@@ -7,7 +7,7 @@
 *** Input:	cosphi		cos(arrival angle of event)
 *** Output:                     pdf (degrees^-1)
 ***       
-*** Author: Pat Scott (patscott@physics.mcgill.ca)
+*** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Apr 24, 2011
 ***********************************************************************
 

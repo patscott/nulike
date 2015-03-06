@@ -12,7 +12,7 @@
 ***
 *** output: nulike_lnpoisint ln(integral)
 ***
-*** Author: Pat Scott (patscott@physics.mcgill.ca)
+*** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: June, July 2011
 ***********************************************************************
 

@@ -13,7 +13,7 @@
 ***		      
 *** output: ln(likelihood)  (dimensionless)
 ***       
-*** Author: Pat Scott (patscott@physics.mcgill.ca)
+*** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Apr 22, 2011, Jun 30, 2011, Jul 21, 2011
 *** Modified: Jun 6 2014
 ***********************************************************************

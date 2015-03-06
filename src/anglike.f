@@ -15,7 +15,7 @@
 ***                    ground.
 *** output:            ln(Likelihood / degrees^-1)
 ***       
-*** Author: Pat Scott (patscott@physics.mcgill.ca)
+*** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: May 6, 2011
 *** Modified: Jun 3, 6 2014
 ***********************************************************************

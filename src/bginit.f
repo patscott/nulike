@@ -13,7 +13,7 @@
 ***                          estimator or number of events).
 ***                          See nucommon.h for the key.
 ***        
-*** Author: Pat Scott (patscott@physics.mcgill.ca)
+*** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: April 8, 2011
 *** Modified: Jun 6, 2014
 ***********************************************************************

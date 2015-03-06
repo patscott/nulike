@@ -5,7 +5,7 @@
 *** input: filename       name of effective area/volume file
 ***        nbins          number of energy bins in file
 ***        
-*** Author: Pat Scott (patscott@physics.mcgill.ca)
+*** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: April 8, 2011
 *** Modified: Jun 3, 6, 15 2014
 ***********************************************************************

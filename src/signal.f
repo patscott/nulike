@@ -14,7 +14,7 @@
 ***
 *** Output:     theta_S         predicted number of signal events.
 *** 
-*** Author: Pat Scott (patscott@physics.mcgill.ca)
+*** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Apr 22, 2011
 *** Modified: March 6 2014
 *** Modified: Jun 3, 6, 8 2014

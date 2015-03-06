@@ -22,7 +22,7 @@
 *** Note that the factor of ln(10) in the logarithmic integral has
 *** been left for post-multiplication in order to increase efficiency.      
 ***
-*** Author: Pat Scott (patscott@physics.mcgill.ca)
+*** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Jun 8, 2014
 ***********************************************************************
 

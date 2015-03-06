@@ -51,6 +51,6 @@
         endif
       endif
 
-      nulike_offctrpsf = phi_obs * expbess / p
+      nulike_offctrpsf = phi_obs * expbess / (p * sigma2)
 
       end function nulike_offctrpsf

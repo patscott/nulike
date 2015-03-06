@@ -8,7 +8,7 @@
 *** Input:	log10E	        log(neutrino energy/GeV)
 *** Output:			39.3% containment ang resolution (degrees)
 ***       
-*** Author: Pat Scott (patscott@physics.mcgill.ca)
+*** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Apr 24, 2011
 *** Modified: Jun 6, 2014
 ***********************************************************************

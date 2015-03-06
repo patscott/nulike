@@ -12,7 +12,7 @@
 ***                       dispersion function data.
 ***         like         likelihood version
 ***        
-*** Author: Pat Scott (patscott@physics.mcgill.ca)
+*** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: April 8, 2011
 *** Modified: Jun 3, 7, 15 2014
 ***********************************************************************

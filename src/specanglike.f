@@ -23,7 +23,7 @@
 ***
 *** output:              ln(Likelihood / chan^-1)
 ***       
-*** Author: Pat Scott (patscott@physics.mcgill.ca)
+*** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Jun 8, 2014
 ***********************************************************************
 
