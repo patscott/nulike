@@ -245,7 +245,7 @@
             do ptypeshare = 1, 2
               IER = 0
               call CUBATR(2,nulike_partials_handoff,SVertices,SRgType,
-     &         SValue,SAbsErr,IER,MaxPts=500000000,EpsAbs=1.d-100,EpsRel=eps_partials,Job=11)
+     &         SValue,SAbsErr,IER,MaxPts=5000000000,EpsAbs=1.d-100,EpsRel=eps_partials,Job=11)
               if (IER .ne. 0) then
                 write(*,*) 'Error raised by CUBATR in nulike_partials: ', IER 
                 stop
