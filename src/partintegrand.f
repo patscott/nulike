@@ -81,79 +81,85 @@
       ierr3 = 0
       ierr4 = 0
 
-      !Point-spread functions
+      !Lepton properties
+      mlep2 = lepmass(leptype)*lepmass(leptype)                              ! GeV^2
+      plep = dsqrt(Elep*Elep - mlep2)                                        ! GeV
+
+      !Event properties
       if (eventnum .ne. 0) then
+        phi_obs = acos(events_cosphi(eventnum,analysis)) * 180.d0/pi         ! --> degrees
+        phi_err = events_cosphiErr(eventnum,analysis)                        ! Already in degrees.
+      endif
 
-        mlep2 = lepmass(leptype)*lepmass(leptype)                              ! GeV^2
-        plep = dsqrt(Elep*Elep - mlep2)                                        ! GeV
-        phi_obs = acos(events_cosphi(eventnum,analysis)) * 180.d0/pi           ! --> degrees
-        phi_err = events_cosphiErr(eventnum,analysis)                          ! Already in degrees.
-
-        if (pcont .gt. 0.d0) then
-          !Lepton opening angle
-          cosang = (Elep - m_p*x*y - 0.5d0*mlep2/E) / plep                     ! Cosine of lepton scattering angle
-          if (cosang .gt. 1.d0) cosang = 1.d0                                  ! Fix floating-pt errs (>1 kinematically disallowed)
-          philep_p = acos(cosang) * 180.d0/pi                                  ! --> degrees
-          !Angular loss factor
-          arg1 = philep_p*philep_p / twoerrlep2                                ! dimensionless
+      !Point-spread function for proton interactions
+      if (pcont .gt. 0.d0) then
+        !Lepton opening angle
+        cosang = (Elep - m_p*x*y - 0.5d0*mlep2/E) / plep                     ! Cosine of lepton scattering angle
+        if (cosang .gt. 1.d0) cosang = 1.d0                                  ! Fix floating-pt errs (>1 kinematically disallowed)
+        philep_p = acos(cosang) * 180.d0/pi                                  ! --> degrees
+        !Angular loss factor
+        arg1 = philep_p*philep_p / twoerrlep2                                ! dimensionless
+        if (arg1 .lt. 1.d4 .and. arg2 .lt. 1.d4) then
           call marcum(1.d0,arg1,arg2,pupper,q,ierr1)
-          if (arg1 .lt. 1.d4 .and. arg2 .lt. 1.d4) then
-            call marcum(1.d0,arg1,arg2,pupper,q,ierr1)
-          else ! If either arg is huge, the PSF width is tiny compared to either the lepton angle or the size of the cut cone,
-               ! so the PSF is either fully in or fully out of the cut cone.
-            if (arg1 .gt. arg2) then
-              pupper = 0.d0 ! Lepton angle is bigger than cut cone --> psf outside cut cone
-            else 
-              pupper = 1.d0 ! Lepton angle is less than cut cone --> psf fully inside cut cone.
-            endif
+        else ! If either arg is huge, the PSF width is tiny compared to either the lepton angle or the size of the cut cone,
+             ! so the PSF is either fully in or fully out of the cut cone.
+          if (arg1 .gt. arg2) then
+            pupper = 0.d0 ! Lepton angle is bigger than cut cone --> psf outside cut cone
+          else 
+            pupper = 1.d0 ! Lepton angle is less than cut cone --> psf fully inside cut cone.
           endif
-          if (arg3 .gt. 1.d4 .or. (arg1 .eq. 0.d0 .and. arg3 .gt. 5.d2)) then
-            plower = 1.d0
-          else
-            call marcum(1.d0,arg1,arg3,plower,q,ierr2)
-          endif
-          angloss = pupper/plower                                              ! dimensionless
-          !Likelihood
-          pcont = pcont * angloss * nulike_offctrpsf(phi_obs, philep_p, phi_err) ! 1e-5 m^-3 cm^2 deg^-1
-        else 
-          pcont = 0.d0
         endif
+        if (arg3 .gt. 1.d4 .or. (arg1 .eq. 0.d0 .and. arg3 .gt. 5.d2)) then
+          plower = 1.d0
+        else
+          call marcum(1.d0,arg1,arg3,plower,q,ierr2)
+        endif
+        angloss = pupper/plower                                              ! dimensionless
+        !Likelihood
+        pcont = pcont * angloss
+        if (eventnum .ne. 0) then
+          pcont = pcont * nulike_offctrpsf(phi_obs, philep_p, phi_err) ! 1e-5 m^-3 cm^2 deg^-1
+        endif
+      else 
+        pcont = 0.d0
+      endif
 
-        if (ncont .gt. 0.d0) then
-          !Lepton opening angle
-          cosang = (Elep - m_n*x*y - 0.5d0*mlep2/E) / plep                     ! Cosine of lepton scattering angle
-          if (cosang .gt. 1.d0) cosang = 1.d0                                  ! Fix floating-pt errs (>1 kinematically disallowed)
-          philep_n = acos(cosang) * 180.d0/pi                                  ! --> degrees
-          !Angular loss factor
-          arg1 = philep_n*philep_n / twoerrlep2                                ! dimensionless
-          if (arg1 .lt. 1.d4 .and. arg2 .lt. 1.d4) then
-            call marcum(1.d0,arg1,arg2,pupper,q,ierr3)
-          else ! If either arg is huge, the PSF width is tiny compared to either the lepton angle or the size of the cut cone,
-               ! so the PSF is either fully in or fully out of the cut cone.
-            if (arg1 .gt. arg2) then
-              pupper = 0.d0 ! Lepton angle is bigger than cut cone --> psf outside cut cone
-            else 
-              pupper = 1.d0 ! Lepton angle is less than cut cone --> psf fully inside cut cone.
-            endif
+      !Point-spread function for neutron interactions
+      if (ncont .gt. 0.d0) then
+        !Lepton opening angle
+        cosang = (Elep - m_n*x*y - 0.5d0*mlep2/E) / plep                     ! Cosine of lepton scattering angle
+        if (cosang .gt. 1.d0) cosang = 1.d0                                  ! Fix floating-pt errs (>1 kinematically disallowed)
+        philep_n = acos(cosang) * 180.d0/pi                                  ! --> degrees
+        !Angular loss factor
+        arg1 = philep_n*philep_n / twoerrlep2                                ! dimensionless
+        if (arg1 .lt. 1.d4 .and. arg2 .lt. 1.d4) then
+          call marcum(1.d0,arg1,arg2,pupper,q,ierr3)
+        else ! If either arg is huge, the PSF width is tiny compared to either the lepton angle or the size of the cut cone,
+             ! so the PSF is either fully in or fully out of the cut cone.
+          if (arg1 .gt. arg2) then
+            pupper = 0.d0 ! Lepton angle is bigger than cut cone --> psf outside cut cone
+          else 
+            pupper = 1.d0 ! Lepton angle is less than cut cone --> psf fully inside cut cone.
           endif
-          if (arg3 .gt. 1.d4 .or. (arg1 .eq. 0.d0 .and. arg3 .gt. 5.d2)) then
-            plower = 1.d0 ! If upper cutoff is huge, there is no renormalisation needed.
-          else
-            call marcum(1.d0,arg1,arg3,plower,q,ierr4)
-          endif
-          angloss = pupper/plower                                              ! dimensionless
-          !Likelihood
-          ncont = ncont * angloss * nulike_offctrpsf(phi_obs, philep_n, phi_err) ! 1e-5 m^-3 cm^2 deg^-1
-        else 
-          ncont = 0.d0
         endif
- 
+        if (arg3 .gt. 1.d4 .or. (arg1 .eq. 0.d0 .and. arg3 .gt. 5.d2)) then
+          plower = 1.d0 ! If upper cutoff is huge, there is no renormalisation needed.
+        else
+          call marcum(1.d0,arg1,arg3,plower,q,ierr4)
+        endif
+        angloss = pupper/plower                                              ! dimensionless
+        !Likelihood
+        ncont = ncont * angloss
+        if (eventnum .ne. 0) then
+          ncont = ncont * nulike_offctrpsf(phi_obs, philep_n, phi_err)       ! 1e-5 m^-3 cm^2 deg^-1
+        endif
+      else 
+        ncont = 0.d0
       endif
       
       !Total
       nulike_partintegrand = effvol * (pcont + ncont)                         ! km^3 1e-5 m^-3 cm^2 deg^-1 -->m^2 deg^-1
       if (eventnum .ne. 0) nulike_partintegrand = nulike_partintegrand*edisp  ! -->m^2 deg^-1 [ee]^-1
-
 
       !Debug
       if (ierr1 .gt. 1 .or. ierr2 .gt. 1 .or. ierr3 .gt. 1 .or. ierr4 .gt. 1) then
