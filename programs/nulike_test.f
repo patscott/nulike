@@ -58,6 +58,18 @@
       iclike2012 = 'data/IceCube/likelihood2012/'
       iclike2014 = 'data/IceCube/likelihood2014/'
 
+      !!!!!!!!!!! Common settings for all likelihoods !!!!!!!!!
+
+      ! Set the estimated relative theoretical error in neutrino flux calculation 
+        theoryError = 0.05d0
+
+      ! Choose a log-normal or a Gaussian distribution for the systematic error on
+      ! the number of neutrino events
+        uselogNorm = .true.
+
+      ! Choose whether to precompute the background p-value
+        BGLikePrecompute = .true.
+
       !!!!!!!!!!!! 2012 likelihoods !!!!!!!!!!!!!!!!!!!
 
       ! Here we use the IC-22 data that ship with nulike.
@@ -70,16 +82,6 @@
       ! Set the analysis cut in degrees around the solar position for IC22
       phi_cut = 10.d0
       
-      ! Set the estimated relative theoretical error in neutrino flux calculation 
-      theoryError = 0.05d0
-
-      ! Choose a log-normal or a Gaussian distribution for the systematic error on
-      ! the number of neutrino events
-      uselogNorm = .true.
-
-      ! Choose whether to precompute the background p-value
-      BGLikePrecompute = .true.
-
       ! Initialise the IceCube data and calculations for IC22. 
       call nulike_init(experiment, eventf, BGf, efareaf, edispf, phi_cut,
      & theoryError, uselogNorm, BGLikePrecompute)
@@ -102,7 +104,7 @@
 
       !efareaf is not needed in 2014-type analyses.
       !edispf is ignored in 2014-type analyses.
-      !phi_cut is ignored in 2-14-type analyses, as it is read in with the partial likelihoods.
+      !phi_cut is ignored in 2014-type analyses, as it is read in with the partial likelihoods.
 
       ! Here we use the IC-79 SL data that ship with nulike
       experiment = 'IC-79 SL'
@@ -216,7 +218,7 @@
 
         ! Choose whether to do the spectral-angular part of the 2014 likelihood calculation using fast
         ! interpolation or slower, more accurate, explicit integration.
-        use_fast_likelihood = .true.
+        use_fast_likelihood = .false.
 
         ! Choose whether to calculate the p value relative to a reference value of 
         ! the likelihood or to the background
