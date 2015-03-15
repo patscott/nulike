@@ -31,7 +31,7 @@
       include 'nuprep.h'
 
       real*8 x, y, E, Elep, log10Elep, mlep2, phi_obs, phi_err, errlep
-      real*8 spnc, spcc, snnc, sncc, pcont, ncont, edisp, effvol, angloss, dsdxdy 
+      real*8 spcc, sncc, pcont, ncont, edisp, effvol, angloss, dsdxdy 
       real*8 nulike_edisp, nulike_offctrpsf, nulike_sens, nulike_angres, cosang
       real*8 twoerrlep2, arg1, arg2, arg3, pupper, plower, q, plep, philep_p, philep_n
       integer eventnum, ptype, ptype_ns, leptype, ierr1, ierr2, ierr3, ierr4
@@ -68,12 +68,10 @@
 
       !Cross-sections and densities 
       ptype_ns = ptype + 2*(leptype-1)                                         ! Convert to nusigma internal neutrino number.
-      spnc = dsdxdy(E,x,y,ptype_ns,'p','NC')                                   ! cm^2
       spcc = dsdxdy(E,x,y,ptype_ns,'p','CC')                                   ! cm^2
-      snnc = dsdxdy(E,x,y,ptype_ns,'n','NC')                                   ! cm^2
       sncc = dsdxdy(E,x,y,ptype_ns,'n','CC')                                   ! cm^2
-      pcont = numdens_p * (spnc + spcc)                                        ! 1e-5 m^-3 cm^2 
-      ncont = numdens_n * (snnc + sncc)                                        ! 1e-5 m^-3 cm^2
+      pcont = numdens_p * spcc                                                 ! 1e-5 m^-3 cm^2 
+      ncont = numdens_n * sncc                                                 ! 1e-5 m^-3 cm^2
 
       !Prime errors 
       ierr1 = 0
@@ -172,7 +170,7 @@
         write(*,*) E,x,y
         write(*,*) Elep, effvol, angloss
         write(*,*) ptype_ns,eventnum,leptype
-        write(*,*) spnc, spcc, snnc, sncc
+        write(*,*) spcc, sncc
         write(*,*) pcont, ncont
         if (eventnum .ne. 0) then
           write(*,*) plep, mlep2
