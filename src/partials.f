@@ -100,7 +100,7 @@
       SVertices(:,3) = (/0.d0,           0.d0/)
 
       !Set the integration adaptive shape type
-      SRgType = HyperQuad
+      SRgType = Simplex
 
       !Open event file, determine the total number of events, likelihood version
       call nulike_preparse_eventfile(eventfile, nEvents_in_file, exp_time, like)
