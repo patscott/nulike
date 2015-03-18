@@ -54,7 +54,8 @@
       !Energy dispersion
       if (eventnum .ne. 0) then
         edisp = nulike_edisp(log10Elep, events_ee(eventnum, analysis), 2014)   ! [ee]^-1
-        if (edisp .le. epsilon(effvol)) then                                   ! Abort if energy dispersion is
+        if (edisp .le. epsilon(edisp)) then                                    ! Abort if energy dispersion is
+          write(*,*) 'edisp neg', edisp, events_ee(eventnum, analysis), eventnum, analysis
           nulike_partintegrand = 0.d0                                          ! zero.     
           return
         endif

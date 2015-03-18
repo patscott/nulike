@@ -34,7 +34,7 @@
       real*8 eps2012, eps2014, SAbsErr, SVertices(1,2)
       integer like, IER, SRgType
       type(c_ptr) context
-      parameter (eps2012 = 1.d-2, eps2014 = 3.d-2, SRgType = HyperQuad)
+      parameter (eps2012 = 1.d-2, eps2014 = 3.d-2, SRgType = Simplex)
       external nuyield
       
       interface

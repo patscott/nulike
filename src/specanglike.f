@@ -47,7 +47,7 @@
       real*8 logEmin_true, logEmax_true
       real*8 sigpartial_accurate, measure
       integer event_number, i, ptype, IER, SRgType
-      parameter (eps =0.5d0, SRgType = HyperQuad)
+      parameter (eps =0.5d0, SRgType = Simplex)
       logical(c_bool), intent(in) :: fast_likelihood
       logical, save :: revert_to_accurate_likelihood
       type(c_ptr) context

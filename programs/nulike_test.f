@@ -227,7 +227,7 @@
 
         ! Choose whether to do the spectral-angular part of the 2014 likelihood calculation using fast
         ! interpolation or slower, more accurate, explicit integration.
-        use_fast_likelihood = .false.
+        use_fast_likelihood = .true.
 
         ! Choose whether to calculate the p value relative to a reference value of 
         ! the likelihood or to the background
