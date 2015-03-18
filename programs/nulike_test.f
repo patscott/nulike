@@ -60,72 +60,81 @@
 
       !!!!!!!!!!! Common settings for all likelihoods !!!!!!!!!
 
-      ! Set the estimated relative theoretical error in neutrino flux calculation 
+        ! Set the estimated relative theoretical error in neutrino flux calculation 
         theoryError = 0.05d0
 
-      ! Choose a log-normal or a Gaussian distribution for the systematic error on
-      ! the number of neutrino events
+        ! Choose a log-normal or a Gaussian distribution for the systematic error on
+        ! the number of neutrino events
         uselogNorm = .true.
 
-      ! Choose whether to precompute the background p-value
+        ! Choose whether to precompute the background p-value
         BGLikePrecompute = .true.
 
       !!!!!!!!!!!! 2012 likelihoods !!!!!!!!!!!!!!!!!!!
 
-      ! Here we use the IC-22 data that ship with nulike.
+        ! Here we use the IC-22 data that ship with nulike.
         experiment = 'IC-22'
         eventf  = trim(iclike2012)//'events_10deg_IC22.dat'
         BGf     = trim(iclike2012)//'BG_distributions_IC22.dat'
         efareaf = trim(iclike2012)//'nuEffArea_IC22.dat'
         edispf  = trim(iclike2012)//'energy_histograms_IC22.dat'
 
-      ! Set the analysis cut in degrees around the solar position for IC22
-      phi_cut = 10.d0
+        ! Set the analysis cut in degrees around the solar position for IC22
+        phi_cut = 10.d0
       
-      ! Initialise the IceCube data and calculations for IC22. 
-      call nulike_init(experiment, eventf, BGf, efareaf, edispf, phi_cut,
-     & theoryError, uselogNorm, BGLikePrecompute)
+        ! Initialise the IceCube data and calculations for IC22. 
+        call nulike_init(experiment, eventf, BGf, efareaf, edispf, phi_cut,
+     &   theoryError, uselogNorm, BGLikePrecompute)
 
-      ! Here we use the IC-86 simulation that ships with nulike
-      experiment = 'IC-86 (predicted)'
-      eventf  = trim(iclike2012)//'events_20deg_IC86_sim_nosig.dat'
-      BGf     = trim(iclike2012)//'BG_distributions_IC86_sim.dat'
-      efareaf = trim(iclike2012)//'nuEffArea_IC86_sim.dat'
-      edispf  = trim(iclike2012)//'energy_histograms_IC86_sim_dummy.dat'
+        ! Here we use the IC-86 simulation that ships with nulike
+        experiment = 'IC-86 (predicted)'
+        eventf  = trim(iclike2012)//'events_20deg_IC86_sim_nosig.dat'
+        BGf     = trim(iclike2012)//'BG_distributions_IC86_sim.dat'
+        efareaf = trim(iclike2012)//'nuEffArea_IC86_sim.dat'
+        edispf  = trim(iclike2012)//'energy_histograms_IC86_sim_dummy.dat'
 
-      ! Set the analysis cut in degrees around the solar position for the IC86 prediction
-      phi_cut = 20.d0
+        ! Set the analysis cut in degrees around the solar position for the IC86 prediction
+        phi_cut = 20.d0
 
-      ! Initialise the IceCube data and calculations for the IC86 prediction. 
-      call nulike_init(experiment, eventf, BGf, efareaf, edispf, 
-     & phi_cut, theoryError, uselogNorm, BGLikePrecompute)
+        ! Initialise the IceCube data and calculations for the IC86 prediction. 
+        call nulike_init(experiment, eventf, BGf, efareaf, edispf, 
+     &   phi_cut, theoryError, uselogNorm, BGLikePrecompute)
 
       !!!!!!!!!!!!!!!! 2014 likelihoods !!!!!!!!!!!!!!!!!!!
 
-      !efareaf is not needed in 2014-type analyses.
-      !edispf is ignored in 2014-type analyses.
-      !phi_cut is ignored in 2014-type analyses, as it is read in with the partial likelihoods.
-
-      ! Here we use the IC-79 SL data that ship with nulike
-      experiment = 'IC-79 SL'
-      eventf  = trim(iclike2014)//'IC79_Events_SL_llhInput_60Deg.txt'
-      BGf     = trim(iclike2014)//'IC79_Background_distributions_SL.txt'
-      partiald= trim(iclike2014)//'IC79_Partial_Likelihoods_SL'
-
-      ! Initialise the IceCube data and calculations for the IC79 SL sample. 
-      call nulike_init(experiment, eventf, BGf, partiald, edispf, 
-     & phi_cut, theoryError, uselogNorm, BGLikePrecompute)
-
-      ! Here we use the IC-79 WL data that ship with nulike
-      experiment = 'IC-79 WL'
-      eventf  = trim(iclike2014)//'IC79_Events_WL_llhInput_60Deg.txt'
-      BGf     = trim(iclike2014)//'IC79_Background_distributions_WL.txt'
-      partiald= trim(iclike2014)//'IC79_Partial_Likelihoods_WL'
-
-      ! Initialise the IceCube data and calculations for the IC79 WL sample. 
-      call nulike_init(experiment, eventf, BGf, partiald, edispf, 
-     & phi_cut, theoryError, uselogNorm, BGLikePrecompute)
-
+        !efareaf is not needed in 2014-type analyses.
+        !edispf is ignored in 2014-type analyses.
+        !phi_cut is ignored in 2014-type analyses, as it is read in with the partial likelihoods.
+  
+        ! Here we use the IC-79 SL data that ship with nulike
+        experiment = 'IC-79 SL'
+        eventf  = trim(iclike2014)//'IC79_Events_SL_llhInput_60Deg.txt'
+        BGf     = trim(iclike2014)//'IC79_Background_distributions_SL.txt'
+        partiald= trim(iclike2014)//'IC79_Partial_Likelihoods_SL'
+  
+        ! Initialise the IceCube data and calculations for the IC79 SL sample. 
+        call nulike_init(experiment, eventf, BGf, partiald, edispf, 
+     &   phi_cut, theoryError, uselogNorm, BGLikePrecompute)
+  
+        ! Here we use the IC-79 WL data that ship with nulike
+        experiment = 'IC-79 WL'
+        eventf  = trim(iclike2014)//'IC79_Events_WL_llhInput_60Deg.txt'
+        BGf     = trim(iclike2014)//'IC79_Background_distributions_WL.txt'
+        partiald= trim(iclike2014)//'IC79_Partial_Likelihoods_WL'
+  
+        ! Initialise the IceCube data and calculations for the IC79 WL sample. 
+        call nulike_init(experiment, eventf, BGf, partiald, edispf, 
+     &   phi_cut, theoryError, uselogNorm, BGLikePrecompute)
+  
+        ! Here we use the IC-79 WH data that ship with nulike
+        experiment = 'IC-79 WH'
+        eventf  = trim(iclike2014)//'IC79_Events_WH_llhInput_60Deg.txt'
+        BGf     = trim(iclike2014)//'IC79_Background_distributions_WH.txt'
+        partiald= trim(iclike2014)//'IC79_Partial_Likelihoods_WH'
+  
+        ! Initialise the IceCube data and calculations for the IC79 SL sample. 
+        call nulike_init(experiment, eventf, BGf, partiald, edispf, 
+     &   phi_cut, theoryError, uselogNorm, BGLikePrecompute)
 
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       ! 2. DarkSUSY initialisation and model read-in

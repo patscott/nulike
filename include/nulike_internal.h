@@ -15,7 +15,7 @@
       parameter(nchan_maxallowed = 100) !Maximum value of nchan
 
       real*8 effZero, logZero
-      parameter(effZero = 1.d-100)
+      parameter(effZero = 1.d-500)
       parameter(logZero = log10(effZero))
 
       character (len=nulike_clen) analysis_name_array(max_analyses)
