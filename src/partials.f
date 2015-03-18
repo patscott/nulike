@@ -244,14 +244,28 @@
           else !Otherwise, we might see some leptons, so iterate over CP eigenstates
             do ptypeshare = 1, 2
               IER = 0
-              call CUBATR(2,nulike_partials_handoff,SVertices,SRgType,
-     &         SValue,SAbsErr,IFAIL=IER,EpsAbs=1.d-150,EpsRel=eps_partials,MaxPts=2100000000,Job=11)
+              call CUBATR(2,nulike_partials_handoff,SVertices,Simplex,
+     &         SValue,SAbsErr,IFAIL=IER,EpsAbs=effZero,EpsRel=eps_partials,MaxPts=2100000000,Job=11)
               if (IER .ne. 0) then
                 write(*,*) 'Error raised by CUBATR in nulike_partials: ', IER 
                 stop
               endif
               call CUBATR()
               partial_likes(i,ptypeshare) = SValue
+              !Try again with the HyperQuad if the Simplex result looks suspicious.
+              if (i > 1) then
+                if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and. 
+     &           partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
+                  call CUBATR(2,nulike_partials_handoff,SVertices,HyperQuad,
+     &             SValue,SAbsErr,IFAIL=IER,EpsAbs=effZero,EpsRel=eps_partials,MaxPts=2100000000,Job=11)
+                  if (IER .ne. 0) then
+                    write(*,*) 'Error raised by CUBATR in nulike_partials: ', IER 
+                    stop
+                  endif
+                  call CUBATR()
+                  partial_likes(i,ptypeshare) = max(partial_likes(i,ptypeshare), SValue)
+                endif
+              endif
             enddo
           endif
           write(*,*) '      Partial likelihood, nu:    ',partial_likes(i,1)

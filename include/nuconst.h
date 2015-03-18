@@ -25,6 +25,10 @@
       real*8 pi
       parameter (pi=3.141592653589793238d0)
 
+      real*8 effZero, logZero
+      parameter(effZero = 1.d-300)
+      parameter(logZero = log10(effZero))
+
       character (len=15) hstring(3)
       parameter(hstring = (/'####--Angular--',
      &                      '####--Nchan--  ',
