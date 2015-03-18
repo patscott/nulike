@@ -133,7 +133,7 @@
           IER = 0
           SVertices(1,:) = (/logEmin_true, logEmax_true/)
           call CUBATR(1,nulike_specangintegrand,SVertices,SRgType,
-     &     sigpartial_accurate,SAbsErr,IER,MaxPts=5000000,EpsRel=eps,Job=2,Key=2)
+     &     sigpartial_accurate,SAbsErr,IER,EpsAbs=effZero,MaxPts=5000000,EpsRel=eps,Job=2,Key=2)
           if (IER .ne. 0) then
             write(*,*) 'Error raised by CUBATR in nulike_specanglike: ', IER 
             stop
