@@ -240,7 +240,6 @@
             specAngLikelihood = specAngLikelihood + nulike_specanglike(j,
      &       theta_S, f_S, annrate, logmw, sens_logE(1,1,analysis), 
      &       nuyield, context, fastlike)
-            write(*,*) j, specAngLikelihood
           enddo
         endif
 
@@ -264,8 +263,7 @@
 
       !Put together the number, angular and spectral likelihoods
       lnlike = nLikelihood + specAngLikelihood
-      write(*,*) nLikelihood, specAngLikelihood, theta_S, f_S
-      stop
+
 
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       ! 6. p value
