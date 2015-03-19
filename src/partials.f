@@ -257,7 +257,7 @@
                 if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and. 
      &           partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
                   call CUBATR(2,nulike_partials_handoff,SVertices,HyperQuad,
-     &             SValue,SAbsErr,IFAIL=IER,EpsAbs=effZero,EpsRel=eps_partials,MaxPts=2100000000,Job=11)
+     &             SValue,SAbsErr,IFAIL=IER,EpsRel=eps_partials,MaxPts=2100000000,Job=11)
                   if (IER .ne. 0) then
                     write(*,*) 'Error raised by CUBATR in nulike_partials: ', IER 
                     stop

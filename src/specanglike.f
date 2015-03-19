@@ -160,7 +160,7 @@
 
       ! Combine background and signal components
       nulike_specanglike = f_S * sigpartial + (1.d0-f_S) * bgpartial
-
+      
       ! Take ln of total likelihood
       if (nulike_specanglike .le. effZero) then
         nulike_specanglike = logZero
