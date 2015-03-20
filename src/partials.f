@@ -261,7 +261,8 @@
 
               !Try again without an absolute error target if the result looks fishy.
               if (i .gt. 1) then
-                if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and. partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
+                if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and.
+     &           partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
      
                   write(*,*) 'Initial estimate of integral looks fishy.  Retrying with no abolute error target.'
                   IER = 0
@@ -275,7 +276,8 @@
                   partial_likes(i,ptypeshare) = max(partial_likes(i,ptypeshare), SValue)
 
                   !Try again with the HyperQuad if the Simplex result still looks suspicious.
-                  if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and. partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
+                  if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and. 
+     &             partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
 
                     write(*,*) 'That looks fishy too.  Retrying with HyperQuad quadrature strategy.'
                     IER = 0
