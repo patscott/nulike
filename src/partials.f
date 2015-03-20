@@ -233,16 +233,21 @@
         endif
 
         !Step through each energy
-        do i = 1, nEnergies
+        do i = 13, nEnergies
           log10E = logE_min + dble(i-1)/dble(nEnergies-1)*(logE_max - logE_min)
           Eshare = 10.d0**log10E
           write(*,*) '    Computing partial likelihoods for E = ',Eshare,' GeV'
           !If the neutrino already has less energy than the lowest-E lepton that can be detected,
           !we know the effective volume will always be zero and the partial likelihoods are zero.
+
           if (log10E .lt. min_detectable_logE) then
+
             partial_likes(i,:) = 0.d0
+
           else !Otherwise, we might see some leptons, so iterate over CP eigenstates
+
             do ptypeshare = 1, 2
+
               IER = 0
               call CUBATR(2,nulike_partials_handoff,SVertices,Simplex,
      &         SValue,SAbsErr,IFAIL=IER,EpsAbs=effZero,EpsRel=eps_partials,MaxPts=2100000000,Job=11)
@@ -251,25 +256,46 @@
                 stop
               endif
               call CUBATR()
-              partial_likes(i,ptypeshare) = SValue
-              !Try again with the HyperQuad if the Simplex result looks suspicious.
+
+              !Try again without an absolute error target if the result looks fishy.
               if (i > 1) then
                 if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and. 
      &           partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
-                  call CUBATR(2,nulike_partials_handoff,SVertices,HyperQuad,
-     &             SValue,SAbsErr,IFAIL=IER,EpsRel=eps_partials,MaxPts=2100000000,Job=11)
+     
+                  call CUBATR(2,nulike_partials_handoff,SVertices,Simplex,
+     &            SValue,SAbsErr,IFAIL=IER,EpsRel=eps_partials,MaxPts=2100000000,Job=11)
                   if (IER .ne. 0) then
                     write(*,*) 'Error raised by CUBATR in nulike_partials: ', IER 
                     stop
                   endif
                   call CUBATR()
                   partial_likes(i,ptypeshare) = max(partial_likes(i,ptypeshare), SValue)
+
+                  !Try again with the HyperQuad if the Simplex result still looks suspicious.
+                  if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and. 
+     &             partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
+
+                    call CUBATR(2,nulike_partials_handoff,SVertices,HyperQuad,
+     &               SValue,SAbsErr,IFAIL=IER,EpsAbs=effZero,EpsRel=eps_partials,MaxPts=2100000000,Job=11)
+                    if (IER .ne. 0) then
+                      write(*,*) 'Error raised by CUBATR in nulike_partials: ', IER 
+                      stop
+                    endif
+                    call CUBATR()
+                    partial_likes(i,ptypeshare) = max(partial_likes(i,ptypeshare), SValue)
+
+                  endif
+
                 endif
               endif
+
             enddo
+
           endif
+
           write(*,*) '      Partial likelihood, nu:    ',partial_likes(i,1)
           write(*,*) '      Partial likelihood, nubar: ',partial_likes(i,2)
+
         enddo
 
         !Save partial likelihoods for this event.
