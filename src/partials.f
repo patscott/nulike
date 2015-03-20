@@ -233,7 +233,7 @@
         endif
 
         !Step through each energy
-        do i = 13, nEnergies
+        do i = 1, nEnergies
           log10E = logE_min + dble(i-1)/dble(nEnergies-1)*(logE_max - logE_min)
           Eshare = 10.d0**log10E
           write(*,*) '    Computing partial likelihoods for E = ',Eshare,' GeV'
