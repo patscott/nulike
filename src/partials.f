@@ -264,7 +264,7 @@
                 if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and.
      &           partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
      
-                  write(*,*) 'Initial estimate of integral looks fishy.  Retrying with no abolute error target.'
+                  write(*,*) 'Initial estimate of integral looks fishy.  Trying without absolute error target.'
                   IER = 0
                   call CUBATR(2,nulike_partials_handoff,SVertices,Simplex,
      &            SValue,SAbsErr,IFAIL=IER,EpsRel=eps_partials,MaxPts=2100000000,Job=11)
