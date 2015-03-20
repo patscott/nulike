@@ -233,7 +233,7 @@
         endif
 
         !Step through each energy
-        do i = 12, nEnergies
+        do i = 1, nEnergies
         
           log10E = logE_min + dble(i-1)/dble(nEnergies-1)*(logE_max - logE_min)
           Eshare = 10.d0**log10E
@@ -257,11 +257,13 @@
                 stop
               endif
               call CUBATR()
+              partial_likes(i,ptypeshare) = SValue
 
               !Try again without an absolute error target if the result looks fishy.
-              !if (i .gt. 1) then
-                !if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and. partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
+              if (i .gt. 1) then
+                if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and. partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
      
+                  write(*,*) 'Initial estimate of integral looks fishy.  Retrying with no abolute error target.'
                   IER = 0
                   call CUBATR(2,nulike_partials_handoff,SVertices,Simplex,
      &            SValue,SAbsErr,IFAIL=IER,EpsRel=eps_partials,MaxPts=2100000000,Job=11)
@@ -273,8 +275,9 @@
                   partial_likes(i,ptypeshare) = max(partial_likes(i,ptypeshare), SValue)
 
                   !Try again with the HyperQuad if the Simplex result still looks suspicious.
-                  !if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and. partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
+                  if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and. partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
 
+                    write(*,*) 'That looks fishy too.  Retrying with HyperQuad quadrature strategy.'
                     IER = 0
                     call CUBATR(2,nulike_partials_handoff,SVertices,HyperQuad,
      &               SValue,SAbsErr,IFAIL=IER,EpsAbs=effZero,EpsRel=eps_partials,MaxPts=2100000000,Job=11)
@@ -285,10 +288,10 @@
                     call CUBATR()
                     partial_likes(i,ptypeshare) = max(partial_likes(i,ptypeshare), SValue)
 
-                  !endif
+                  endif
 
-                !endif
-              !endif
+                endif
+              endif
 
             enddo
 
