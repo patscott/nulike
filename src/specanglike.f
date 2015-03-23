@@ -168,4 +168,10 @@
         nulike_specanglike = log(nulike_specanglike)
       endif
 
+      if (nulike_specanglike .ge. 0.d0) then
+        write(*,*) 'Error in nulike_specanglike for event ', event_number
+        write(*,*) 'Spectral-angular likelihood greater than 1.'
+        stop
+      endif
+
       end function nulike_specanglike
