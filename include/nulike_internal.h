@@ -81,11 +81,12 @@
       type(c_ptr) context_shared
 
       abstract interface 
-        real*8 function nuyield_signature (log10E,ptype,context)
-          use iso_c_binding, only: c_ptr
-          real*8 log10E
-          integer ptype
-          type(c_ptr) context
+        real(c_double) function nuyield_signature(log10E,ptype,context)
+          use iso_c_binding, only: c_ptr, c_double, c_int
+          implicit none
+          real(c_double), intent(in) :: log10E
+          integer(c_int), intent(in) :: ptype
+          type(c_ptr), intent(inout) :: context
         end function nuyield_signature
       end interface
       procedure (nuyield_signature), pointer :: nuyield_ptr

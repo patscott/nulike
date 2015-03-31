@@ -30,13 +30,22 @@
       implicit none
       include 'nulike_internal.h'
 
-      real*8 integral, logmw, nuyield, upperLimit, theta_Snu, theta_Snubar, annrate
+      real*8 integral, logmw, upperLimit, theta_Snu, theta_Snubar, annrate
       real*8 eps2012, eps2014, SAbsErr, SVertices(1,2)
       integer like, IER, SRgType
       type(c_ptr) context
       parameter (eps2012 = 1.d-2, eps2014 = 3.d-2, SRgType = Simplex)
-      external nuyield
       
+      interface
+        real(c_double) function nuyield(log10E,ptype,context) bind(c)
+          use iso_c_binding, only: c_ptr, c_double, c_int
+          implicit none
+          real(c_double), intent(in) :: log10E
+          integer(c_int), intent(in) :: ptype
+          type(c_ptr), intent(inout) :: context
+        end function
+      end interface
+
       interface
         function nulike_sigintegrand(NumFun,X) result(Value)
           integer, intent(in) :: NumFun
