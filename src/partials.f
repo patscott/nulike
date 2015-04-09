@@ -313,7 +313,7 @@
      &                 partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
 
                         write(*,*) 'Result: ', partial_likes(i,ptypeshare)
-                        stop 'This still does not look trustworthy.  Sorry, you will need to try adjusting integration parameters in partials.f yourself.  Quitting...'
+                        stop 'This still does not look trustworthy.  Sorry, you will need to try adjusting integration parameters in partials.f yourself.  Quitting.'
 
                       endif
 
