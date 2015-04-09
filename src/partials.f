@@ -259,15 +259,17 @@
               call CUBATR()
               partial_likes(i,ptypeshare) = SValue
 
-              !Try again without an absolute error target if the result looks fishy.
+              !Possibly repeat the calculation, depending on the comparison to the previous energy bin.
               if (i .gt. 1) then
+
+                !Try again with the HyperQuad if the Simplex result looks suspicious.
                 if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and.
      &           partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
      
-                  write(*,*) 'Initial estimate of integral looks fishy.  Trying without absolute error target.'
+                  write(*,*) 'Result looks fishy.  Retrying with HyperQuad quadrature strategy.'
                   IER = 0
-                  call CUBATR(2,nulike_partials_handoff,SVertices,Simplex,
-     &            SValue,SAbsErr,IFAIL=IER,EpsRel=eps_partials,MaxPts=2100000000,Job=11)
+                  call CUBATR(2,nulike_partials_handoff,SVertices,HyperQuad,
+     &             SValue,SAbsErr,IFAIL=IER,EpsAbs=effZero,EpsRel=eps_partials,MaxPts=2100000000,Job=11)
                   if (IER .ne. 0) then
                     write(*,*) 'Error raised by CUBATR in nulike_partials: ', IER 
                     stop
@@ -275,20 +277,47 @@
                   call CUBATR()
                   partial_likes(i,ptypeshare) = max(partial_likes(i,ptypeshare), SValue)
 
-                  !Try again with the HyperQuad if the Simplex result still looks suspicious.
+                  !Try again with the Simplex and no absolute error if result still looks suspicious.
                   if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and. 
      &             partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
 
-                    write(*,*) 'That looks fishy too.  Retrying with HyperQuad quadrature strategy.'
+                    write(*,*) 'Still looks fishy.  Retrying Simplex with no absolute error target.'
                     IER = 0
-                    call CUBATR(2,nulike_partials_handoff,SVertices,HyperQuad,
-     &               SValue,SAbsErr,IFAIL=IER,EpsAbs=effZero,EpsRel=eps_partials,MaxPts=2100000000,Job=11)
+                    call CUBATR(2,nulike_partials_handoff,SVertices,Simplex,
+     &               SValue,SAbsErr,IFAIL=IER,EpsRel=eps_partials,MaxPts=2100000000,Job=11)
                     if (IER .ne. 0) then
                       write(*,*) 'Error raised by CUBATR in nulike_partials: ', IER 
                       stop
                     endif
                     call CUBATR()
                     partial_likes(i,ptypeshare) = max(partial_likes(i,ptypeshare), SValue)
+
+                    !Try yet again with the HyperQuad and no absolute error if result still looks suspicious.
+                    if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and. 
+     &               partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
+
+                      write(*,*) 'That still looks fishy.  Retrying HyperQuad with no absolute error target.'
+                      write(*,*) 'Pray.'
+                      IER = 0
+                      call CUBATR(2,nulike_partials_handoff,SVertices,HyperQuad,
+     &                 SValue,SAbsErr,IFAIL=IER,EpsRel=eps_partials,MaxPts=2100000000,Job=11)
+                      if (IER .ne. 0) then
+                        write(*,*) 'Error raised by CUBATR in nulike_partials: ', IER 
+                        stop
+                      endif
+                      call CUBATR()
+                      partial_likes(i,ptypeshare) = max(partial_likes(i,ptypeshare), SValue)
+
+                      !Bail if result still looks suspicious.
+                      if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and. 
+     &                 partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
+
+                        write(*,*) 'Result: ', partial_likes(i,ptypeshare)
+                        stop 'This still does not look trustworthy.  Sorry, you will need to try adjusting integration parameters in partials.f yourself.  Quitting...'
+
+                      endif
+
+                    endif
 
                   endif
 
