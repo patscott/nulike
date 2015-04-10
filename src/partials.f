@@ -311,7 +311,7 @@
                       if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and.
      &                 partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
       
-                        write(*,*) 'Result looks fishy.  Retrying with Key=4, Job=12 and no abolute error.'
+                        write(*,*) 'Result looks fishy.  Retrying with Key=4, Job=12 and no absolute error.'
                         IER = 0
                         call CUBATR(2,nulike_partials_handoff,SVertices,Simplex,
      &                   SValue,SAbsErr,IFAIL=IER,EpsAbs=effZero,EpsRel=eps_partials,MaxPts=2100000000,Key=4,Job=12)
@@ -343,7 +343,8 @@
     
                             write(*,*) 'Result: ', partial_likes(i,ptypeshare)
                             write(*,*) 'This still does not look trustworthy.'
-                            write(*,*) 'Sorry, you will need to try adjusting the integrator in partials.f yourself.'
+                            write(*,*) 'Sorry, you will need to try adjusting the integrator in partials.f yourself,'
+                            write(*,*) 'or decreasing the tolerance eps_partials in include/nuprep.h.'
                             stop 'Quitting.'
 
                           endif
