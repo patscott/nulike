@@ -277,21 +277,6 @@
                   call CUBATR()
                   partial_likes(i,ptypeshare) = max(partial_likes(i,ptypeshare), SValue)
 
-                !Try again with alternative integration tactics if the original Simplex result looks suspicious.
-                if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and.
-     &           partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
-
-                  write(*,*) 'Result looks fishy.  Retrying with Key=2, Job=12.'
-                  IER = 0
-                  call CUBATR(2,nulike_partials_handoff,SVertices,Simplex,
-     &             SValue,SAbsErr,IFAIL=IER,EpsAbs=effZero,EpsRel=eps_partials,MaxPts=2100000000,Key=2,Job=12)
-                  if (IER .ne. 0) then
-                    write(*,*) 'Error raised by CUBATR in nulike_partials: ', IER 
-                    stop
-                  endif
-                  call CUBATR()
-                  partial_likes(i,ptypeshare) = max(partial_likes(i,ptypeshare), SValue)
-
                   !Try again with the HyperQuad if the Simplex result looks suspicious.
                   if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and.
      &             partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
@@ -376,8 +361,6 @@
                               write(*,*) 'Sorry, you will need to try adjusting the integrator in partials.f yourself,'
                               write(*,*) 'or decreasing the tolerance eps_partials in include/nuprep.h.'
                               stop 'Quitting.'
-
-                              endif
 
                             endif
 
