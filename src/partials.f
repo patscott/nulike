@@ -297,7 +297,6 @@
      &               partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
 
                       write(*,*) 'That still looks fishy.  Retrying HyperQuad with no absolute error target.'
-                      write(*,*) 'Pray.'
                       IER = 0
                       call CUBATR(2,nulike_partials_handoff,SVertices,HyperQuad,
      &                 SValue,SAbsErr,IFAIL=IER,EpsRel=eps_partials,MaxPts=2100000000,Job=11)
@@ -313,7 +312,9 @@
      &                 partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
 
                         write(*,*) 'Result: ', partial_likes(i,ptypeshare)
-                        stop 'This still does not look trustworthy.  Sorry, you will need to try adjusting integration parameters in partials.f yourself.  Quitting.'
+                        write(*,*) 'This still does not look trustworthy.'
+                        write(*,*) 'Sorry, you will need to try adjusting the integrator in partials.f yourself.'
+                        stop 'Quitting.'
 
                       endif
 
