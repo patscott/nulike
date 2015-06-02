@@ -22,8 +22,8 @@ FOPT=-O2 -ffixed-line-length-none # -Wall -fcheck=all #(contributed numerical ro
 MODULE=J
 
 # DarkSUSY location, library name and include path
-DSLIBDIR = ../gambit/extras/DarkSUSY/DarkSUSY/lib
-DSLIBINC = ../gambit/extras/DarkSUSY/DarkSUSY/include
+DSLIBDIR = ../darksusy-ucmh/lib
+DSLIBINC = ../darksusy-ucmh/include
 DSLIBNAME = darksusy
 
 # nusigma location and library name
@@ -110,6 +110,12 @@ nulike_prep : libnulike.a $(PROGS)/nulike_prep.f
 
 nulike_test : libnulike.a $(PROGS)/nulike_test.f
 	$(FF) $(FFLAGS) -I$(DSLIBINC) -o $@ $(PROGS)/nulike_test.f -L$(DSLIBDIR) -l$(DSLIBNAME) -lHB -lFH -L$(LIB) -lnulike
+
+nulike_test_mssm25 : libnulike.a $(PROGS)/nulike_test_mssm25.f
+	$(FF) $(FFLAGS) -I$(DSLIBINC) -o $@ $(PROGS)/nulike_test_mssm25.f -L$(DSLIBDIR) -l$(DSLIBNAME) -lHB -lFH -L$(LIB) -lnulike
+
+nulike_test_wimp : libnulike.a $(PROGS)/nulike_test_wimp.f
+	$(FF) $(FFLAGS) -I$(DSLIBINC) -o $@ $(PROGS)/nulike_test_wimp.f -L$(DSLIBDIR) -l$(DSLIBNAME) -lHB -lFH -L$(LIB) -lnulike
 
 clean : 
 	rm -f $(BUILD)/* tspack.f Key.dat nulike_test nulike_prep

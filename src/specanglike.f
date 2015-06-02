@@ -153,8 +153,12 @@
           if (measure .gt. eps) revert_to_accurate_likelihood = .true.
         endif
 
-        if (revert_to_accurate_likelihood .or. .not. fast_likelihood) sigpartial = sigpartial_accurate  
-        sigpartial = exp_time(analysis) / theta_S * annrate * dlog(10.d0) * sigpartial
+        if (theta_S .gt. epsilon(theta_S)) then
+          if (revert_to_accurate_likelihood .or. .not. fast_likelihood) sigpartial = sigpartial_accurate  
+          sigpartial = exp_time(analysis) / theta_S * annrate * dlog(10.d0) * sigpartial
+        else 
+          sigpartial = 0.d0
+        endif
 
       endif
 

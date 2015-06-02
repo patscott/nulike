@@ -67,7 +67,7 @@
       logical pvalBGPoisComputed(max_analyses)
       real*8  BGpvalPoissonian(max_analyses)
 
-      integer nPrecompE(max_nPrecompE)
+      integer nPrecompE(max_nPrecompE), start_index(max_analyses)
       real*8 precomp_log10E(max_nPrecompE,max_analyses)
       real*8 precomp_weights(max_nPrecompE,max_nEvents,2,max_analyses)
       real*8 precomp_derivs(max_nPrecompE,max_nEvents,2,max_analyses)
@@ -106,7 +106,7 @@
      & precomp_sigma, precompEA_weights, precompEA_derivs, 
      & precompEA_sigma, ee_min, ee_max, nchanshare,
      & BGeedist_derivs, BGeedist_sigma,
-     & nBinsBGE, nBinsBGAng, nEvents,
+     & nBinsBGE, nBinsBGAng, nEvents, start_index,
      & nSensBins, nPrecompE, nHistograms, nnchan_total,
      & nchan_hist2BGoffset, FullSkyBG,
      & pvalBGPoisComputed, sysErrDist_logNorm,

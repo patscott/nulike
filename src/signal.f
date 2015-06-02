@@ -89,7 +89,8 @@
         IER = 0
         SVertices(1,:) = (/sens_logE(1,1,analysis), upperLimit/)
         call CUBATR(1,nulike_sigintegrand,SVertices,SRgType,
-     &   integral,SAbsErr,IER,MaxPts=5000000,EpsRel=eps2012,Job=2,Key=2)
+     &   integral,SAbsErr,IER,MaxPts=5000000,EpsRel=eps2012,Job=2,
+     &   EpsAbs=1.d-200,Key=2)
         if (IER .ne. 0) then
           write(*,*) 'Error raised by CUBATR in nulike_signal: ', IER 
           stop
@@ -102,7 +103,8 @@
         IER = 0
         SVertices(1,:) = (/sens_logE(1,1,analysis), upperLimit/)
         call CUBATR(1,nulike_sigintegrand,SVertices,SRgType,
-     &   integral,SAbsErr,IER,MaxPts=5000000,EpsRel=eps2012,Job=2,Key=2)
+     &   integral,SAbsErr,IER,MaxPts=5000000,EpsRel=eps2012,Job=2,
+     &   EpsAbs=1.d-200,Key=2)
         if (IER .ne. 0) then
           write(*,*) 'Error raised by CUBATR in nulike_signal: ', IER 
           stop
@@ -118,10 +120,11 @@
 
         eventnumshare = 0 ! Use effective area from previous tabulation.
         IER = 0
-        SVertices(1,:) = (/precomp_log10E(1,analysis), 
+        SVertices(1,:) = (/precomp_log10E(start_index(analysis),analysis), 
      &   min(precomp_log10E(nPrecompE(analysis),analysis),logmw)/)
         call CUBATR(1,nulike_specangintegrand,SVertices,SRgType,
-     &   integral,SAbsErr,IER,MaxPts=5000000,EpsRel=eps2014,Job=2,Key=2)
+     &   integral,SAbsErr,IER,MaxPts=5000000,EpsRel=eps2014,Job=2,
+     &   EpsAbs=1.d-200,Key=2)
         if (IER .ne. 0) then
           write(*,*) 'Error raised by CUBATR in nulike_signal: ', IER 
           stop

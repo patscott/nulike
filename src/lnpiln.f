@@ -854,7 +854,9 @@
       IF (.NOT. found) THEN
         WRITE(*,*) 'ERROR: failed to find integrand maximum'
      &             // ' (nulike_lnpiln)'
-        STOP
+        WRITE(*,*) 'Called with arguments: ',n,thetab,thetas,sigma,y0,g0,
+     &   sigmau
+        STOP('Please report this to Chris Savage (chris@savage.name)')
       END IF
       
       ! Now calculate other quantites at y0.

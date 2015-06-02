@@ -6,13 +6,13 @@
 *** b) the total predicted number of signal events in nulike_signal.
 *** This routine is used only with the 2014 likelihood.
 ***
-*** Input:		log10E       log10(neutrino energy/GeV)
-***                     ptype        1=nu, 2=nubar
-*** 			eventnum     the unique index number of the event
+*** Input:    log10E       log10(neutrino energy/GeV)
+***           ptype        1=nu, 2=nubar
+***           eventnum     the unique index number of the event
 ***
-*** Output:             weight       eventnum = 0 => effective area (m^2)
-***                                  eventnum > 0 => weighting for event
-***                                   eventnum (m^2 chan^-1 degrees^-1 )
+*** Output:   weight       eventnum = 0 => effective area (m^2)
+***                        eventnum > 0 => weighting for event
+***                         eventnum (m^2 chan^-1 degrees^-1 )
 ***
 *** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Jun 8, 2014
@@ -29,12 +29,12 @@
       real*8 log10E, nulike_tabulated_weight_a(1)
       integer ptype, eventnum, IER
 
-
       if (eventnum .eq. 0) then 
 
         !Call interpolator to get effective area for this energy
-        call TSVAL1(nPrecompE(analysis),precomp_log10E(:,analysis),
-     &   precompEA_weights(:,ptype,analysis),
+        call TSVAL1(nPrecompE(analysis)-start_index(analysis)+1,
+     &   precomp_log10E(start_index(analysis):,analysis),
+     &   precompEA_weights(start_index(analysis):,ptype,analysis),
      &   precompEA_derivs(:,ptype,analysis),
      &   precompEA_sigma(:,ptype,analysis),
      &   0,1,log10E,nulike_tabulated_weight_a,IER)
