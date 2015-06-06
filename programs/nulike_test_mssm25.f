@@ -44,8 +44,8 @@
       ! Book-keeping
       integer unphys,hwarning,iend,ierr,iwar,nfc,i,j
       logical :: on_spoke_1 = .false., on_spoke_2 = .false.
-      logical :: first = .true.
-      real*8 x, y, excl, rs
+      logical :: first = .true., finished = .false.
+      real*8 :: x = 0.d0, y = 0.d0, excl, rs
       real*8, parameter :: dummyval=0.d0, xmin=0.d0, ymin=0.d0
       real*8, parameter :: xmax = 50, ymax = 25, omegacdmh2 = 0.12038d0 !From best fit Planck+WMAP (Planck 2013)  
       integer, parameter :: spoke_1_pts = 10, spoke_2_pts = 10   
@@ -92,14 +92,15 @@
       ! Skip the header
       call read_model(11,-15,iend,ierr,0.d0,0.d0)
 
-      do
+      do while (.not. finished)
 
         ! Switch depending on whether we're working on benchmarks or slopes
         if (on_spoke_1) then
 
           x = xmin + dble(j)/dble(spoke_1_pts) * (xmax - xmin)
+          y = 0.d0
           if (talky) write (*,*) 'Spoke 1 of MODEL: ',idtag,' with x = ',x,' GeV.'
-          call read_model(11,0,iend,ierr,x,0.d0)
+          call read_model(11,0,iend,ierr,x,y)
           if (j .ne. spoke_1_pts) then
             j = j + 1
           else 
@@ -110,13 +111,14 @@
                     
         elseif (on_spoke_2) then
         
+          x = 0.d0
           y = ymin + dble(j)/dble(spoke_2_pts) * (ymax - ymin)
           if (talky) write (*,*) 'Spoke 2 of MODEL: ',idtag,' with y = ',y,' GeV.'
-          call read_model(11,0,iend,ierr,0.d0,y)
+          call read_model(11,0,iend,ierr,x,y)
           if (j .ne. spoke_2_pts) then
             j = j + 1
           else 
-            exit ! Done both spokes now - split from the do loop.
+            finished = .true.
           endif          
         
         else
@@ -267,16 +269,19 @@
       implicit none
       include 'dsidtag.h'
       include 'dsmssm.h'
-      integer nmodel,lunit,iend,ierr
+      integer nmodel,lunit,iend,ierr,i
       real*8 am1,am2,am3,amu,ama,atanbe,
      &  amsqL1,amsqL2,amsqL3,amsqRu,amsqRc,amsqRt,amsqRd,
      &  amsqRs,amsqRb,amslL1,amslL2,amslL3,amslRe,
      &  amslRmu,amslRtau,atm,abm,ataum,aemum,x,y
-      integer i
-      save am1,am2,am3,amu,ama,atanbe,
-     &  amsqL1,amsqL2,amsqL3,amsqRu,amsqRc,amsqRt,amsqRd,
-     &  amsqRs,amsqRb,amslL1,amslL2,amslL3,amslRe,
-     &  amslRmu,amslRtau,atm,abm,ataum,aemum
+      real*8 am1_s,am2_s,am3_s,amu_s,ama_s,atanbe_s,
+     &  amsqL1_s,amsqL2_s,amsqL3_s,amsqRu_s,amsqRc_s,amsqRt_s,amsqRd_s,
+     &  amsqRs_s,amsqRb_s,amslL1_s,amslL2_s,amslL3_s,amslRe_s,
+     &  amslRmu_s,amslRtau_s,atm_s,abm_s,ataum_s,aemum_s
+      save am1_s,am2_s,am3_s,amu_s,ama_s,atanbe_s,
+     &  amsqL1_s,amsqL2_s,amsqL3_s,amsqRu_s,amsqRc_s,amsqRt_s,amsqRd_s,
+     &  amsqRs_s,amsqRb_s,amslL1_s,amslL2_s,amslL3_s,amslRe_s,
+     &  amslRmu_s,amslRtau_s,atm_s,abm_s,ataum_s,aemum_s
 
  2000 format (1x,a12,25(1x,e14.8))
       ierr=0
@@ -284,29 +289,31 @@
       ! If x or y are non-zero, use them to rescale the previous point
       if (x .gt. epsilon(0.d0) .or. y .gt. epsilon(0.d0)) then
 
-        am1 = am1 - 12.d0*x - 16.d0*y
-        am2 = am2 + 64.d0*y
-        am3 = am3 + 11.d0*x + 64.d0*y
-        amu = amu - 64*y
-        ama = ama + 64*y
-        amsqL1 = amsqL1 + 11*x + 9*y
-        amsqL2 = amsqL2 + 11*x + 9*y
-        amsqL3 = amsqL3 + 11*x + 64*y
-        amsqRu = amsqRu + 11*x + 9*y
-        amsqRc = amsqRc + 11*x + 9*y
-        amsqRt = amsqRt + 64*y
-        amsqRd = amsqRd + 64*y
-        amsqRs = amsqRs + 64*y
-        amsqRb = amsqRb + 64*y
-        amslL1 = amslL1 + 11*x + 64*y
-        amslL2 = amslL2 + 11*x + 64*y
-        amslL3 = amslL3 + 64*y
-        amslRe = amslRe + 64*y
-        amslRmu = amslRmu + 64*y
-        amslRtau = amslRtau + 64*y
-        atm = atm - 64*y
-        abm = abm + 64*y
-        ataum = ataum + 64*y
+        am1 = am1_s - 12.d0*x - 16.d0*y
+        am2 = am2_s + 64.d0*y
+        am3 = am3_s + 11.d0*x + 64.d0*y
+        amu = amu_s - 64*y
+        ama = ama_s + 64*y
+        atanbe = atanbe_s
+        amsqL1 = amsqL1_s + 11*x + 9*y
+        amsqL2 = amsqL2_s + 11*x + 9*y
+        amsqL3 = amsqL3_s + 11*x + 64*y
+        amsqRu = amsqRu_s + 11*x + 9*y
+        amsqRc = amsqRc_s + 11*x + 9*y
+        amsqRt = amsqRt_s + 64*y
+        amsqRd = amsqRd_s + 64*y
+        amsqRs = amsqRs_s + 64*y
+        amsqRb = amsqRb_s + 64*y
+        amslL1 = amslL1_s + 11*x + 64*y
+        amslL2 = amslL2_s + 11*x + 64*y
+        amslL3 = amslL3_s + 64*y
+        amslRe = amslRe_s + 64*y
+        amslRmu = amslRmu_s + 64*y
+        amslRtau = amslRtau_s + 64*y
+        atm = atm_s - 64*y
+        abm = abm_s + 64*y
+        ataum = ataum_s + 64*y
+        aemum = aemum_s
 
       else 
 
@@ -317,9 +324,9 @@
            enddo
            return
         endif
-        ! If nmodel>0, read n-th model (assumes header line)
+        ! If nmodel>0, read n-th model (assumes no headers)
         if (nmodel.gt.0) then
-           do i=1,nmodel
+           do i=1,nmodel-1
               read (lunit,*,end=1000,err=3000)
            enddo
         endif
@@ -329,10 +336,35 @@
      &   amsqL1,amsqL2,amsqL3,amsqRu,amsqRc,amsqRt,amsqRd,
      &   amsqRs,amsqRb,amslL1,amslL2,amslL3,amslRe,
      &   amslRmu,amslRtau,atm,abm,ataum,aemum
+        ! Save for next time, in case this is the last.
+        am1_s = am1
+        am2_s = am2
+        am3_s = am3
+        amu_s = amu
+        ama_s = ama
+        atanbe_s = atanbe
+        amsqL1_s = amsqL1
+        amsqL2_s = amsqL2
+        amsqL3_s = amsqL3
+        amsqRu_s = amsqRu
+        amsqRc_s = amsqRc
+        amsqRt_s = amsqRt
+        amsqRd_s = amsqRd
+        amsqRs_s = amsqRs
+        amsqRb_s = amsqRb
+        amslL1_s = amslL1
+        amslL2_s = amslL2
+        amslL3_s = amslL3
+        amslRe_s = amslRe
+        amslRmu_s = amslRmu
+        amslRtau_s = amslRtau
+        atm_s = atm
+        abm_s =  abm
+        ataum_s =  ataum
+        aemum_s = aemum
         ! modify/set additional parameters
         !  higloop=5  ! 5 = Full FeynHiggs;  6 = FeynHiggsFast
         !  W mass for unitarity of tree-level annihilation amplitudes
-
       endif
       
       call dsgive_model25(am1,am2,am3,amu,ama,atanbe,

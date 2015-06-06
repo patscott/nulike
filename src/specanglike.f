@@ -47,7 +47,7 @@
       real*8 logEmin_true, logEmax_true
       real*8 sigpartial_accurate, measure
       integer event_number, i, ptype, IER, SRgType
-      parameter (eps =0.5d0, SRgType = Simplex)
+      parameter (SRgType = Simplex)
       logical(c_bool), intent(in) :: fast_likelihood
       logical, save :: revert_to_accurate_likelihood
       type(c_ptr) context
@@ -60,6 +60,13 @@
           real*8 :: Value(NumFun)
         end function nulike_specangintegrand
       end interface
+
+      ! Choose eps according to fast likelihood switch
+      if (fast_likelihood) then 
+        eps =0.3d0
+      else
+        eps =0.03d0
+      endif
 
       ! Don't bother with energies above or below which there is no estimate of the effective area
       logEmin_true = max(precomp_log10E(1,analysis),logEmin)

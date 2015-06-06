@@ -36,9 +36,11 @@
       integer i,j
       logical :: first = .true.
       real*8 excl
-      real*8, parameter :: dummyval = 0, mwimpmin = 80, mwimpmax = 5000  
-      integer, parameter :: mwimp_pts = 500
-      logical, parameter :: talky = .false.
+      real*8, parameter :: dummyval = 0, mwimpmin = 10, mwimpmax = 5000  
+      !real*8, parameter :: chosen_masses(21) = (/6.d0, 10.d0, 25.d0, 50.d0, 80.3d0, 91.2d0, 1.d2, 1.5d2, 1.76d2, 2.d2, 2.5d2, 3.5d2, 5.d2, 7.5d2, 1.d3, 1.5d3, 2.d3, 3.d3, 5.d3, 7.5d3, 1.d4/)
+      real*8, parameter :: chosen_masses(2) = (/7.5d3, 1.d4/)
+      integer, parameter :: mwimp_pts = 100
+      logical, parameter :: talky = .false., chosen_ones_only = .true.
       
 
       ! See the header of src/init.f for detailed explanations of the following options.
@@ -98,13 +100,13 @@
       wabr(16) = 0.d0       !nu_mu nubar_mu
       wabr(17) = 0.d0       !mu+ mu-
       wabr(18) = 0.d0       !nu_tau nubar_tau
-      wabr(19) = 0.d0       !tau+ tau-
+      wabr(19) = 1.d0       !tau+ tau-
       wabr(20) = 0.d0       !u  ubar
       wabr(21) = 0.d0       !d  dbar
       wabr(22) = 0.d0       !c  cbar
       wabr(23) = 0.d0       !s  sbar
       wabr(24) = 0.d0       !t  tbar
-      wabr(25) = 1.d0       !b  bbar
+      wabr(25) = 0.d0       !b  bbar
       wabr(26) = 0.d0       !g  g
       wabr(27) = 0.d0       !qqg (not implemented)
       wabr(28) = 0.d0       !gamma gamma
@@ -156,10 +158,10 @@
       wascm=0.d0
 
       ! Step through each of the requested WIMP masses
-      do i = 1, mwimp_pts
+      do i = 1, merge(size(chosen_masses),mwimp_pts,chosen_ones_only)
 
         ! Set WIMP mass and annihilation cross-section, then write them out
-        wamwimp = 10.**(log10(mwimpmin) + dble(i-1)/dble(mwimp_pts-1)*log10(mwimpmax/mwimpmin))
+        wamwimp = merge(chosen_masses(i),10.**(log10(mwimpmin) + dble(i-1)/dble(mwimp_pts-1)*log10(mwimpmax/mwimpmin)),chosen_ones_only)
         wasv = 3.d-26
         if (talky) write(*,*) '  WIMP mass = ', wamwimp
         if (talky) write(*,*) '  Annihilation cross-section = ',wasv,' cm^-3 s^-1'
@@ -238,9 +240,9 @@
       ! See the header of src/nulike_bounds.f for detailed explanations of the following options.
       use_fast_likelihood = .false.
       pvalFromRef = .true.
-      dof = 1.0  !Calculate exclusion assuming conditioning on everything except a single parameter (eg mchi).
+      dof = 1.0  !Calculate exclusion assuming conditioning on everything except a single parameter (eg sigma_SDp).
       ptr = C_NULL_PTR
-      likechoice = 1
+      likechoice = 4
       !All obtained by setting signal content to zero => total high-scale decoupling.
       if (likechoice .eq. 1) then
         pvalFromRef = .false.
