@@ -3,7 +3,7 @@
 *** unbinned likelihood, based on values of the arrival direction and 
 *** the energy estimator for the event, as well as the theoretical 
 *** energy spectrum of incoming neutrinos.
-*** This routine is used only with the 2014 likelihood.
+*** This routine is used only with the 2015 likelihood.
 ***
 *** input:  event_number
 ***         theta_S      total predicted number of signal events

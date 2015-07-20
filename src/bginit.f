@@ -110,8 +110,8 @@
           call exit(0)
         endif
 
-      !2014 likelihood, as per arXiv:141x.xxxx (Set up interpolation in distribution of the energy estimator.)
-      case (2014)
+      !2015 likelihood, as per arXiv:15xx.xxxx (Set up interpolation in distribution of the energy estimator.)
+      case (2015)
 
         !Set up interpolation in energy distribution.
         call TSPSI(nbins_ee,BGeedist_ee(:,analysis),BGeedist_prob(:,analysis),2,0,.false.,.false.,

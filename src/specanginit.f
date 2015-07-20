@@ -2,7 +2,7 @@
 *** nulike_specanginit initialises the precomputed unbiased effective
 *** areas and partial angular-spectral likelihoods by reading them in
 *** from the specified directory.
-*** This routine is used only with the 2014 likelihood.
+*** This routine is used only with the 2015 likelihood.
 ***
 *** input:  dirname      name of directory containig partial likelihoods.
 ***         nevents      number of events for which partial likelihoods 

@@ -25,7 +25,7 @@
       data savedevents /0/
 
       !Save the current number of events for later comparison if it is already set.
-      if (like .eq. 2014) savedevents = cutevents
+      if (like .eq. 2015) savedevents = cutevents
 
       !Open event file and read in events
       open(lun,file=filename, ACTION='READ')
@@ -58,7 +58,7 @@
           select case (like)
           case (2012)
             events_nchan(cutevents,analysis) = nint(ee)
-          case (2014)
+          case (2015)
             events_ee(cutevents,analysis) = ee
           case default
             stop 'Unrecognised likelihood type in nulike_eventinit.'
@@ -69,7 +69,7 @@
         endif
       enddo
 
-      if (like .eq. 2014 .and. savedevents .gt. 0 .and. cutevents .ne. savedevents)
+      if (like .eq. 2015 .and. savedevents .gt. 0 .and. cutevents .ne. savedevents)
      & stop 'Number of events in partial likelihood file and event file do not match!! Death.'
 
       close(lun)

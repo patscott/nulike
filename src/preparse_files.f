@@ -183,7 +183,7 @@
         read(lun, fmt=*), instring 
         read(lun, fmt=*), instring 
       else
-        if (like .eq. 2014) stop 'Density required in effective volume file for 2014 likelihood.'
+        if (like .eq. 2015) stop 'Density required in effective volume file for 2015 likelihood.'
         rho = 0.d0
       endif
       

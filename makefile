@@ -27,8 +27,8 @@ DSLIBINC = ../gambit/extras/DarkSUSY/DarkSUSY/include
 DSLIBNAME = darksusy
 
 # nusigma location and library name
-NUSIGDIR = ../nusigma-1.17-pyr/lib
-NUSIGINC = ../nusigma-1.17-pyr/inc
+NUSIGDIR = ../nusigma/lib
+NUSIGINC = ../nusigma/inc
 NUSIGNAME = nusigma
 
 # Define library-making options

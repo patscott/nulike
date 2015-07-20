@@ -25,7 +25,7 @@
 ***                             = number of lit DOMs)
 ***                        4 => Number of events, event arrival angles and 
 ***                             energy estimator
-***        fastlike      In the case of liketype=4 with the 2014 likelihood, 
+***        fastlike      In the case of liketype=4 with the 2015 likelihood, 
 ***                      do a faster, less accurate calculation of the spectral-angular
 ***                      part of the likelihood.  
 ***
@@ -148,11 +148,11 @@
         stop
       endif
       
-      !Make sure the user has not tried to use the 2014 like with only angular or only spectral likelihood.
-      if (likelihood_version(analysis) .eq. 2014 .and. 
+      !Make sure the user has not tried to use the 2015 like with only angular or only spectral likelihood.
+      if (likelihood_version(analysis) .eq. 2015 .and. 
      & (liketype .eq. 2 .or. liketype .eq. 3) ) then
         write(*,*) "Analysis '"//trim(analysis_name)//"' requested of nulike_bounds"
-        write(*,*) 'uses the 2014 likelihood, which is incompatible with liketype = ',liketype
+        write(*,*) 'uses the 2015 likelihood, which is incompatible with liketype = ',liketype
         write(*,*) 'Quitting...'
         stop
       endif 
@@ -237,8 +237,8 @@
         endif
         specAngLikelihood = angularLikelihood + spectralLikelihood
 
-      !2014 likelihood, as per arXiv:150x.xxxx
-      case (2014)
+      !2015 likelihood, as per arXiv:15xx.xxxx
+      case (2015)
         specAngLikelihood = 0.d0
         if (liketype .eq. 4) then
           do j = 1, nEvents(analysis)          

@@ -3,7 +3,7 @@
 *** a) the signal component of the combined angular-spectral likelihood
 ***    in nulike_specanglike
 *** b) the total predicted number of signal events in nulike_signal.
-*** This routine is used only with the 2014 likelihood.
+*** This routine is used only with the 2015 likelihood.
 ***
 *** Input:        NumFun         =1
 ***               X(1)           log10(neutrino energy/GeV)

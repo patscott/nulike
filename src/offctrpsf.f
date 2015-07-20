@@ -11,7 +11,7 @@
 *** deviation (not 68%), and may be given by e.g. the parabaloid sigma
 *** for an individual event, or the global mean angular error.
 ***
-*** This routine is used only with the 2014 likelihood.
+*** This routine is used only with the 2015 likelihood.
 *** 
 *** Input:	phi_obs	        observed angle (degrees)
 ***         phi_pred            predicted angle (degrees)

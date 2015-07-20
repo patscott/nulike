@@ -128,8 +128,8 @@
 
         enddo 
 
-      !2014 likelihood, as per arXiv:141x.xxxx 
-      case (2014)
+      !2015 likelihood, as per arXiv:15xx.xxxxx 
+      case (2015)
 
         hist_ee_flip = transpose(hist_ee_temp)
         hist_prob_flip = transpose(hist_prob_temp)

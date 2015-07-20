@@ -2,7 +2,7 @@
 *** nulike_partialintegrand provides the integrand for the double
 *** integral required to be computed to obtain partial likelihoods or
 *** effective areas.
-*** This routine is used only with the 2014 likelihood.
+*** This routine is used only with the 2015 likelihood.
 ***
 *** Input:              x              Bjorken x
 ***                     y              Bjorken y
@@ -55,7 +55,7 @@
 
       !Energy dispersion
       if (eventnum .gt. 0) then
-        edisp = nulike_edisp(log10Elep, events_ee(eventnum, analysis), 2014)   ! [ee]^-1
+        edisp = nulike_edisp(log10Elep, events_ee(eventnum, analysis), 2015)   ! [ee]^-1
         if (edisp .le. epsilon(edisp)) then                                    ! Abort if energy dispersion is
           nulike_partintegrand = 0.d0                                          ! zero.     
           return

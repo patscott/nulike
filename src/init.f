@@ -15,7 +15,7 @@
 ***   file3             If the eventfile indicates that the likelihood is
 ***                      2012 type: path to the file containing the IceCube
 ***                                 effective area and angular resolution.
-***                      2014 type: path to the folder containing the partial
+***                      2015 type: path to the folder containing the partial
 ***                                 angular-spectral likelihoods, the
 ***                                 effective area, the cut angle and all
 ***                                 other parameters that they have been 
@@ -25,13 +25,13 @@
 ***                                 of the number of DOMs in the IceCube   
 ***                                 detector triggered by neutrinos of 
 ***                                 different energies.
-***                      2014 type: ignored  
+***                      2015 type: ignored  
 ***   phi_cut	        If the eventfile indicates that the likelihood is
 ***                      2012 type: cutoff angle; likelihoods and p-values 
 ***			            will be based only on events with  
 ***			            reconstructed directions within this 
 ***			            angle of the solar centre. [degrees]
-***                      2014 type: ignored  
+***                      2015 type: ignored  
 ***   theoryError       theoretical error to incorporate into likelihood
 ***                      and p-value calculations (given as a fractional
 ***                      relative error).
@@ -131,15 +131,15 @@
         !Read in the actual nchan response histograms and rearrange them into energy dispersion estimators
         call nulike_edispinit(nchandistfile, nhist, nnchan, ee_min(analysis), 2012)
 
-      !2014 likelihood, as per arXiv:141x.xxxx (load the precalculated effective area and partial likelihoods.)
-      case (2014)
+      !2015 likelihood, as per arXiv:15xx.xxxx (load the precalculated unbiased effective area and partial likelihoods.)
+      case (2015)
 
         !Read in partial likelihoods, return number of events, cut angle and no. of energies tabulated over
         call nulike_specanginit(file3,nEvents(analysis),phi_max_deg(analysis),nPrecompE(analysis))
         cosphimax = dcos(phi_max_deg(analysis)*pi/180.d0)
 
         !Read in the actual background data
-        call nulike_bginit(BGfile, nBinsBGAng(analysis), nBinsBGE(analysis), BGfirst, BGsecond, 2014)
+        call nulike_bginit(BGfile, nBinsBGAng(analysis), nBinsBGE(analysis), BGfirst, BGsecond, 2015)
 
       case default
         write(*,*) "Unrecognised likelihood version in nulike_init: ", likelihood_version(analysis)

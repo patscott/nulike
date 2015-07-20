@@ -1,9 +1,9 @@
 ***********************************************************************
 *** nulike_partials computes model-independent partial angular-spectral
 *** likelihoods using data for a given analysis, and writes them to 
-*** disk.  These files are required for computing the final 2014-type 
+*** disk.  These files are required for computing the final 2015-type 
 *** likelihoods.
-*** This routine is used only with the 2014 likelihood.
+*** This routine is used only with the 2015 likelihood.
 ***
 *** input: 
 ***   eventfile         path to the file containing IceCube event data
@@ -104,22 +104,22 @@
 
       !Open event file, determine the total number of events, likelihood version
       call nulike_preparse_eventfile(eventfile, nEvents_in_file, exp_time, like)
-      !Die if the event file is not meant for 2014-type likelihoods.
-      if (like .ne. 2014) stop 'Error: event file is not for 2014 likelihood.'
+      !Die if the event file is not meant for 2015-type likelihoods.
+      if (like .ne. 2015) stop 'Error: event file is not for 2015 likelihood.'
       !Set nEvents to zero to indicate to eventinit that it has not been determined elsewhere.
       nEvents = 0
       !Read in the actual details of all events.
-      call nulike_eventinit(eventfile, nEvents_in_file, nEvents, dcos(phi_cut*pi/180.d0), 2014)
+      call nulike_eventinit(eventfile, nEvents_in_file, nEvents, dcos(phi_cut*pi/180.d0), 2015)
 
       !Open neutrino effective volume file and determine number of bins
-      call nulike_preparse_effarea_or_volume(effvolfile, nbins_effvol, density, 2014)
+      call nulike_preparse_effarea_or_volume(effvolfile, nbins_effvol, density, 2015)
       !Read in the actual effective volume and PSF data.
       call nulike_sensinit(effvolfile,nbins_effvol)
 
       !Open file of energy estimators, determine how many histograms and how many bins in each histogram.
-      call nulike_preparse_energy_dispersion(edispfile, nhist, ncols, ee_min, ee_max, 2014)
+      call nulike_preparse_energy_dispersion(edispfile, nhist, ncols, ee_min, ee_max, 2015)
       !Read in the actual energy estimator response histograms and rearrange them into energy dispersion estimators
-      call nulike_edispinit(edispfile, nhist, ncols, ee_min, 2014)
+      call nulike_edispinit(edispfile, nhist, ncols, ee_min, 2015)
     
       !Calculate neutron and proton number per m^3 in detector, scaled up by 10^5 for later unit conversion.
       numdens_n = 8.d5 * density / m_water

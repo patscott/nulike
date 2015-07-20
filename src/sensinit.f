@@ -89,7 +89,7 @@
         stop
       endif
 
-      !Set the minimum detectable energy (only used in 2014 partial likelihood calculation).
+      !Set the minimum detectable energy (only used in 2015 partial likelihood calculation).
       min_detectable_logE = sens_logE(1,1,analysis)
 
       !Calculate the percentage total systematic error from the effective 
