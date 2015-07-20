@@ -13,13 +13,13 @@
 # Just compiling the library requires neither.
 
 # Define fortran compiler and options: intel
-FF=ifort
-FOPT=-O2 -extend_source # -warn all -check all #(contributed numerical routines cause warnings)
-MODULE=module
+#FF=ifort
+#FOPT=-O2 -extend_source # -warn all -check all #(contributed numerical routines cause warnings)
+#MODULE=module
 # Define fortran compiler and options: gnu
-#FF=gfortran
-#FOPT=-O2 -ffixed-line-length-none # -Wall -fcheck=all #(contributed numerical routines cause warnings)
-#MODULE=J
+FF=gfortran
+FOPT=-O2 -ffixed-line-length-none  -Wall -fcheck=all #(contributed numerical routines cause warnings)
+MODULE=J
 
 # DarkSUSY location, library name and include path
 DSLIBDIR = ../gambit/extras/DarkSUSY/DarkSUSY/lib

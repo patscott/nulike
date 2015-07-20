@@ -16,8 +16,8 @@
       parameter(max_ncols       = 100)  !Max number of columns (entries) in a single energy-window histogram
       parameter(max_analyses    = 5)    !Maximum number of analyses that can be loaded up simultaneously
 
-      integer angular, enrgyest, events, lun, lun2
-      parameter(angular = 1, enrgyest = 2, events = 3, lun = 20, lun2 = 21)
+      integer angular, enrgyest, events, lun, lun2, lun3
+      parameter(angular = 1, enrgyest = 2, events = 3, lun = 20, lun2 = 21, lun3 = 22)
 
       integer Simplex, HyperQuad
       parameter (Simplex = 1, HyperQuad = 2)

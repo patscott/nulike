@@ -127,7 +127,7 @@
 
       !Try to open the files for saving the unbiased effective areas
       open(lun, file=partialfolder//'/unbiased_effective_area.dat', form='unformatted', 
-     & action='WRITE', status='NEW', err=10, recl=nEnergies*2*8)
+     & action='WRITE', status='NEW', err=20, recl=nEnergies*2*8)
       open(lun2, file=partialfolder//'/unbiased_effective_area_noL.dat', form='unformatted', 
      & action='WRITE', status='NEW', err=20, recl=nEnergies*2*8)
 
