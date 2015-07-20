@@ -37,8 +37,8 @@
       logical :: first = .true.
       real*8 excl
       real*8, parameter :: dummyval = 0, mwimpmin = 10, mwimpmax = 5000  
-      !real*8, parameter :: chosen_masses(21) = (/6.d0, 10.d0, 25.d0, 50.d0, 80.3d0, 91.2d0, 1.d2, 1.5d2, 1.76d2, 2.d2, 2.5d2, 3.5d2, 5.d2, 7.5d2, 1.d3, 1.5d3, 2.d3, 3.d3, 5.d3, 7.5d3, 1.d4/)
-      real*8, parameter :: chosen_masses(2) = (/7.5d3, 1.d4/)
+      real*8, parameter :: chosen_masses(21) = (/6.d0, 10.d0, 25.d0, 50.d0, 80.3d0, 91.2d0, 1.d2, 1.5d2, 1.76d2, 2.d2, 2.5d2, 3.5d2, 5.d2, 7.5d2, 1.d3, 1.5d3, 2.d3, 3.d3, 5.d3, 7.5d3, 1.d4/)
+      !real*8, parameter :: chosen_masses(2) = (/7.5d3, 1.d4/)
       integer, parameter :: mwimp_pts = 100
       logical, parameter :: talky = .false., chosen_ones_only = .true.
       

@@ -67,7 +67,8 @@
       logical pvalBGPoisComputed(max_analyses)
       real*8  BGpvalPoissonian(max_analyses)
 
-      integer nPrecompE(max_nPrecompE), start_index(max_analyses)
+      integer nPrecompE(max_nPrecompE)
+      integer start_index(max_analyses), start_index_noL(max_analyses)
       real*8 precomp_log10E(max_nPrecompE,max_analyses)
       real*8 precomp_weights(max_nPrecompE,max_nEvents,2,max_analyses)
       real*8 precomp_derivs(max_nPrecompE,max_nEvents,2,max_analyses)
@@ -75,6 +76,9 @@
       real*8 precompEA_weights(max_nPrecompE,2,max_analyses)
       real*8 precompEA_derivs(max_nPrecompE,2,max_analyses)
       real*8 precompEA_sigma(max_nPrecompE,2,max_analyses)
+      real*8 precompEAnoL_weights(max_nPrecompE,2,max_analyses)
+      real*8 precompEAnoL_derivs(max_nPrecompE,2,max_analyses)
+      real*8 precompEAnoL_sigma(max_nPrecompE,2,max_analyses)
 
       real*8  thetashare, annrateshare, nchanshare
 
@@ -103,10 +107,11 @@
      & BGangdist_conenorm, hist_LogE, hist_logEcentres, hist_nchan,
      & hist_prob, hist_derivs, hist_sigma, sens_nubar,sens_syserr,
      & sens_staterr, precomp_log10E, precomp_weights, precomp_derivs,
-     & precomp_sigma, precompEA_weights, precompEA_derivs, 
+     & precomp_sigma, precompEAnoL_weights, precompEAnoL_derivs, 
+     & precompEAnoL_sigma, precompEA_weights, precompEA_derivs, 
      & precompEA_sigma, ee_min, ee_max, nchanshare,
      & BGeedist_derivs, BGeedist_sigma,
-     & nBinsBGE, nBinsBGAng, nEvents, start_index,
+     & nBinsBGE, nBinsBGAng, nEvents, start_index, start_index_noL,
      & nSensBins, nPrecompE, nHistograms, nnchan_total,
      & nchan_hist2BGoffset, FullSkyBG,
      & pvalBGPoisComputed, sysErrDist_logNorm,

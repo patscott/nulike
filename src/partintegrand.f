@@ -9,7 +9,9 @@
 ***                     dsdxdy         cross-section function
 ***                                    (see partials.f for details)
 ***                     eventnum       the unique index number of this event.
-***                                    0 => get integrand for effective area
+***                                    0  => get integrand for effective area
+***                                    -1 => get integrand for effective area,
+***                                          without angular loss factor
 ***                     E              neutrino energy (GeV)
 ***                     ptype          1=nu, 2=nubar
 ***                     leptype        1=e, 2=mu, 3=tau          
@@ -52,7 +54,7 @@
       endif
 
       !Energy dispersion
-      if (eventnum .ne. 0) then
+      if (eventnum .gt. 0) then
         edisp = nulike_edisp(log10Elep, events_ee(eventnum, analysis), 2014)   ! [ee]^-1
         if (edisp .le. epsilon(edisp)) then                                    ! Abort if energy dispersion is
           nulike_partintegrand = 0.d0                                          ! zero.     
@@ -84,7 +86,7 @@
       plep = dsqrt(Elep*Elep - mlep2)                                        ! GeV
 
       !Event properties
-      if (eventnum .ne. 0) then
+      if (eventnum .gt. 0) then
         phi_obs = acos(events_cosphi(eventnum,analysis)) * 180.d0/pi         ! --> degrees
         phi_err = events_cosphiErr(eventnum,analysis)                        ! Already in degrees.
       endif
@@ -115,7 +117,7 @@
         angloss = pupper/plower                                              ! dimensionless
         !Likelihood
         pcont = pcont * angloss
-        if (eventnum .ne. 0) then
+        if (eventnum .gt. 0) then
           pcont = pcont * nulike_offctrpsf(phi_obs, philep_p, phi_err) ! 1e-5 m^-3 cm^2 deg^-1
         endif
       else 
@@ -148,7 +150,7 @@
         angloss = pupper/plower                                              ! dimensionless
         !Likelihood
         ncont = ncont * angloss
-        if (eventnum .ne. 0) then
+        if (eventnum .gt. 0) then
           ncont = ncont * nulike_offctrpsf(phi_obs, philep_n, phi_err)       ! 1e-5 m^-3 cm^2 deg^-1
         endif
       else 
@@ -157,7 +159,7 @@
       
       !Total
       nulike_partintegrand = effvol * (pcont + ncont)                         ! km^3 1e-5 m^-3 cm^2 deg^-1 -->m^2 deg^-1
-      if (eventnum .ne. 0) nulike_partintegrand = nulike_partintegrand*edisp  ! -->m^2 deg^-1 [ee]^-1
+      if (eventnum .gt. 0) nulike_partintegrand = nulike_partintegrand*edisp  ! -->m^2 deg^-1 [ee]^-1
 
       !Debug
       if (ierr1 .gt. 1 .or. ierr2 .gt. 1 .or. ierr3 .gt. 1 .or. ierr4 .gt. 1) then
@@ -172,7 +174,7 @@
         write(*,*) ptype_ns,eventnum,leptype
         write(*,*) spcc, sncc
         write(*,*) pcont, ncont
-        if (eventnum .ne. 0) then
+        if (eventnum .gt. 0) then
           write(*,*) plep, mlep2
           write(*,*) edisp, (Elep - m_p*x*y - mlep2/E) / plep
           write(*,*) phi_obs, phi_max, phi_err

@@ -65,7 +65,7 @@
       character (len=6) eventstring, evnmshrfmt
       real*8 phi_cut, ee_min, ee_max, exp_time, density, log10E 
       real*8 logE_min, logE_max, working(2*max_nHistograms+2)
-      real*8 partial_likes(nEnergies,2), dsdxdy
+      real*8 eff_areas(nEnergies,2), partial_likes(nEnergies,2), dsdxdy
       real*8 nEvents2, nEnergies2, phi_cut2, logE_min2, logE_max2
       real*8 SAbsErr, SValue, SVertices(2,3)
       integer like, ncols(max_nHistograms+2), nEvents_in_file 
@@ -125,14 +125,16 @@
       numdens_n = 8.d5 * density / m_water
       numdens_p = 10.d5 * density / m_water
 
-      !Try to open the file for saving the effective area
-      open(lun, file=partialfolder//'/effective_area.dat', form='unformatted', 
+      !Try to open the files for saving the unbiased effective areas
+      open(lun, file=partialfolder//'/unbiased_effective_area.dat', form='unformatted', 
+     & action='WRITE', status='NEW', err=10, recl=nEnergies*2*8)
+      open(lun2, file=partialfolder//'/unbiased_effective_area_noL.dat', form='unformatted', 
      & action='WRITE', status='NEW', err=20, recl=nEnergies*2*8)
 
       !That worked, so now we can at least make some sort of claim about what is to come...
       write(*,*)
-      write(*,*) 'Computing partial likelihoods and effective '
-      write(*,*) 'area, and saving to '
+      write(*,*) 'Computing partial likelihoods and unbiased '
+      write(*,*) 'effective areas, and saving to '
       write(*,*) trim(partialfolder)//'.'
       write(*,*) 'Note that existing files will be retained; '
       write(*,*) 'Please manually delete any partial likelihood'
@@ -140,26 +142,27 @@
       write(*,*)
 
       !Save auxiliary info about the partial likelihoods
-      open(lun2, file=partialfolder//'/partlikes.aux', action='WRITE')
-      write(lun2, fmt=*) '#This file provides auxiliary information about partial likelihoods.'
-      write(lun2, fmt=*) '#It was generated automatically by nulike_partials.'
-      write(lun2, fmt=*) '# #events #energies, phi_cut, log10E_min, log10E_max'
-      write(lun2, fmt='(A1,2I8,3E16.5)') ' ', nEvents, nEnergies, phi_cut, logE_min, logE_max
-      close(lun2)
+      open(lun3, file=partialfolder//'/partlikes.aux', action='WRITE')
+      write(lun3, fmt=*) '#This file provides auxiliary information about partial likelihoods.'
+      write(lun3, fmt=*) '#It was generated automatically by nulike_partials.'
+      write(lun3, fmt=*) '# #events #energies, phi_cut, log10E_min, log10E_max'
+      write(lun3, fmt='(A1,2I8,3E16.5)') ' ', nEvents, nEnergies, phi_cut, logE_min, logE_max
+      close(lun3)
 
       !Compute and save the effective area
-      write(*,*) 'Computing effective areas.'
-      eventnumshare = 0
+      write(*,*) 'Computing unbiased effective areas.'
       !Step through each energy
       do i = 1, nEnergies
         log10E = logE_min + dble(i-1)/dble(nEnergies-1)*(logE_max - logE_min)
         Eshare = 10.d0**log10E
-        write(*,*) '    Computing effective areas for E = ',Eshare,' GeV'
+        write(*,*) '    Computing unbiased effective areas for E = ',Eshare,' GeV'
         !If the neutrino already has less energy than the lowest-E lepton that can be detected,
         !we know the effective volume will always be zero and the efffective area is zero.
         if (log10E .lt. min_detectable_logE) then
           partial_likes(i,:) = 0.d0
+          eff_areas(i,:) = 0.d0
         else !Otherwise, we might see some leptons, so iterate over CP eigenstates
+          eventnumshare = 0
           do ptypeshare = 1, 2
             IER = 0
             call CUBATR(2,nulike_partials_handoff,SVertices,SRgType,
@@ -171,13 +174,29 @@
             call CUBATR()
             partial_likes(i,ptypeshare) = SValue
           enddo
+          eventnumshare = -1
+          do ptypeshare = 1, 2
+            IER = 0
+            call CUBATR(2,nulike_partials_handoff,SVertices,SRgType,
+     &       SValue,SAbsErr,IFAIL=IER,EpsAbs=1.d-150,EpsRel=eps_partials,MaxPts=25000000,Job=11)
+            if (IER .ne. 0) then
+              write(*,*) 'Error raised by CUBATR in nulike_partials: ', IER 
+              stop
+            endif
+            call CUBATR()
+            eff_areas(i,ptypeshare) = SValue
+          enddo
         endif
-        write(*,*) '      Effective area (m^2), nu:    ',partial_likes(i,1)
-        write(*,*) '      Effective area (m^2), nubar: ',partial_likes(i,2)
+        write(*,*) '      Effective area (m^2), nu:                    ',partial_likes(i,1)
+        write(*,*) '      Effective area (m^2), nubar:                 ',partial_likes(i,2)
+        write(*,*) '      Effective area (m^2), nu, no angular cut:    ',eff_areas(i,1)
+        write(*,*) '      Effective area (m^2), nubar, no angular cut: ',eff_areas(i,2)
       enddo
-      !Save effective area for this event.
+      !Save effective areas for this event.
       write(lun) partial_likes
+      write(lun2) eff_areas
       close(lun) 
+      close(lun2)
 
       !Check that the already-saved auxiliary info matches 
 20    open(lun, file=partialfolder//'/partlikes.aux', err=60, action='READ')
