@@ -13,22 +13,22 @@
 # Just compiling the library requires neither.
 
 # Define fortran compiler and options: intel
-#FF=ifort
-#FOPT=-O2 -extend_source # -warn all -check all #(contributed numerical routines cause warnings)
-#MODULE=module
+FF=ifort
+FOPT=-O2 -extend_source # -warn all -check all #(contributed numerical routines cause warnings)
+MODULE=module
 # Define fortran compiler and options: gnu
-FF=gfortran
-FOPT=-O2 -ffixed-line-length-none # -Wall -fcheck=all #(contributed numerical routines cause warnings)
-MODULE=J
+#FF=gfortran
+#FOPT=-O2 -ffixed-line-length-none # -Wall -fcheck=all #(contributed numerical routines cause warnings)
+#MODULE=J
 
 # DarkSUSY location, library name and include path
-DSLIBDIR = ../darksusy-ucmh/lib
-DSLIBINC = ../darksusy-ucmh/include
+DSLIBDIR = ../gambit/extras/DarkSUSY/DarkSUSY/lib
+DSLIBINC = ../gambit/extras/DarkSUSY/DarkSUSY/include
 DSLIBNAME = darksusy
 
 # nusigma location and library name
-NUSIGDIR = ../nusigma/lib
-NUSIGINC = ../nusigma/inc
+NUSIGDIR = ../nusigma-1.17-pyr/lib
+NUSIGINC = ../nusigma-1.17-pyr/inc
 NUSIGNAME = nusigma
 
 # Define library-making options
@@ -110,12 +110,6 @@ nulike_prep : libnulike.a $(PROGS)/nulike_prep.f
 
 nulike_test : libnulike.a $(PROGS)/nulike_test.f
 	$(FF) $(FFLAGS) -I$(DSLIBINC) -o $@ $(PROGS)/nulike_test.f -L$(DSLIBDIR) -l$(DSLIBNAME) -lHB -lFH -L$(LIB) -lnulike
-
-nulike_test_mssm25 : libnulike.a $(PROGS)/nulike_test_mssm25.f
-	$(FF) $(FFLAGS) -I$(DSLIBINC) -o $@ $(PROGS)/nulike_test_mssm25.f -L$(DSLIBDIR) -l$(DSLIBNAME) -lHB -lFH -L$(LIB) -lnulike
-
-nulike_test_wimp : libnulike.a $(PROGS)/nulike_test_wimp.f
-	$(FF) $(FFLAGS) -I$(DSLIBINC) -o $@ $(PROGS)/nulike_test_wimp.f -L$(DSLIBDIR) -l$(DSLIBNAME) -lHB -lFH -L$(LIB) -lnulike
 
 clean : 
 	rm -f $(BUILD)/* tspack.f Key.dat nulike_test nulike_prep

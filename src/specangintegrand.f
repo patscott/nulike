@@ -5,7 +5,7 @@
 *** b) the total predicted number of signal events in nulike_signal.
 *** This routine is used only with the 2014 likelihood.
 ***
-*** Input:		NumFun         =1
+*** Input:        NumFun         =1
 ***               X(1)           log10(neutrino energy/GeV)
 *** Hidden input: nuyield_ptr    external double function that returns
 ***                               the differential neutrino flux
