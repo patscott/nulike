@@ -290,7 +290,8 @@
               if (i .gt. 1) then
                 !Possibly repeat the calculation, depending on the comparison to the previous energy bin.
                 if (is_fishy(partial_likes(i,ptypeshare), partial_likes(i-1,ptypeshare))) then                 
-                  write(*,*) '      Result looks fishy.  Systematically retrying with all possible integrator settings until it looks right.'
+                  write(*,*) '      Result looks fishy.  Systematically retrying with all possible '
+                  write(*,*) '      integrator settings until it looks right.'
                   !Not very efficient to set these here, but it makes things clearer when you need to come back and mess with them. 
                   shapes = (/Simplex, HyperQuad/)
                   shapenames = (/"Simplex  ", "HyperQuad"/)
@@ -307,7 +308,8 @@
                     enddo
                   enddo
                   if (is_fishy(partial_likes(i,ptypeshare), partial_likes(i-1,ptypeshare))) then
-                    write(*,*) '        All integration options exhausted.  Largest result: ', partial_likes(i,ptypeshare)
+                    write(*,*) '        All integration options exhausted.  Largest result: ',
+     &               partial_likes(i,ptypeshare)
                     if (ultracautious .or. previous_result_needs_correcting(ptypeshare)) then
                       !Bail if result still looks suspicious and it can't be fixed.
                       if (previous_result_needs_correcting(ptypeshare)) then
@@ -315,8 +317,9 @@
                       else
                         write(*,*) '          This still does not look trustworthy.'
                       endif
-                      write(*,*) '            Sorry, you will need to try adjusting the integrator in partials.f yourself,'
-                      write(*,*) '            or decreasing the tolerance eps_partials in include/nuprep.h.'
+                      write(*,*) '            Sorry, you will need to try adjusting the integrator in'
+                      write(*,*) '            partials.f yourself, or decreasing the tolerance'
+                      write(*,*) '            eps_partials in include/nuprep.h.'
                       stop 'Quitting.'
                     else
                       partial_likes(i,ptypeshare) = partial_likes(i-1,ptypeshare)
