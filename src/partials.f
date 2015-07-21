@@ -290,7 +290,7 @@
               if (i .gt. 1) then
                 !Possibly repeat the calculation, depending on the comparison to the previous energy bin.
                 if (is_fishy(partial_likes(i,ptypeshare), partial_likes(i-1,ptypeshare))) then                 
-                  write(*,*) "      Result looks fishy.  Systematically retrying with all possible integrator settings until it looks right."                
+                  write(*,*) '      Result looks fishy.  Systematically retrying with all possible integrator settings until it looks right.'
                   !Not very efficient to set these here, but it makes things clearer when you need to come back and mess with them. 
                   shapes = (/Simplex, HyperQuad/)
                   shapenames = (/"Simplex  ", "HyperQuad"/)
@@ -451,9 +451,9 @@
         endif
         if (IER .eq. 0) now = max(now, SValue)
         if (IER .eq. 1) then
-          write(*,*) "           Failed to converge.  Result:",SValue," Relative error: ",SAbsErr/SValue 
+          write(*,*) '           Failed to converge.  Result:',SValue,' Relative error: ',SAbsErr/SValue 
           if (SAbsErr*1.d-1/SValue .le. eps_partials) then
-            write(*,*) "           Relative error is within a factor of 10 of request; accepting as possibly correct."
+            write(*,*) '           Relative error is within a factor of 10 of request; accepting as possibly correct.'
             now = max(now, SValue)
           endif
         endif
