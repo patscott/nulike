@@ -63,13 +63,18 @@
       character (len=*) eventfile, effvolfile, edispfile, partialfolder
       character (len=100) instring
       character (len=6) eventstring, evnmshrfmt
+      character (len=9) shapenames(2)
       real*8 phi_cut, ee_min, ee_max, exp_time, density, log10E 
       real*8 logE_min, logE_max, working(2*max_nHistograms+2)
       real*8 eff_areas(nEnergies,2), partial_likes(nEnergies,2), dsdxdy
       real*8 nEvents2, nEnergies2, phi_cut2, logE_min2, logE_max2
       real*8 SAbsErr, SValue, SVertices(2,3)
+      logical abserr(2), is_fishy, ultracautious
+      logical this_result_needs_correcting(2)
+      logical previous_result_needs_correcting(2)
+      integer shapes(2), job_indices(4), i, j, k, l, m
       integer like, ncols(max_nHistograms+2), nEvents_in_file 
-      integer nEvents, nbins_effvol, nEnergies, i, IER, SRgType
+      integer nEvents, nbins_effvol, nEnergies, IER, SRgType
       interface
         function nulike_partials_handoff(NumFun,X) result(Value)
         integer, intent(in) :: NumFun
@@ -77,7 +82,8 @@
         double precision :: Value(NumFun)
         end function nulike_partials_handoff
       end interface
-      external dsdxdy
+      external dsdxdy, is_fishy
+      parameter (ultracautious = .false.)
 
       !Roll credits.
       call nulike_credits
@@ -263,10 +269,13 @@
           if (log10E .lt. min_detectable_logE) then
 
             partial_likes(i,:) = 0.d0
+            previous_result_needs_correcting(:) = .false.
 
           else !Otherwise, we might see some leptons, so iterate over CP eigenstates
 
             do ptypeshare = 1, 2
+
+              this_result_needs_correcting(ptypeshare) = .false.
 
               IER = 0
               call CUBATR(2,nulike_partials_handoff,SVertices,Simplex,
@@ -278,155 +287,48 @@
               call CUBATR()
               partial_likes(i,ptypeshare) = SValue
 
-              !Possibly repeat the calculation, depending on the comparison to the previous energy bin.
               if (i .gt. 1) then
-
-                !Try again with alternative integration tactics if the original Simplex result looks suspicious.
-                if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and.
-     &           partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
-
-                  write(*,*) 'Result looks fishy.  Retrying with Key=4, Job=12.'
-                  IER = 0
-                  call CUBATR(2,nulike_partials_handoff,SVertices,Simplex,
-     &             SValue,SAbsErr,IFAIL=IER,EpsAbs=effZero,EpsRel=eps_partials,MaxPts=2100000000,Key=4,Job=12)
-                  if (IER .ne. 0) then
-                    write(*,*) 'Error raised by CUBATR in nulike_partials: ', IER 
-                    stop
-                  endif
-                  call CUBATR()
-                  partial_likes(i,ptypeshare) = max(partial_likes(i,ptypeshare), SValue)
-
-                  !Try again with the HyperQuad if the Simplex result looks suspicious.
-                  if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and.
-     &             partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
-  
-                    write(*,*) 'Still looks fishy.  Retrying with HyperQuad quadrature strategy.'
-                    IER = 0
-                    call CUBATR(2,nulike_partials_handoff,SVertices,HyperQuad,
-     &               SValue,SAbsErr,IFAIL=IER,EpsAbs=effZero,EpsRel=eps_partials,MaxPts=2100000000,Job=11)
-                    if (IER .ne. 0) then
-                      write(*,*) 'Error raised by CUBATR in nulike_partials: ', IER 
-                      stop
-                    endif
-                    call CUBATR()
-                    partial_likes(i,ptypeshare) = max(partial_likes(i,ptypeshare), SValue)
-  
-                    !Try again with the HyperQuad and alternative integration if result still looks suspicious.
-                    if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and.
-     &               partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
-                     
-                      write(*,*) 'Still looks fishy.  Retrying with HyperQuad, Key=3, Job=12.'
-                      IER = 0
-                      call CUBATR(2,nulike_partials_handoff,SVertices,HyperQuad,
-     &                 SValue,SAbsErr,IFAIL=IER,EpsAbs=effZero,EpsRel=eps_partials,MaxPts=2100000000,Key=3,Job=12)
-                      if (IER .ne. 0) then
-                        write(*,*) 'Error raised by CUBATR in nulike_partials: ', IER 
-                        stop
+                !Possibly repeat the calculation, depending on the comparison to the previous energy bin.
+                if (is_fishy(partial_likes(i,ptypeshare), partial_likes(i-1,ptypeshare))) then                 
+                  write(*,*) "      Result looks fishy.  Systematically retrying with all possible integrator settings until it looks right."                
+                  !Not very efficient to set these here, but it makes things clearer when you need to come back and mess with them. 
+                  shapes = (/Simplex, HyperQuad/)
+                  shapenames = (/"Simplex  ", "HyperQuad"/)
+                  abserr = (/.true., .false./)
+                  job_indices = (/12,11,2,1/)               
+                  do j = 1,2
+                    do k = 1,2
+                      do l = 1,4
+                        do m = 0,5
+                          call try_integration(partial_likes(i,ptypeshare),partial_likes(i-1,ptypeshare),m,
+     &                                         job_indices(l),shapes(j),shapenames(j),abserr(k),SVertices)
+                        enddo
+                      enddo
+                    enddo
+                  enddo
+                  if (is_fishy(partial_likes(i,ptypeshare), partial_likes(i-1,ptypeshare))) then
+                    write(*,*) '        All integration options exhausted.  Largest result: ', partial_likes(i,ptypeshare)
+                    if (ultracautious .or. previous_result_needs_correcting(ptypeshare)) then
+                      !Bail if result still looks suspicious and it can't be fixed.
+                      if (previous_result_needs_correcting(ptypeshare)) then
+                        write(*,*) '        Previous result was bogus too.'
+                      else
+                        write(*,*) '          This still does not look trustworthy.'
                       endif
-                      call CUBATR()
-                      partial_likes(i,ptypeshare) = SValue
-      
-                      !Try again with other alternative integration tactics and no aboslute error if result still looks bad.
-                      if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and.
-     &                 partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
-      
-                        write(*,*) 'Still looks fishy.  Retrying as Simplex, Key=2, Job=2, no absolute error.'
-                        IER = 0
-                        call CUBATR(2,nulike_partials_handoff,SVertices,Simplex,
-     &                   SValue,SAbsErr,IFAIL=IER,EpsRel=eps_partials,MaxPts=2100000000,Key=2,Job=2)
-                        if (IER .ne. 0) then
-                          write(*,*) 'Error raised by CUBATR in nulike_partials: ', IER 
-                          stop
-                        endif
-                        call CUBATR()
-                        partial_likes(i,ptypeshare) = max(partial_likes(i,ptypeshare), SValue)
- 
-                        !Try again with yet more alternative integration tactics and no aboslute error if result still looks bad.
-                        if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and.
-     &                   partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
-        
-                          write(*,*) 'Still looks fishy.  Retrying as Simplex, Key=4, Job=2, no absolute error.'
-                          IER = 0
-                          call CUBATR(2,nulike_partials_handoff,SVertices,Simplex,
-     &                     SValue,SAbsErr,IFAIL=IER,EpsRel=eps_partials,MaxPts=2100000000,Key=4,Job=2)
-                          if (IER .ne. 0) then
-                            write(*,*) 'Error raised by CUBATR in nulike_partials: ', IER 
-                            stop
-                          endif
-                          call CUBATR()
-                          partial_likes(i,ptypeshare) = max(partial_likes(i,ptypeshare), SValue)
-  
-                          !Try again with alternative integration tactics and no aboslute error if result still looks bad.
-                          if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and.
-     &                     partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
-          
-                            write(*,*) 'Still looks fishy.  Retrying as Simplex, Key=4, Job=12, no absolute error.'
-                            IER = 0
-                            call CUBATR(2,nulike_partials_handoff,SVertices,Simplex,
-     &                       SValue,SAbsErr,IFAIL=IER,EpsRel=eps_partials,MaxPts=2100000000,Key=4,Job=12)
-                            if (IER .ne. 0) then
-                              write(*,*) 'Error raised by CUBATR in nulike_partials: ', IER 
-                              stop
-                            endif
-                            call CUBATR()
-                            partial_likes(i,ptypeshare) = max(partial_likes(i,ptypeshare), SValue)
-      
-                            !Try again with the Simplex and no absolute error if result still looks suspicious.
-                            if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and. 
-     &                       partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
-          
-                              write(*,*) 'Still looks fishy.  Retrying Simplex with no absolute error target.'
-                              IER = 0
-                              call CUBATR(2,nulike_partials_handoff,SVertices,Simplex,
-     &                         SValue,SAbsErr,IFAIL=IER,EpsRel=eps_partials,MaxPts=2100000000,Job=11)
-                              if (IER .ne. 0) then
-                                write(*,*) 'Error raised by CUBATR in nulike_partials: ', IER 
-                                stop
-                              endif
-                              call CUBATR()
-                              partial_likes(i,ptypeshare) = max(partial_likes(i,ptypeshare), SValue)
-    
-                              !Try yet again with the HyperQuad and no absolute error if result still looks suspicious.
-                              if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and. 
-     &                         partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
-          
-                                write(*,*) 'That still looks fishy.  Retrying HyperQuad with no absolute error target.'
-                                IER = 0
-                                call CUBATR(2,nulike_partials_handoff,SVertices,HyperQuad,
-     &                           SValue,SAbsErr,IFAIL=IER,EpsRel=eps_partials,MaxPts=2100000000,Job=11)
-                                if (IER .ne. 0) then
-                                  write(*,*) 'Error raised by CUBATR in nulike_partials: ', IER 
-                                  stop
-                                endif
-                                call CUBATR()
-                                partial_likes(i,ptypeshare) = max(partial_likes(i,ptypeshare), SValue)
-          
-                                !Bail if result still looks suspicious.
-                                if (partial_likes(i,ptypeshare) .lt. 1.d-40 .and. 
-     &                           partial_likes(i,ptypeshare) .lt. 1.d-15*partial_likes(i-1,ptypeshare) ) then
-          
-                                  write(*,*) 'Result: ', partial_likes(i,ptypeshare)
-                                  write(*,*) 'This still does not look trustworthy.'
-                                  write(*,*) 'Sorry, you will need to try adjusting the integrator in partials.f yourself,'
-                                  write(*,*) 'or decreasing the tolerance eps_partials in include/nuprep.h.'
-                                  stop 'Quitting.'
-
-                                endif
-  
-                              endif
-
-                            endif
-
-                          endif
-
-                        endif
-
+                      write(*,*) '            Sorry, you will need to try adjusting the integrator in partials.f yourself,'
+                      write(*,*) '            or decreasing the tolerance eps_partials in include/nuprep.h.'
+                      stop 'Quitting.'
+                    else
+                      partial_likes(i,ptypeshare) = partial_likes(i-1,ptypeshare)
+                      if (i .eq. nEnergies) then
+                        write(*,*) '        Adopting result for previous energy: ', partial_likes(i,ptypeshare)
+                      else
+                        write(*,*) '        This value will be filled in by linear interpolation between the'
+                        write(*,*) '        logs of the previous and next results.'
+                        this_result_needs_correcting(ptypeshare) = .true.
                       endif
-
                     endif
-
-                  endif
-
+                  endif                
                 endif
               endif
 
@@ -434,8 +336,22 @@
 
           endif
 
-          write(*,*) '      Partial likelihood, nu:    ',partial_likes(i,1)
-          write(*,*) '      Partial likelihood, nubar: ',partial_likes(i,2)
+          if (any(previous_result_needs_correcting)) then
+            partial_likes(i-1,1) = 10.d0**(0.5d0*(log10(partial_likes(i-2,1)) + log10(partial_likes(i,1))))
+            partial_likes(i-1,2) = 10.d0**(0.5d0*(log10(partial_likes(i-2,2)) + log10(partial_likes(i,2))))
+            write(*,*) '      Deferred partial likelihood, nu:    ',partial_likes(i-1,1)
+            write(*,*) '      Deferred partial likelihood, nubar: ',partial_likes(i-1,2)
+          endif
+
+          if (any(this_result_needs_correcting)) then 
+            write(*,*) '      Partial likelihood, nu:    deferred'
+            write(*,*) '      Partial likelihood, nubar: deferred'
+          else
+            write(*,*) '      Partial likelihood, nu:    ',partial_likes(i,1)
+            write(*,*) '      Partial likelihood, nubar: ',partial_likes(i,2)
+          endif
+
+          previous_result_needs_correcting = this_result_needs_correcting
 
         enddo
 
@@ -485,3 +401,64 @@
 
       end function nulike_partials_handoff
 
+
+      !Determine whether a new partial likelihood looks fishy or not.
+      logical function is_fishy(now, before)
+      implicit none
+      double precision, intent(in) :: now, before
+      is_fishy = (now .lt. 1.d-40 .and. now .lt. 1.d-5*before)
+      end function is_fishy
+
+
+      !Try a partial likelihood integration
+      subroutine try_integration(now, before, key, job, intshape, intshapename, abserr, SVertices)
+
+      use CUI
+
+      implicit none
+      include 'nucommon.h'
+      include 'nuprep.h'
+
+      double precision, intent(inout) :: now
+      double precision, intent(in) :: before, SVertices(2,3)
+      integer, intent(in) :: key, job, intshape
+      character(len=9), intent(in) :: intshapename
+      logical, intent(in) :: abserr
+      logical :: is_fishy
+      integer :: IER
+      double precision:: SValue, SAbsErr
+      interface
+        function nulike_partials_handoff(NumFun,X) result(Value)
+        integer, intent(in) :: NumFun
+        double precision, intent(in) :: X(:)
+        double precision :: Value(NumFun)
+        end function nulike_partials_handoff
+      end interface
+      external is_fishy
+
+      if (is_fishy(now, before)) then
+        write(*,'(A,I2,A,I2,A,L1)') "         Retrying with "//intshapename//": Key=",
+     &   key,": Job=",job,": Absolute error=",abserr
+        IER = 1
+        if (abserr) then
+          call CUBATR(2,nulike_partials_handoff,SVertices,intshape,SValue,
+     &     SAbsErr,IFAIL=IER,EpsRel=eps_partials,EpsAbs=effZero, 
+     &     MaxPts=10000000,Key=key,Job=job)
+        else
+          call CUBATR(2,nulike_partials_handoff,SVertices,intshape,SValue,
+     &     SAbsErr,IFAIL=IER,EpsRel=eps_partials,MaxPts=10000000,
+     &     Key=key,Job=job)
+        endif
+        if (IER .eq. 0) now = max(now, SValue)
+        if (IER .eq. 1) then
+          write(*,*) "           Failed to converge.  Result:",SValue," Relative error: ",SAbsErr/SValue 
+          if (SAbsErr*1.d-1/SValue .le. eps_partials) then
+            write(*,*) "           Relative error is within a factor of 10 of request; accepting as possibly correct."
+            now = max(now, SValue)
+          endif
+        endif
+        call CUBATR()
+      endif     
+
+      end subroutine try_integration
+          
