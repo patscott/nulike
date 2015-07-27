@@ -84,7 +84,7 @@
       ee = events_ee(event_number,analysis)
 
       ! Include the background component
-      bgpartial = nulike_bgangpdf(cosphi) * nulike_bgspec(ee,2014)
+      bgpartial = nulike_bgangpdf(cosphi) * nulike_bgspec(ee,2015)
 
       ! Include the signal component
       if (logEmin_true .gt. logEmax_true) then

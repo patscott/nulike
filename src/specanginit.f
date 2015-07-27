@@ -44,7 +44,7 @@
       do while (instring(1:1) .eq. '#' .or. instring(2:2) .eq. '#')
         read(lun, fmt='(A100)'), instring
       enddo
-      read(instring, fmt=*) n_events, n_energies, phi_cut, logE_min, logE_max
+      read(instring, fmt=*) n_events, n_energies, phi_cut, logE_min, logE_max, EAErr(analysis)
       close(lun)
 
       !Use the tabulation bounds in energy to reconstruct the energies

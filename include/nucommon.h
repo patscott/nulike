@@ -9,8 +9,10 @@
       integer analysis, ptypeshare, eventnumshare
       real*8  Eshare, min_detectable_logE
       real*8  events_ee(max_nEvents,max_analyses)
+      real*8  EAErr(max_analyses)
 
-      common /nu_comm/ Eshare, min_detectable_logE, events_ee, analysis, ptypeshare, eventnumshare
+      common /nu_comm/ Eshare, min_detectable_logE, events_ee, EAErr,
+     & analysis, ptypeshare, eventnumshare
       save /nu_comm/
 
       ! This parameter will be initialized in a block data routine

@@ -118,7 +118,7 @@
       !2015 likelihood, as per arXiv:150x.xxxxx
       case (2015)
 
-        eventnumshare = 0 ! Use effective area from previous tabulation.
+        eventnumshare = 0 ! Set event number to indicate total signal rate calculation (i.e. not an event).
         IER = 0
         SVertices(1,:) = (/precomp_log10E(start_index(analysis),analysis), 
      &   min(precomp_log10E(nPrecompE(analysis),analysis),logmw)/)

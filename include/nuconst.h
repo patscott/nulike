@@ -4,11 +4,12 @@
 !----------------------------------------------------------------------c
 !  author: Pat Scott (p.scott@imperial.ac.uk), June 12, 2014
 
-      integer max_nPrecompE,max_nSensBins,max_nBinsBGAng,max_nBinsBGE
+      integer max_nPrecompE,max_nSensBins,max_nBinsBGAng,max_nBinsBGE,max_nBiasBins
       integer max_nEvents,max_nHistograms,max_ncols,max_analyses,nulike_clen
       parameter(nulike_clen     = 300)  !Length of fixed-length strings in nulike
       parameter(max_nPrecompE   = 1000) !Maximum number partial likelihoods per event
       parameter(max_nSensBins   = 50)   !Maximum number of bins in the effective area or volume
+      parameter(max_nBiasBins   = 200)  !Maximum number of bins in the biased effective area 
       parameter(max_nBinsBGAng  = 180)  !Maximum number of angular bins in the background
       parameter(max_nBinsBGE    = 100)  !Maximum number of spectral bins in the background
       parameter(max_nEvents     = 5000) !Maximum number of events for any analysis

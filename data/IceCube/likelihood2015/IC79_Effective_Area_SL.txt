@@ -1,0 +1,212 @@
+#This file contains the following instrument response data for IceCube-79 SL data sample:
+# 1. Mean density of water/ice molecules in the detector.
+# 2. Muon/anti-muon neutrino effective area, for a point-source search 
+#    towards the Sun, averaged over one austral winter.
+# 3. Statistical and systematic errors in each energy bin at the 1 sigma 
+#    level, as a percentage of the effective area in that bin.  
+# 4. Mean angular error within each energy bin, given as the 39.3% 
+#    (equivalent 1 sigma) containment radius.
+#
+#The density block has the following content:
+#rho [H2O density in kg/m^3]
+#The response block has the following column content:
+#B [bin Nr.]
+#E [E-nu-lower-bound]  [E-nu-upper-bound]
+#A [Aeff(nu_mu)]   [Aeff(nu_mu_bar)]
+#err [syst.error]   [stat.error]
+MAR [angular res.]
+###--Density--
+rho   920.00
+###--Response--
+B     2
+E     6.35408   7.16298
+A     5.18772e-08   7.97344e-09
+err   54   18.7749
+MAR   44.9718
+####
+B     3
+E     7.16298   8.07486
+A     7.80399e-08   9.47299e-09
+err   54   16.8123
+MAR   49.8872
+####
+B     4
+E     8.07486   9.10282
+A     1.37084e-07   1.50838e-08
+err   54   13.8871
+MAR   39.446
+####
+B     5
+E     9.10282   10.2617
+A     3.12746e-07   2.74454e-08
+err   54   10.2963
+MAR   32.6489
+####
+B     6
+E     10.2617   11.568
+A     5.13522e-07   6.55023e-08
+err   54   8.00226
+MAR   29.7465
+####
+B     7
+E     11.568   13.0407
+A     7.6143e-07   1.01846e-07
+err   54   6.81006
+MAR   27.009
+####
+B     8
+E     13.0407   14.7008
+A     1.15556e-06   1.65176e-07
+err   54   5.97296
+MAR   30.6783
+####
+B     9
+E     14.7008   16.5723
+A     2.16807e-06   2.63211e-07
+err   54   4.88019
+MAR   22.8739
+####
+B     10
+E     16.5723   18.682
+A     3.1448e-06   4.57893e-07
+err   54   4.37392
+MAR   21.4946
+####
+B     11
+E     18.682   21.0603
+A     4.45092e-06   7.00337e-07
+err   54   4.06066
+MAR   20.8517
+####
+B     12
+E     21.0603   23.7414
+A     6.61018e-06   1.03869e-06
+err   25   3.65333
+MAR   16.4617
+####
+B     13
+E     23.7414   26.7637
+A     9.98508e-06   1.63854e-06
+err   25   3.2494
+MAR   14.7387
+####
+B     14
+E     26.7637   30.1709
+A     1.3034e-05   2.08069e-06
+err   25   3.27499
+MAR   13.1359
+####
+B     15
+E     30.1709   34.0118
+A     1.89061e-05   2.86421e-06
+err   25   3.23551
+MAR   11.4434
+####
+B     16
+E     34.0118   38.3416
+A     2.21555e-05   3.847e-06
+err   25   3.45798
+MAR   10.0927
+####
+B     17
+E     38.3416   43.2227
+A     3.0101e-05   5.52441e-06
+err   25   3.38959
+MAR   9.44071
+####
+B     18
+E     43.2227   48.7251
+A     3.94118e-05   6.75352e-06
+err   25   3.58207
+MAR   8.98036
+####
+B     19
+E     48.7251   54.928
+A     4.15915e-05   8.1621e-06
+err   25   4.04007
+MAR   7.49803
+####
+B     20
+E     54.928   61.9206
+A     5.65159e-05   1.00553e-05
+err   21   3.91278
+MAR   6.60768
+####
+B     21
+E     61.9206   69.8034
+A     6.33279e-05   1.17154e-05
+err   21   4.03095
+MAR   5.70615
+####
+B     22
+E     69.8034   78.6896
+A     7.06583e-05   1.25736e-05
+err   21   4.20912
+MAR   5.75172
+####
+B     23
+E     78.6896   88.7072
+A     7.09917e-05   1.40788e-05
+err   21   5.06056
+MAR   5.58862
+####
+B     24
+E     88.7072   100
+A     6.6057e-05   1.15507e-05
+err   21   6.17775
+MAR   5.82612
+####
+B     25
+E     100   112.73
+A     8.35729e-05   1.28085e-05
+err   21   6.21955
+MAR   6.09287
+####
+B     26
+E     112.73   127.082
+A     6.57528e-05   1.43182e-05
+err   21   7.17327
+MAR   5.99968
+####
+B     27
+E     127.082   143.26
+A     5.95149e-05   1.40612e-05
+err   21   8.17458
+MAR   5.70674
+####
+B     28
+E     143.26   161.497
+A     5.88227e-05   1.78122e-05
+err   21   8.58013
+MAR   4.57753
+####
+B     29
+E     161.497   182.056
+A     4.41076e-05   1.25364e-05
+err   21   11.3434
+MAR   7.01994
+####
+B     30
+E     182.056   205.233
+A     6.56221e-05   1.27515e-05
+err   21   11.7678
+MAR   5.94999
+####
+B     31
+E     205.233   231.36
+A     4.64901e-05   1.22376e-05
+err   21   14.8099
+MAR   5.7584
+####
+B     32
+E     231.36   260.813
+A     3.18682e-05   1.26899e-05
+err   21   18.2253
+MAR   5.48412
+####
+B     33
+E     260.813   294.016
+A     3.53596e-05   2.14355e-05
+err   21   19.9455
+MAR   5.75505
+####

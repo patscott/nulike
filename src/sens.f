@@ -1,11 +1,11 @@
 ***********************************************************************
-*** nulike_sens provides the interpolated effective area/volume of the 
-*** IceCube experiment to either neutrinos or anti-neutrinos.
+*** nulike_sens provides the interpolated effective area/volume of a  
+*** loaded experiment/analysis to either neutrinos or anti-neutrinos.
 ***
-*** Input:	log10E	        log(neutrino energy/GeV)
-*** 		ptype	= 1	neutrinos
-***			= 2	anti-neutrinos
-*** Output:                     effective area (m^2) or volume (km^3)
+*** Input:  log10E  log(neutrino energy/GeV)
+***         ptype   = 1 neutrinos
+***                 = 2 anti-neutrinos
+*** Output: effective area (m^2) or volume (km^3)
 ***       
 *** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Apr 24, 2011

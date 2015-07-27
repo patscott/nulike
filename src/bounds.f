@@ -193,11 +193,6 @@
       nLikelihood = nulike_nlike(nEvents(analysis),
      & theta_tot,theta_S,EAErr(analysis),theoryErr(analysis))
 
-      ! FIXME temp
-      EAErr(1) = sqrt((54.d-2)**2 + (13.2202d-2)**2)
-      EAErr(2) = sqrt((54.d-2)**2 + (17.982d-2)**2)
-      EAErr(3) = sqrt((25.d-2)**2 + (18.1148d-2)**2)
-
       if (doProfiling) then
         call system_clock(counted1,countrate)
         write(*,*) 'Elapsed time on number likelihood calc (s): ', 

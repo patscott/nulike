@@ -31,7 +31,7 @@
       logical(c_bool) use_fast_likelihood                        ! neutrino likelihood
       logical BGLikePrecompute                                   ! neutrino likelihood
       type(c_ptr) ptr                                            ! neutrino likelihood
-      character (len=nulike_clen) iclike2012, iclike2014         ! neutrino likelihood
+      character (len=nulike_clen) iclike2012, iclike2015         ! neutrino likelihood
       character (len=nulike_clen) experiment, eventf, edispf     ! neutrino likelihood
       character (len=nulike_clen) BGf, efareaf, partiald         ! neutrino likelihood
       integer unphys,hwarning,iend,ierr,iwar,nfc                 ! bookkeeping
@@ -51,12 +51,12 @@
       ! resolution.  
 
       ! The likelihood2012 folder contains data files designed for use with the
-      ! 2012 likelihood (Scott, Savage, Edsjö & IceCube Collab 2012, 
+      ! 2012 likelihood (Scott, Savage, Edsjö & IceCube Collaboration 2012, 
       ! JCAP 11:057, arXiv:1207.0810).
-      ! The likelihood2014 folder contains data files designed for use with the
-      ! 2014 likelihood (IceCube Collab 2015, JCAP xx:xxx, arXiv:15xx.xxxxx).
+      ! The likelihood2015 folder contains data files designed for use with the
+      ! 2015 likelihood (IceCube Collaboration 2015, JCAP xx:xxx, arXiv:150x.xxxxx).
       iclike2012 = 'data/IceCube/likelihood2012/'
-      iclike2014 = 'data/IceCube/likelihood2014/'
+      iclike2015 = 'data/IceCube/likelihood2015/'
 
       !!!!!!!!!!! Common settings for all likelihoods !!!!!!!!!
 
@@ -100,40 +100,45 @@
         call nulike_init(experiment, eventf, BGf, efareaf, edispf, 
      &   phi_cut, theoryError, uselogNorm, BGLikePrecompute)
 
-      !!!!!!!!!!!!!!!! 2014 likelihoods !!!!!!!!!!!!!!!!!!!
+      !!!!!!!!!!!!!!!! 2015 likelihoods !!!!!!!!!!!!!!!!!!!
 
-        !efareaf is not needed in 2014-type analyses.
-        !edispf is ignored in 2014-type analyses.
-        !phi_cut is ignored in 2014-type analyses, as it is read in with the partial likelihoods.
+        !* edispf is ignored in 2015-type analyses, as only enters in the precomputation of partial likelihoods.
+        !* phi_cut is ignored in 2015-type analyses, as it is read in with the partial likelihoods.
+        !* efareaf is not strictly needed in 2015-type analyses; you can set it to 'no-bias' to just assume that
+        !  your analysis is bias-free, and ignore the difference between the simulated effective area and the 
+        !  one nulike obtains from the effective volume when precomputing the partial likelihoods.
   
         ! Here we use the IC-79 SL data that ship with nulike
         experiment = 'IC-79 SL'
-        eventf  = trim(iclike2014)//'IC79_Events_SL_llhInput_60Deg.txt'
-        BGf     = trim(iclike2014)//'IC79_Background_distributions_SL.txt'
-        partiald= trim(iclike2014)//'IC79_Partial_Likelihoods_SL'
+        eventf  = trim(iclike2015)//'IC79_Events_SL_llhInput_60Deg.txt'
+        BGf     = trim(iclike2015)//'IC79_Background_distributions_SL.txt'
+        efareaf = 'no-bias'!trim(iclike2015)//'IC79_Effective_Area_SL.txt'
+        partiald= trim(iclike2015)//'IC79_Partial_Likelihoods_SL'
   
         ! Initialise the IceCube data and calculations for the IC79 SL sample. 
-        call nulike_init(experiment, eventf, BGf, partiald, edispf, 
+        call nulike_init(experiment, eventf, BGf, efareaf, partiald, 
      &   phi_cut, theoryError, uselogNorm, BGLikePrecompute)
   
         ! Here we use the IC-79 WL data that ship with nulike
         experiment = 'IC-79 WL'
-        eventf  = trim(iclike2014)//'IC79_Events_WL_llhInput_60Deg.txt'
-        BGf     = trim(iclike2014)//'IC79_Background_distributions_WL.txt'
-        partiald= trim(iclike2014)//'IC79_Partial_Likelihoods_WL'
+        eventf  = trim(iclike2015)//'IC79_Events_WL_llhInput_60Deg.txt'
+        BGf     = trim(iclike2015)//'IC79_Background_distributions_WL.txt'
+        efareaf = 'no-bias'!trim(iclike2015)//'IC79_Effective_Area_WL.txt'
+        partiald= trim(iclike2015)//'IC79_Partial_Likelihoods_WL'
   
         ! Initialise the IceCube data and calculations for the IC79 WL sample. 
-        call nulike_init(experiment, eventf, BGf, partiald, edispf, 
+        call nulike_init(experiment, eventf, BGf, efareaf, partiald, 
      &   phi_cut, theoryError, uselogNorm, BGLikePrecompute)
   
         ! Here we use the IC-79 WH data that ship with nulike
         experiment = 'IC-79 WH'
-        eventf  = trim(iclike2014)//'IC79_Events_WH_llhInput_60Deg.txt'
-        BGf     = trim(iclike2014)//'IC79_Background_distributions_WH.txt'
-        partiald= trim(iclike2014)//'IC79_Partial_Likelihoods_WH'
+        eventf  = trim(iclike2015)//'IC79_Events_WH_llhInput_60Deg.txt'
+        BGf     = trim(iclike2015)//'IC79_Background_distributions_WH.txt'
+        efareaf = 'no-bias'!trim(iclike2015)//'IC79_Effective_Area_WH.txt'
+        partiald= trim(iclike2015)//'IC79_Partial_Likelihoods_WH'
   
         ! Initialise the IceCube data and calculations for the IC79 SL sample. 
-        call nulike_init(experiment, eventf, BGf, partiald, edispf, 
+        call nulike_init(experiment, eventf, BGf, efareaf, partiald,
      &   phi_cut, theoryError, uselogNorm, BGLikePrecompute)
 
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -220,12 +225,12 @@
         ! considering only the number count, not the spectral or angular information.
         ! If you're only interested in p-values, not likelihoods, use likechoice = 1, as
         ! this is the fastest.
-        !likechoice = 1	! Number of events only
-        !likechoice = 2	! Number of events and event arrival angles
-        !likechoice = 3	! Number of events and energy estimator (for IceCube, this is nchan = number of hit DOMs)
+        !likechoice = 1 ! Number of events only
+        !likechoice = 2 ! Number of events and event arrival angles
+        !likechoice = 3 ! Number of events and energy estimator (for IceCube, this is nchan = number of hit DOMs)
         likechoice = 4  ! Number of events, event arrival angles and energy estimator
 
-        ! Choose whether to do the spectral-angular part of the 2014 likelihood calculation using fast
+        ! Choose whether to do the spectral-angular part of the 2015 likelihood calculation using fast
         ! interpolation or slower, more accurate, explicit integration.
         use_fast_likelihood = .true.
 

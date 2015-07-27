@@ -22,8 +22,8 @@ FOPT=-O2 -ffixed-line-length-none  -Wall -fcheck=all #(contributed numerical rou
 MODULE=J
 
 # DarkSUSY location, library name and include path
-DSLIBDIR = ../gambit/extras/DarkSUSY/DarkSUSY/lib
-DSLIBINC = ../gambit/extras/DarkSUSY/DarkSUSY/include
+DSLIBDIR = /home/pat/darksusy-5.1.2/lib
+DSLIBINC = /home/pat/darksusy-5.1.2/include
 DSLIBNAME = darksusy
 
 # nusigma location and library name
@@ -64,7 +64,7 @@ edisp.f edispinit.f sens.f eventinit.f init.f nlike.f psf.f pval.f \
 analysis_map.f sigintegrand.f signal.f specintegrand.f speclike.f \
 utils.f partials.f specanglike.f specangintegrand.f specanginit.f \
 tabulated_weight.f preparse_files.f partintegrand.f d1mach.f \
-offctrpsf.f
+offctrpsf.f bias.f biasinit.f
 
 OBJ = $(BUILD)/tspack.o $(patsubst %.f90,$(BUILD)/%.o,$(F90SOURCES)) $(patsubst %.f,$(BUILD)/%.o,$(SOURCES)) 
 
@@ -83,7 +83,7 @@ CUBPACK_OBJ = $(CUBPACK_OBJ_BARE:%.o=$(BUILD)/%.o)
 
 default: libnulike.a
 
-all : libnulike.a libnulike.so nulike_prep nulike_test
+all : libnulike.a libnulike.so nulike_prep nulike_test nulike_test_mssm25 nulike_test_wimp
 
 $(BUILD)/%.o : $(SRC)/%.f $(INC_DEP)
 	$(FC) $(FFLAGS) -c $< -o $@
@@ -110,6 +110,12 @@ nulike_prep : libnulike.a $(PROGS)/nulike_prep.f
 
 nulike_test : libnulike.a $(PROGS)/nulike_test.f
 	$(FF) $(FFLAGS) -I$(DSLIBINC) -o $@ $(PROGS)/nulike_test.f -L$(DSLIBDIR) -l$(DSLIBNAME) -lHB -lFH -L$(LIB) -lnulike
+
+nulike_test_mssm25 : libnulike.a $(PROGS)/nulike_test_mssm25.f
+	$(FF) $(FFLAGS) -I$(DSLIBINC) -o $@ $(PROGS)/nulike_test_mssm25.f -L$(DSLIBDIR) -l$(DSLIBNAME) -lHB -lFH -L$(LIB) -lnulike
+
+nulike_test_wimp : libnulike.a $(PROGS)/nulike_test_wimp.f
+	$(FF) $(FFLAGS) -I$(DSLIBINC) -o $@ $(PROGS)/nulike_test_wimp.f -L$(DSLIBDIR) -l$(DSLIBNAME) -lHB -lFH -L$(LIB) -lnulike
 
 clean : 
 	rm -f $(BUILD)/* tspack.f Key.dat nulike_test nulike_prep

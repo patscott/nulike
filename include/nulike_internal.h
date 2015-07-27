@@ -17,11 +17,12 @@
       character (len=nulike_clen) analysis_name_array(max_analyses)
       integer likelihood_version(max_analyses)
       logical sysErrDist_logNorm(max_analyses)
+      logical no_bias(max_analyses)
       real*8 phi_max_deg(max_analyses)
       real*8 exp_time(max_analyses), theoryErr(max_analyses) 
-      real*8 theta_BG(max_analyses), EAErr(max_analyses)
+      real*8 theta_BG(max_analyses)
 
-      integer nSensBins(max_analyses)
+      integer nSensBins(max_analyses), nBiasBins(max_analyses)
       integer nBinsBGAng(max_analyses), nBinsBGE(max_analyses)
       integer nEvents(max_analyses)
       integer nHistograms(max_analyses), nnchan_total(max_analyses)
@@ -40,6 +41,15 @@
       real*8 sens_nusigma(max_nSensBins+1,max_analyses)
       real*8 sens_nubarsigma(max_nSensBins+1,max_analyses)
       real*8 sens_AngRessigma(max_nSensBins+1,max_analyses)
+
+      real*8 bias_logE(2,max_nBiasBins+1,max_analyses)
+      real*8 bias_logEcentres(max_nBiasBins+1,max_analyses)
+      real*8 bias_nu(max_nBiasBins+1,max_analyses)
+      real*8 bias_nubar(max_nBiasBins+1,max_analyses)
+      real*8 bias_nuderivs(max_nBiasBins+1,max_analyses)
+      real*8 bias_nubarderivs(max_nBiasBins+1,max_analyses)
+      real*8 bias_nusigma(max_nBiasBins+1,max_analyses)
+      real*8 bias_nubarsigma(max_nBiasBins+1,max_analyses)
 
       real*8  BGangdist_phi(max_nBinsBGAng,max_analyses)
       real*8  BGangdist_prob(max_nBinsBGAng,max_analyses)
@@ -102,19 +112,21 @@
      & sens_AngResderivs, sens_nusigma, sens_nubarsigma,
      & sens_AngRessigma, BGangdist_derivs, BGangdist_sigma,
      & BGangdist_phi, BGangdist_prob, BGeedist_ee,
-     & phi_max_deg, theoryErr, EAErr, BGpvalPoissonian, BGangdist_norm,
+     & phi_max_deg, theoryErr, BGpvalPoissonian, BGangdist_norm,
      & sens_AngRes, exp_time, thetashare, annrateshare, 
      & BGangdist_conenorm, hist_LogE, hist_logEcentres, hist_nchan,
      & hist_prob, hist_derivs, hist_sigma, sens_nubar,sens_syserr,
      & sens_staterr, precomp_log10E, precomp_weights, precomp_derivs,
      & precomp_sigma, precompEAnoL_weights, precompEAnoL_derivs, 
      & precompEAnoL_sigma, precompEA_weights, precompEA_derivs, 
-     & precompEA_sigma, ee_min, ee_max, nchanshare,
+     & precompEA_sigma, bias_logE, bias_logEcentres, bias_nu, 
+     & bias_nubar, bias_nuderivs, bias_nubarderivs, bias_nusigma, 
+     & bias_nubarsigma, ee_min, ee_max, nchanshare,
      & BGeedist_derivs, BGeedist_sigma,
      & nBinsBGE, nBinsBGAng, nEvents, start_index, start_index_noL,
-     & nSensBins, nPrecompE, nHistograms, nnchan_total,
+     & nSensBins, nBiasBins, nPrecompE, nHistograms, nnchan_total,
      & nchan_hist2BGoffset, FullSkyBG,
-     & pvalBGPoisComputed, sysErrDist_logNorm,
+     & pvalBGPoisComputed, sysErrDist_logNorm, no_bias,
      & analysis_name_array, likelihood_version
       save /nulike_comm/
 

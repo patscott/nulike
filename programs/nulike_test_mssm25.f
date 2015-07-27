@@ -37,9 +37,9 @@
       logical(c_bool) use_fast_likelihood
       logical BGLikePrecompute
       type(c_ptr) ptr
-      character (len=nulike_clen) iclike2014
-      character (len=nulike_clen) experiment(3), eventf, edispf
-      character (len=nulike_clen) BGf, partiald
+      character (len=nulike_clen) iclike2015
+      character (len=nulike_clen) experiment(3), eventf
+      character (len=nulike_clen) BGf, partiald, efareaf
       external nuyield_test
       ! Book-keeping
       integer unphys,hwarning,iend,ierr,iwar,nfc,i,j
@@ -52,30 +52,33 @@
       logical, parameter :: talky = .false.                      
 
       ! See the header of src/init.f for detailed explanations of the following options.
-      iclike2014 = 'data/IceCube/likelihood2014/'
+      iclike2015 = 'data/IceCube/likelihood2015/'
       theoryError = 0.05d0
       uselogNorm = .true.
       BGLikePrecompute = .true.
 
       experiment(1) = 'IC-79 SL'
-      eventf  = trim(iclike2014)//'IC79_Events_SL_llhInput_60Deg.txt'
-      BGf     = trim(iclike2014)//'IC79_Background_distributions_SL.txt'
-      partiald= trim(iclike2014)//'IC79_Partial_Likelihoods_SL'
-      call nulike_init(experiment(1), eventf, BGf, partiald, edispf, 
+      eventf  = trim(iclike2015)//'IC79_Events_SL_llhInput_60Deg.txt'
+      BGf     = trim(iclike2015)//'IC79_Background_distributions_SL.txt'
+      efareaf = 'no-bias'!trim(iclike2015)//'IC79_Effective_Area_SL.txt'
+      partiald= trim(iclike2015)//'IC79_Partial_Likelihoods_SL'
+      call nulike_init(experiment(1), eventf, BGf, efareaf, partiald, 
      & dummyval, theoryError, uselogNorm, BGLikePrecompute)
 
       experiment(2) = 'IC-79 WL'
-      eventf  = trim(iclike2014)//'IC79_Events_WL_llhInput_60Deg.txt'
-      BGf     = trim(iclike2014)//'IC79_Background_distributions_WL.txt'
-      partiald= trim(iclike2014)//'IC79_Partial_Likelihoods_WL'
-      call nulike_init(experiment(2), eventf, BGf, partiald, edispf, 
+      eventf  = trim(iclike2015)//'IC79_Events_WL_llhInput_60Deg.txt'
+      BGf     = trim(iclike2015)//'IC79_Background_distributions_WL.txt'
+      efareaf = 'no-bias'!trim(iclike2015)//'IC79_Effective_Area_WL.txt'
+      partiald= trim(iclike2015)//'IC79_Partial_Likelihoods_WL'
+      call nulike_init(experiment(2), eventf, BGf, efareaf, partiald, 
      & dummyval, theoryError, uselogNorm, BGLikePrecompute)
 
       experiment(3) = 'IC-79 WH'
-      eventf  = trim(iclike2014)//'IC79_Events_WH_llhInput_60Deg.txt'
-      BGf     = trim(iclike2014)//'IC79_Background_distributions_WH.txt'
-      partiald= trim(iclike2014)//'IC79_Partial_Likelihoods_WH'
-      call nulike_init(experiment(3), eventf, BGf, partiald, edispf, 
+      eventf  = trim(iclike2015)//'IC79_Events_WH_llhInput_60Deg.txt'
+      BGf     = trim(iclike2015)//'IC79_Background_distributions_WH.txt'
+      efareaf = 'no-bias'!trim(iclike2015)//'IC79_Effective_Area_WH.txt'
+      partiald= trim(iclike2015)//'IC79_Partial_Likelihoods_WH'
+      call nulike_init(experiment(3), eventf, BGf, efareaf, partiald, 
      & dummyval, theoryError, uselogNorm, BGLikePrecompute)
 
       ! Initialise DarkSUSY
@@ -86,6 +89,7 @@
       endif
       call dsinit
       prtlevel=0
+      j=0
 
       ! Open a file with some SUSY models inside and loop over them.  See DarkSUSY's dstest for details.
       open (unit=11,file='programs/testmodels25.mod')

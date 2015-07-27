@@ -19,23 +19,22 @@
       include 'dswacom.h'
 
       ! Nuclear scattering
-      real*8 sigsip,sigsin,sigsdp,sigsdn
+      real*8 sigsdp
       ! Capture rate
       real*8 dsntcapsuntab, ca, tt_sun, annrate
       ! Neutrino likelihoods
       real*8 theoryError, diff_CL, zeroin
       logical uselogNorm
       logical BGLikePrecompute
-      character (len=nulike_clen) iclike2014
-      character (len=nulike_clen) experiment(3), eventf, edispf
-      character (len=nulike_clen) BGf, partiald
+      character (len=nulike_clen) iclike2015
+      character (len=nulike_clen) experiment(3), eventf
+      character (len=nulike_clen) BGf, partiald, efareaf
       double precision :: ref_CL = 90.d0                   
       external diff_CL
       common/wimpcom/ref_CL, experiment
       ! Book-keeping
       integer i,j
       logical :: first = .true.
-      real*8 excl
       real*8, parameter :: dummyval = 0, mwimpmin = 10, mwimpmax = 5000  
       real*8, parameter :: chosen_masses(21) = (/6.d0, 10.d0, 25.d0, 50.d0, 80.3d0, 91.2d0, 1.d2, 1.5d2, 1.76d2, 2.d2, 2.5d2, 3.5d2, 5.d2, 7.5d2, 1.d3, 1.5d3, 2.d3, 3.d3, 5.d3, 7.5d3, 1.d4/)
       !real*8, parameter :: chosen_masses(2) = (/7.5d3, 1.d4/)
@@ -44,30 +43,33 @@
       
 
       ! See the header of src/init.f for detailed explanations of the following options.
-      iclike2014 = 'data/IceCube/likelihood2014/'
+      iclike2015 = 'data/IceCube/likelihood2015/'
       theoryError = 0.05d0
       uselogNorm = .true.
       BGLikePrecompute = .true.
 
       experiment(1) = 'IC-79 SL'
-      eventf  = trim(iclike2014)//'IC79_Events_SL_llhInput_60Deg.txt'
-      BGf     = trim(iclike2014)//'IC79_Background_distributions_SL.txt'
-      partiald= trim(iclike2014)//'IC79_Partial_Likelihoods_SL'
-      call nulike_init(experiment(1), eventf, BGf, partiald, edispf, 
+      eventf  = trim(iclike2015)//'IC79_Events_SL_llhInput_60Deg.txt'
+      BGf     = trim(iclike2015)//'IC79_Background_distributions_SL.txt'
+      efareaf = 'no-bias'!trim(iclike2015)//'IC79_Effective_Area_SL.txt'
+      partiald= trim(iclike2015)//'IC79_Partial_Likelihoods_SL'
+      call nulike_init(experiment(1), eventf, BGf, efareaf, partiald, 
      & dummyval, theoryError, uselogNorm, BGLikePrecompute)
 
       experiment(2) = 'IC-79 WL'
-      eventf  = trim(iclike2014)//'IC79_Events_WL_llhInput_60Deg.txt'
-      BGf     = trim(iclike2014)//'IC79_Background_distributions_WL.txt'
-      partiald= trim(iclike2014)//'IC79_Partial_Likelihoods_WL'
-      call nulike_init(experiment(2), eventf, BGf, partiald, edispf, 
+      eventf  = trim(iclike2015)//'IC79_Events_WL_llhInput_60Deg.txt'
+      BGf     = trim(iclike2015)//'IC79_Background_distributions_WL.txt'
+      efareaf = 'no-bias'!trim(iclike2015)//'IC79_Effective_Area_WL.txt'
+      partiald= trim(iclike2015)//'IC79_Partial_Likelihoods_WL'
+      call nulike_init(experiment(2), eventf, BGf, efareaf, partiald, 
      & dummyval, theoryError, uselogNorm, BGLikePrecompute)
 
       experiment(3) = 'IC-79 WH'
-      eventf  = trim(iclike2014)//'IC79_Events_WH_llhInput_60Deg.txt'
-      BGf     = trim(iclike2014)//'IC79_Background_distributions_WH.txt'
-      partiald= trim(iclike2014)//'IC79_Partial_Likelihoods_WH'
-      call nulike_init(experiment(3), eventf, BGf, partiald, edispf, 
+      eventf  = trim(iclike2015)//'IC79_Events_WH_llhInput_60Deg.txt'
+      BGf     = trim(iclike2015)//'IC79_Background_distributions_WH.txt'
+      efareaf = 'no-bias'!trim(iclike2015)//'IC79_Effective_Area_WH.txt'
+      partiald= trim(iclike2015)//'IC79_Partial_Likelihoods_WH'
+      call nulike_init(experiment(3), eventf, BGf, efareaf, partiald, 
      & dummyval, theoryError, uselogNorm, BGLikePrecompute)
 
       ! Initialise DarkSUSY

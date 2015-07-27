@@ -36,12 +36,12 @@
       integer, intent(in) :: NumFun
       real*8, intent(in) :: X(:)
       real*8 :: Value(NumFun)
-      real*8 nulike_tabulated_weight
+      real*8 nulike_tabulated_weight, nulike_bias
 
       !Scale neutrino and anti-neutrino yields by saved weights.
       Value(1) =  
-     & nuyield_ptr(X(1),1,context_shared)*nulike_tabulated_weight(X(1),1,eventnumshare) +
-     & nuyield_ptr(X(1),2,context_shared)*nulike_tabulated_weight(X(1),2,eventnumshare)
+     & nuyield_ptr(X(1),1,context_shared)*nulike_bias(X(1),1)*nulike_tabulated_weight(X(1),1,eventnumshare) +
+     & nuyield_ptr(X(1),2,context_shared)*nulike_bias(X(1),2)*nulike_tabulated_weight(X(1),2,eventnumshare)
 
       !Weight by E to give full integrand
       Value(1) = Value(1) * 10.d0**X(1)

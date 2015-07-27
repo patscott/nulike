@@ -1,0 +1,206 @@
+#This file contains the following instrument response data for IceCube-79 WH data sample:
+# 1. Mean density of water/ice molecules in the detector.
+# 2. Muon/anti-muon neutrino effective area, for a point-source search 
+#    towards the Sun, averaged over one austral winter.
+# 3. Statistical and systematic errors in each energy bin at the 1 sigma 
+#    level, as a percentage of the effective area in that bin.  
+# 4. Mean angular error within each energy bin, given as the 39.3% 
+#    (equivalent 1 sigma) containment radius.
+#
+#The density block has the following content:
+#rho [H2O density in kg/m^3]
+#The response block has the following column content:
+#B [bin Nr.]
+#E [E-nu-lower-bound]  [E-nu-upper-bound]
+#A [Aeff(nu_mu)]   [Aeff(nu_mu_bar)]
+#err [syst.error]   [stat.error]
+MAR [angular res.]
+###--Density--
+rho   920.00
+###--Response--
+B     18
+E     43.2227   48.7251
+A     1.08946e-06   3.14255e-07
+err   25   20.0291
+MAR   6.27799
+####
+B     19
+E     48.7251   54.928
+A     3.0931e-06   8.20208e-07
+err   25   14.3274
+MAR   3.86769
+####
+B     20
+E     54.928   61.9206
+A     1.18415e-05   2.71537e-06
+err   21   8.5778
+MAR   3.57169
+####
+B     21
+E     61.9206   69.8034
+A     3.11111e-05   8.55337e-06
+err   21   5.43635
+MAR   3.83036
+####
+B     22
+E     69.8034   78.6896
+A     8.56958e-05   2.75208e-05
+err   21   3.43036
+MAR   3.17351
+####
+B     23
+E     78.6896   88.7072
+A     0.000217403   6.24412e-05
+err   21   2.79387
+MAR   2.91988
+####
+B     24
+E     88.7072   100
+A     0.000433431   0.000141695
+err   21   2.15668
+MAR   2.71686
+####
+B     25
+E     100   112.73
+A     0.000873027   0.000297443
+err   21   1.6717
+MAR   2.51126
+####
+B     26
+E     112.73   127.082
+A     0.00153787   0.000530736
+err   21   1.40286
+MAR   2.28625
+####
+B     27
+E     127.082   143.26
+A     0.00267663   0.000977795
+err   21   1.17211
+MAR   2.18148
+####
+B     28
+E     143.26   161.497
+A     0.00402788   0.00165922
+err   21   1.03303
+MAR   1.99137
+####
+B     29
+E     161.497   182.056
+A     0.00627263   0.00262739
+err   21   0.932429
+MAR   1.86257
+####
+B     30
+E     182.056   205.233
+A     0.00869077   0.00416227
+err   21   0.868772
+MAR   1.74589
+####
+B     31
+E     205.233   231.36
+A     0.0120183   0.00601868
+err   21   0.839377
+MAR   1.65252
+####
+B     32
+E     231.36   260.813
+A     0.0155549   0.00927738
+err   21   0.792405
+MAR   1.57122
+####
+B     33
+E     260.813   294.016
+A     0.0193776   0.012951
+err   21   0.871118
+MAR   1.4989
+####
+B     34
+E     294.016   331.445
+A     0.0237535   0.0183983
+err   21   0.886437
+MAR   1.42315
+####
+B     35
+E     331.445   373.64
+A     0.0275233   0.0268831
+err   21   0.929534
+MAR   1.3521
+####
+B     36
+E     373.64   421.206
+A     0.032197   0.0380746
+err   21   0.980055
+MAR   1.2965
+####
+B     37
+E     421.206   474.827
+A     0.0402375   0.0541675
+err   21   1.0523
+MAR   1.2455
+####
+B     38
+E     474.827   535.275
+A     0.0440473   0.0772182
+err   21   1.16494
+MAR   1.2056
+####
+B     39
+E     535.275   603.418
+A     0.0461832   0.110222
+err   21   1.44165
+MAR   1.14523
+####
+B     40
+E     603.418   680.235
+A     0.0508054   0.16383
+err   21   1.66541
+MAR   1.14876
+####
+B     41
+E     680.235   766.832
+A     0.0519805   0.233126
+err   21   1.90185
+MAR   1.04545
+####
+B     42
+E     766.832   864.453
+A     0.0509337   0.348991
+err   21   2.5904
+MAR   1.05077
+####
+B     43
+E     864.453   974.502
+A     0.0535028   0.533876
+err   21   2.91255
+MAR   1.00016
+####
+B     44
+E     974.502   1098.56
+A     0.0447409   0.834138
+err   21   4.54827
+MAR   1.02188
+####
+B     45
+E     1098.56   1238.41
+A     0.058284   1.42407
+err   21   5.24995
+MAR   0.927282
+####
+B     46
+E     1238.41   1396.07
+A     0.0261465   1.9477
+err   21   9.07749
+MAR   0.946009
+####
+B     47
+E     1396.07   1573.79
+A     0.0233533   3.18248
+err   21   11.19
+MAR   1.03501
+####
+B     48
+E     1573.79   1774.14
+A     0.0542451   5.70264
+err   21   18.4461
+MAR   0.620554
+####

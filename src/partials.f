@@ -21,10 +21,10 @@
 ***   nEnergies         number of neutrino energies to tabluate the
 ***                      partial likelihoods for.
 ***   logE_min,logE_max limits of the tabulation energies    
-***   phi_cut	        cutoff angle; likelihoods and p-values will be 
-***			 based only on events with reconstructed 
-***			 directions within this angle of the solar centre.
-***			 [degrees]
+***   phi_cut           cutoff angle; likelihoods and p-values will be 
+***          based only on events with reconstructed 
+***          directions within this angle of the solar centre.
+***          [degrees]
 ***   dsdxdy            differential cross-section function, with signature
 ***                     Input:  real*8      E      Neutrino energy in GeV
 ***                             real*8      x      Bjorken-x
@@ -151,8 +151,8 @@
       open(lun3, file=partialfolder//'/partlikes.aux', action='WRITE')
       write(lun3, fmt=*) '#This file provides auxiliary information about partial likelihoods.'
       write(lun3, fmt=*) '#It was generated automatically by nulike_partials.'
-      write(lun3, fmt=*) '# #events #energies, phi_cut, log10E_min, log10E_max'
-      write(lun3, fmt='(A1,2I8,3E16.5)') ' ', nEvents, nEnergies, phi_cut, logE_min, logE_max
+      write(lun3, fmt=*) '# #events #energies, phi_cut, log10E_min, log10E_max, fractional_err_EA'
+      write(lun3, fmt='(A1,2I8,4E16.5)') ' ', nEvents, nEnergies, phi_cut, logE_min, logE_max, EAErr(analysis)
       close(lun3)
 
       !Compute and save the effective area
