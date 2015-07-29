@@ -24,6 +24,10 @@ PUBLIC :: CUBATR, CUBPACK_INFO
 !          Katholieke Universiteit Leuven, Celestijnenlaan 200A,
 !          B-3001 Heverlee, Belgium
 !          Email:  Ronald.Cools@cs.kuleuven.ac.be
+!***REVISION DATE  150729   (YYMMDD) (Made threadsafe / re-entrant)
+!***MODIFIER
+!          Pat Scott, Dept. of Physics, Imperial College London
+!          Email: p.scott@imperial
 !
 !***PURPOSE  Computation of integrals over a collection of regions.
 !
@@ -42,6 +46,7 @@ INTEGER, PRIVATE                :: BOTTIH,BOTTRH
 INTEGER,         DIMENSION(:), PRIVATE, ALLOCATABLE  :: IWork
 REAL(kind=stnd), DIMENSION(:), PRIVATE, ALLOCATABLE  :: RWork
 TYPE(EPSALG_MEM), PRIVATE              :: M
+!$omp threadprivate (PreJob, BOTTIH, BOTTRH, IWork, RWork, M)
 
 INTERFACE CUBATR
    MODULE PROCEDURE CUBATR_X, CUBATR_1, CUBATR_CLEAR

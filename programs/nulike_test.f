@@ -29,6 +29,7 @@
       logical uselogNorm                                         ! neutrino likelihood
       logical(c_bool) pvalFromRef                                ! neutrino likelihood
       logical(c_bool) use_fast_likelihood                        ! neutrino likelihood
+      logical(c_bool) threadsafe                                 ! neutrino likelihood
       logical BGLikePrecompute                                   ! neutrino likelihood
       type(c_ptr) ptr                                            ! neutrino likelihood
       character (len=nulike_clen) iclike2012, iclike2015         ! neutrino likelihood
@@ -234,6 +235,11 @@
         ! interpolation or slower, more accurate, explicit integration.
         use_fast_likelihood = .true.
 
+        ! Tell nulike whether to consider your provided neutrino yield function threadsafe or not.
+        ! If this is true, nulike will use openMP to parallelise the spectro-angular likelihoood calculation.
+        ! Here we set this to true because (from v5.1.3 onwards) DarkSUSY's yield functions are indeed threadsafe.
+        threadsafe = .true.
+
         ! Choose whether to calculate the p value relative to a reference value of 
         ! the likelihood or to the background
         pvalFromRef = .false.
@@ -251,7 +257,7 @@
         ! Finally use nulike to get signal and background predictions, number of observed events, likelihood and p-value
         call nulike_bounds(experiment, wamwimp, annrate, nuyield_test, sigpred, bgpred, 
      &   totobs, lnLike, pval, likechoice, use_fast_likelihood, pvalFromRef,
-     &   refLike, dof, ptr)
+     &   refLike, dof, ptr, threadsafe)
      
         write(*,*) '  Predicted signal events:    ', sigpred
         write(*,*) '  Total predicted events:     ', sigpred+bgpred

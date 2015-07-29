@@ -6,7 +6,8 @@
 
       include "nuconst.h"
 
-      integer analysis, ptypeshare, eventnumshare
+      integer analysis, ptypeshare
+      integer eventnumshare(max_threads)
       real*8  Eshare, min_detectable_logE
       real*8  events_ee(max_nEvents,max_analyses)
       real*8  EAErr(max_analyses)

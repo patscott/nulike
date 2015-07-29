@@ -53,6 +53,8 @@
 ***
 ***        context       A c_ptr passed in to nuyield when it is called
 ***
+***        threadsafe    Indicate that nulike can treat nuyield as threadsafe.
+***
 ***                              
 *** output: Nsignal_predicted  Predicted number of signal events within 
 ***                      phi_cut (includes solar coronal BG)
@@ -77,9 +79,10 @@
       subroutine nulike_bounds(analysis_name_in, mwimp, annrate, 
      & nuyield, Nsignal_predicted, NBG_expected, Ntotal_observed, 
      & lnlike, pvalue, liketype, fastlike, pvalFromRef, referenceLike,
-     & dof, context) bind(c)
+     & dof, context, threadsafe) bind(c)
 
       use iso_c_binding, only: c_ptr, c_char, c_double, c_int, c_bool
+      use omp_lib
       
       implicit none
       include 'nulike_internal.h'
@@ -88,7 +91,7 @@
       integer(c_int), intent(in) :: liketype
       real(c_double), intent(inout) :: Nsignal_predicted, NBG_expected, lnlike, pvalue
       real(c_double), intent(in) :: referenceLike, dof, mwimp, annrate
-      logical(c_bool), intent(in) :: fastlike, pvalFromRef
+      logical(c_bool), intent(in) :: fastlike, pvalFromRef, threadsafe
       character(kind=c_char), dimension(nulike_clen), intent(inout) :: analysis_name_in
       type(c_ptr), intent(inout) :: context
 
@@ -236,11 +239,28 @@
       case (2015)
         specAngLikelihood = 0.d0
         if (liketype .eq. 4) then
-          do j = 1, nEvents(analysis)          
-            specAngLikelihood = specAngLikelihood + nulike_specanglike(j,
-     &       theta_S, f_S, annrate, logmw, sens_logE(1,1,analysis), 
-     &       nuyield, context, fastlike)
-          enddo
+          if (threadsafe .and. omp_get_max_threads() .gt. max_threads) then
+            write(*,*) "Nulike actually hasn't been configured to deal with"
+            write(*,*) "such a powerhouse machine.  Please increase "
+            write(*,*) "max_threads in nuconst.h."
+            stop
+          endif
+          specAngLikelihood = nulike_specanglike(1,theta_S, f_S, annrate, 
+     &     logmw, sens_logE(1,1,analysis), nuyield, context, fastlike)
+          if (threadsafe) then
+!$omp parallel do reduction(+:specAngLikelihood)
+            do j = 2, nEvents(analysis)
+              specAngLikelihood = specAngLikelihood + nulike_specanglike(j,
+     &         theta_S, f_S, annrate, logmw, sens_logE(1,1,analysis), 
+     &         nuyield, context, fastlike)    
+            enddo
+          else
+            do j = 2, nEvents(analysis)
+              specAngLikelihood = specAngLikelihood + nulike_specanglike(j,
+     &         theta_S, f_S, annrate, logmw, sens_logE(1,1,analysis), 
+     &         nuyield, context, fastlike)    
+            enddo
+          endif
         endif
 
       case default

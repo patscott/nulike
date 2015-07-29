@@ -25,6 +25,10 @@ CONTAINS
 !            Washington State University
 !            Pullman, WA 99164-3113, USA
 !
+!***REVISION DATE  150729   (YYMMDD) (Made threadsafe / re-entrant)
+!***MODIFIER
+!          Pat Scott, Dept. of Physics, Imperial College London
+!          Email: p.scott@imperial
 !
 !***PURPOSE  To compute basic integration rule values and
 !            corresponding error estimates.
@@ -91,6 +95,7 @@ CONTAINS
    REAL(KIND=STND), DIMENSION(MXG,MXW), SAVE :: G
    INTEGER,                             SAVE :: OLDKEY = -1, OLDN = 0
    INTEGER,                             SAVE :: WTS, NUMR
+!$omp threadprivate(W, G, OLDKEY, OLDN, WTS, NUMR)
 !
    INTEGER                                   :: I, DIVAXN
    REAL(KIND=STND), PARAMETER                :: ONE = 1

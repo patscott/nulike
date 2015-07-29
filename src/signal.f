@@ -26,6 +26,7 @@
       use iso_c_binding, only: c_ptr
       use Precision_Model
       use CUI
+      use omp_lib
 
       implicit none
       include 'nulike_internal.h'
@@ -118,7 +119,7 @@
       !2015 likelihood, as per arXiv:150x.xxxxx
       case (2015)
 
-        eventnumshare = 0 ! Set event number to indicate total signal rate calculation (i.e. not an event).
+        eventnumshare(omp_get_thread_num()+1) = 0 ! Set event number to indicate total signal rate calculation (i.e. not an event).
         IER = 0
         SVertices(1,:) = (/precomp_log10E(start_index(analysis),analysis), 
      &   min(precomp_log10E(nPrecompE(analysis),analysis),logmw)/)

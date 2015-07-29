@@ -47,7 +47,7 @@ CUBPACK=contrib/CUBPACK
 
 # Set internal compile commands
 FC=$(FF)
-FFLAGS=$(FOPT) -I$(INC) -$(MODULE) $(BUILD) -fPIC
+FFLAGS=$(FOPT) -I$(INC) -$(MODULE) $(BUILD) -fPIC -fopenmp
 
 # Headers
 INC_DEP = nulike.h nulike_internal.h nuprep.h nuversion.h nucommon.h nuconst.h constants.h

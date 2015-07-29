@@ -15,6 +15,7 @@ CONTAINS
 !***BEGIN PROLOGUE Rule_Tn
 !***KEYWORDS basic numerical integration rule
 !***PURPOSE  To compute basic integration rule values.
+!***LAST MODIFICATION BY ORIGINAL AUTHOR 02-07-09
 !***AUTHOR
 !
 !            Alan Genz
@@ -23,7 +24,10 @@ CONTAINS
 !            Pullman, WA 99164-3113, USA
 !            AlanGenz@wsu.edu
 !
-!***LAST MODIFICATION 02-07-09
+!***REVISION DATE  150729   (YYMMDD) (Made threadsafe / re-entrant)
+!***MODIFIER
+!          Pat Scott, Dept. of Physics, Imperial College London
+!          Email: p.scott@imperial
 !***DESCRIPTION Rule_Tn computes basic integration rule values for a
 !            vector of integrands over a hyper-rectangular region.
 !            These are estimates for the integrals. Rule_Tn also computes
@@ -101,6 +105,7 @@ CONTAINS
       INTEGER, DIMENSION(MXW), SAVE               :: PTS
       REAL(KIND=STND), DIMENSION(MXW,MXRLS), SAVE :: W
       REAL(KIND=STND), DIMENSION(0:MXG,MXW), SAVE :: G
+!$omp threadprivate(OLDKEY, OLDN, RLS, WTS, KEY, FVALS, PTS, W, G)
       REAL(KIND=STND), DIMENSION(NF,MXRLS)        :: RULE
       REAL(KIND=STND), DIMENSION(MXRLS)           :: ALPHA
       REAL(KIND=STND), DIMENSION(0:NDIM)          :: GTEMP 

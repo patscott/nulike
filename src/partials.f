@@ -72,7 +72,7 @@
       logical abserr(2), is_fishy, ultracautious
       logical this_result_needs_correcting(2)
       logical previous_result_needs_correcting(2)
-      integer shapes(2), job_indices(4), i, j, k, l, m
+      integer shapes(2), job_indices(4), i, j, k, l, m, eventnum
       integer like, ncols(max_nHistograms+2), nEvents_in_file 
       integer nEvents, nbins_effvol, nEnergies, IER, SRgType
       interface
@@ -168,7 +168,7 @@
           partial_likes(i,:) = 0.d0
           eff_areas(i,:) = 0.d0
         else !Otherwise, we might see some leptons, so iterate over CP eigenstates
-          eventnumshare = 0
+          eventnumshare(1) = 0
           do ptypeshare = 1, 2
             IER = 0
             call CUBATR(2,nulike_partials_handoff,SVertices,SRgType,
@@ -180,7 +180,7 @@
             call CUBATR()
             partial_likes(i,ptypeshare) = SValue
           enddo
-          eventnumshare = -1
+          eventnumshare(1) = -1
           do ptypeshare = 1, 2
             IER = 0
             call CUBATR(2,nulike_partials_handoff,SVertices,SRgType,
@@ -224,23 +224,24 @@
 
       !Step through the events and compute partial likelihoods for each one
       write(*,*) 'Computing partial likelihoods for ',nEvents,' events.'
-      do eventnumshare = 1, nEvents
+      do eventnum = 1, nEvents
+        eventnumshare(1) = eventnum
 
-        write(eventstring,fmt=evnmshrfmt(eventnumshare)) eventnumshare
+        write(eventstring,fmt=evnmshrfmt(eventnumshare(1))) eventnumshare(1)
         open(lun, file=partialfolder//'/partlike_event'//trim(eventstring)//'.dat', form='unformatted',
      &   action='WRITE', status='NEW', err=40, recl=nEnergies*2*8)
 
-        write(*,*) '  Computing partial likelihood for event ',eventnumshare
+        write(*,*) '  Computing partial likelihood for event ',eventnumshare(1)
 
         !Arrange the energy dispersion function for this event.
         do i = 1, nhist
           !If the measured value of the energy estimator is outside the range of this histogram, set the prob to zero.
-          if (events_ee(eventnumshare,analysis) .lt. hist_ee_flip(1,i) .or. 
-     &        events_ee(eventnumshare,analysis) .gt. hist_ee_flip(ncols(i),i) ) then
+          if (events_ee(eventnumshare(1),analysis) .lt. hist_ee_flip(1,i) .or. 
+     &        events_ee(eventnumshare(1),analysis) .gt. hist_ee_flip(ncols(i),i) ) then
             hist_single_ee_prob(i) = 0.d0
           else !If the measured value of the energy estimator is in the range of this histogram, set the prob by interpolating.
             call TSVAL1(ncols(i),hist_ee_flip(:,i),hist_prob_flip(:,i),hist_derivs_flip(:,i),
-     &       hist_sigma_flip(:,i),0,1,events_ee(eventnumshare,analysis),hist_single_ee_prob(i),IER)
+     &       hist_sigma_flip(:,i),0,1,events_ee(eventnumshare(1),analysis),hist_single_ee_prob(i),IER)
             if (IER .lt. 0) then
               write(*,*) 'TSVAL1 error from energy dispersion'
               write(*,*) 'in nulike_partials, code: ', IER, 'i=',i 
@@ -396,7 +397,7 @@
       external nulike_partintegrand
 
       if (associated(dsdxdy_ptr)) then 
-        Value(1) = nulike_partintegrand(X(1), X(2), dsdxdy_ptr, eventnumshare,
+        Value(1) = nulike_partintegrand(X(1), X(2), dsdxdy_ptr, eventnumshare(1),
      &   Eshare, ptypeshare, leptypeshare)
       else
         stop('Cannot call nulike_partials_handoff without setting dsdxdy_ptr')
