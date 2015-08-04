@@ -14,7 +14,7 @@
 #E [E-nu-lower-bound]  [E-nu-upper-bound]
 #A [Aeff(nu_mu)]   [Aeff(nu_mu_bar)]
 #err [syst.error]   [stat.error]
-MAR [angular res.]
+#MAR [angular res.]
 ###--Density--
 rho   920.00
 ###--Response--

@@ -32,7 +32,7 @@
       include 'nulike_internal.h'
 
       real*8 integral, logmw, upperLimit, theta_Snu, theta_Snubar, annrate
-      real*8 eps2012, eps2015, SAbsErr, SVertices(1,2)
+      real*8 eps2012, eps2015, SAbsErr, log10E_lower, log10E_upper, SVertices(1,2)
       integer like, IER, SRgType
       type(c_ptr) context
       parameter (eps2012 = 1.d-2, eps2015 = 3.d-2, SRgType = Simplex)
@@ -119,19 +119,24 @@
       !2015 likelihood, as per arXiv:150x.xxxxx
       case (2015)
 
-        eventnumshare(omp_get_thread_num()+1) = 0 ! Set event number to indicate total signal rate calculation (i.e. not an event).
-        IER = 0
-        SVertices(1,:) = (/precomp_log10E(start_index(analysis),analysis), 
-     &   min(precomp_log10E(nPrecompE(analysis),analysis),logmw)/)
-        call CUBATR(1,nulike_specangintegrand,SVertices,SRgType,
-     &   integral,SAbsErr,IER,MaxPts=5000000,EpsRel=eps2015,Job=2,
-     &   EpsAbs=1.d-200,Key=2)
-        if (IER .ne. 0) then
-          write(*,*) 'Error raised by CUBATR in nulike_signal: ', IER 
-          stop
+        log10E_lower = precomp_log10E(start_index(analysis),analysis)
+        log10E_upper = min(precomp_log10E(nPrecompE(analysis),analysis),logmw)
+        if (log10E_lower .ge. log10E_upper) then
+          nulike_signal = 0.d0
+        else 
+          eventnumshare(omp_get_thread_num()+1) = 0 ! Set event number to indicate total signal rate calculation (i.e. not an event).
+          IER = 0
+          SVertices(1,:) = (/log10E_lower, log10E_upper/) 
+          call CUBATR(1,nulike_specangintegrand,SVertices,SRgType,
+     &     integral,SAbsErr,IER,MaxPts=5000000,EpsRel=eps2015,Job=2,
+     &     EpsAbs=1.d-200,Key=2)
+          if (IER .ne. 0) then
+            write(*,*) 'Error raised by CUBATR in nulike_signal: ', IER 
+            stop
+          endif
+          call CUBATR()
+          nulike_signal = integral * dlog(10.d0) * exp_time(analysis) * annrate
         endif
-        call CUBATR()
-        nulike_signal = integral * dlog(10.d0) * exp_time(analysis) * annrate
 
       case default
         write(*,*) "Unrecognised likelihood version in nulike_signal."

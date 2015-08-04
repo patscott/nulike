@@ -70,8 +70,8 @@
         bias_logEcentres(i,analysis) = 0.5d0*(bias_logE(1,i,analysis)+bias_logE(2,i,analysis))
         
         !Call interpolator to get unbiased, non angularly-corrected effective areas for this energy
+        temp1(1) = bias_logEcentres(i,analysis)
         do ptype = 1, 2
-          temp1(1) = bias_logEcentres(i,analysis)
           call TSVAL1(nPrecompE(analysis)-start_index_noL(analysis)+1,
      &     precomp_log10E(start_index_noL(analysis):,analysis),
      &     precompEAnoL_weights(start_index_noL(analysis):,ptype,analysis),
@@ -82,8 +82,8 @@
         enddo
 
         !Rescale the biased effective area by the unbiased effective area to get the bias factor
-        bias_nu(i,analysis) = merge(bias_nu(i,analysis) / EA_unbiased(1), 0.d0, EA_unbiased(1) .ge. 0.d0)
-        bias_nubar(i,analysis) = merge(bias_nubar(i,analysis) / EA_unbiased(2), 0.d0, EA_unbiased(2) .ge. 0.d0)
+        bias_nu(i,analysis) = merge(10.d0**(log10(bias_nu(i,analysis)) - EA_unbiased(1)), 0.d0, EA_unbiased(1) .gt. logZero)
+        bias_nubar(i,analysis) = merge(10.d0**(log10(bias_nubar(i,analysis)) - EA_unbiased(2)), 0.d0, EA_unbiased(2) .gt. logZero)
 
       enddo
 

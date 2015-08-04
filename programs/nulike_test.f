@@ -113,7 +113,7 @@
         experiment = 'IC-79 SL'
         eventf  = trim(iclike2015)//'IC79_Events_SL_llhInput_60Deg.txt'
         BGf     = trim(iclike2015)//'IC79_Background_distributions_SL.txt'
-        efareaf = 'no-bias'!trim(iclike2015)//'IC79_Effective_Area_SL.txt'
+        efareaf = trim(iclike2015)//'IC79_Effective_Area_SL.txt'
         partiald= trim(iclike2015)//'IC79_Partial_Likelihoods_SL'
   
         ! Initialise the IceCube data and calculations for the IC79 SL sample. 
@@ -124,7 +124,7 @@
         experiment = 'IC-79 WL'
         eventf  = trim(iclike2015)//'IC79_Events_WL_llhInput_60Deg.txt'
         BGf     = trim(iclike2015)//'IC79_Background_distributions_WL.txt'
-        efareaf = 'no-bias'!trim(iclike2015)//'IC79_Effective_Area_WL.txt'
+        efareaf = trim(iclike2015)//'IC79_Effective_Area_WL.txt'
         partiald= trim(iclike2015)//'IC79_Partial_Likelihoods_WL'
   
         ! Initialise the IceCube data and calculations for the IC79 WL sample. 
@@ -135,7 +135,7 @@
         experiment = 'IC-79 WH'
         eventf  = trim(iclike2015)//'IC79_Events_WH_llhInput_60Deg.txt'
         BGf     = trim(iclike2015)//'IC79_Background_distributions_WH.txt'
-        efareaf = 'no-bias'!trim(iclike2015)//'IC79_Effective_Area_WH.txt'
+        efareaf = trim(iclike2015)//'IC79_Effective_Area_WH.txt'
         partiald= trim(iclike2015)//'IC79_Partial_Likelihoods_WH'
   
         ! Initialise the IceCube data and calculations for the IC79 SL sample. 

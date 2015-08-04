@@ -8,6 +8,8 @@
 
       program nulike_test_wimp
 
+      use iso_c_binding, only: c_bool
+
       implicit none
       !Nulike include
       include 'nulike.h'
@@ -26,18 +28,18 @@
       real*8 theoryError, diff_CL, zeroin
       logical uselogNorm
       logical BGLikePrecompute
+      logical(c_bool) threadsafe
       character (len=nulike_clen) iclike2015
       character (len=nulike_clen) experiment(3), eventf
       character (len=nulike_clen) BGf, partiald, efareaf
       double precision :: ref_CL = 90.d0                   
       external diff_CL
-      common/wimpcom/ref_CL, experiment
+      common/wimpcom/ref_CL, experiment, threadsafe
       ! Book-keeping
       integer i,j
       logical :: first = .true.
-      real*8, parameter :: dummyval = 0, mwimpmin = 10, mwimpmax = 5000  
-      real*8, parameter :: chosen_masses(21) = (/6.d0, 10.d0, 25.d0, 50.d0, 80.3d0, 91.2d0, 1.d2, 1.5d2, 1.76d2, 2.d2, 2.5d2, 3.5d2, 5.d2, 7.5d2, 1.d3, 1.5d3, 2.d3, 3.d3, 5.d3, 7.5d3, 1.d4/)
-      !real*8, parameter :: chosen_masses(2) = (/7.5d3, 1.d4/)
+      real*8, parameter :: dummyval = 0, mwimpmin = 10, mwimpmax = 10000  
+      real*8, parameter :: chosen_masses(20) = (/10.d0, 25.d0, 50.d0, 80.3d0, 91.2d0, 1.d2, 1.5d2, 1.76d2, 2.d2, 2.5d2, 3.5d2, 5.d2, 7.5d2, 1.d3, 1.5d3, 2.d3, 3.d3, 5.d3, 7.5d3, 1.d4/)
       integer, parameter :: mwimp_pts = 100
       logical, parameter :: talky = .false., chosen_ones_only = .true.
       
@@ -47,11 +49,12 @@
       theoryError = 0.05d0
       uselogNorm = .true.
       BGLikePrecompute = .true.
+      threadsafe = .true.
 
       experiment(1) = 'IC-79 SL'
       eventf  = trim(iclike2015)//'IC79_Events_SL_llhInput_60Deg.txt'
       BGf     = trim(iclike2015)//'IC79_Background_distributions_SL.txt'
-      efareaf = 'no-bias'!trim(iclike2015)//'IC79_Effective_Area_SL.txt'
+      efareaf = trim(iclike2015)//'IC79_Effective_Area_SL.txt'
       partiald= trim(iclike2015)//'IC79_Partial_Likelihoods_SL'
       call nulike_init(experiment(1), eventf, BGf, efareaf, partiald, 
      & dummyval, theoryError, uselogNorm, BGLikePrecompute)
@@ -59,7 +62,7 @@
       experiment(2) = 'IC-79 WL'
       eventf  = trim(iclike2015)//'IC79_Events_WL_llhInput_60Deg.txt'
       BGf     = trim(iclike2015)//'IC79_Background_distributions_WL.txt'
-      efareaf = 'no-bias'!trim(iclike2015)//'IC79_Effective_Area_WL.txt'
+      efareaf = trim(iclike2015)//'IC79_Effective_Area_WL.txt'
       partiald= trim(iclike2015)//'IC79_Partial_Likelihoods_WL'
       call nulike_init(experiment(2), eventf, BGf, efareaf, partiald, 
      & dummyval, theoryError, uselogNorm, BGLikePrecompute)
@@ -67,7 +70,7 @@
       experiment(3) = 'IC-79 WH'
       eventf  = trim(iclike2015)//'IC79_Events_WH_llhInput_60Deg.txt'
       BGf     = trim(iclike2015)//'IC79_Background_distributions_WH.txt'
-      efareaf = 'no-bias'!trim(iclike2015)//'IC79_Effective_Area_WH.txt'
+      efareaf = trim(iclike2015)//'IC79_Effective_Area_WH.txt'
       partiald= trim(iclike2015)//'IC79_Partial_Likelihoods_WH'
       call nulike_init(experiment(3), eventf, BGf, efareaf, partiald, 
      & dummyval, theoryError, uselogNorm, BGLikePrecompute)
@@ -221,10 +224,11 @@
       integer totobs, likechoice, i
       logical(c_bool) pvalFromRef
       logical(c_bool) use_fast_likelihood
+      logical(c_bool) threadsafe
       character (len=nulike_clen) experiment(3)
       type(c_ptr) ptr
       external nuyield_test
-      common/wimpcom/ref_CL, experiment
+      common/wimpcom/ref_CL, experiment, threadsafe
 
       ! Set the cross-sections
       wasigsip = 0.d0
@@ -261,7 +265,7 @@
         !Use nulike to get signal and background predictions, number of observed events, likelihood and p-value
         call nulike_bounds(experiment(i), wamwimp, annrate, nuyield_test, sigpred, bgpred, 
      &   totobs, lnLike(i), pval(i), likechoice, use_fast_likelihood, pvalFromRef,
-     &   refLike(i), dof, ptr)
+     &   refLike(i), dof, ptr, threadsafe)
       enddo
 
       diff_CL = ref_CL - 1.d2*(1.d0-DGAMIC(dof*0.5d0,max(0.d0, sum(refLike-lnLike)))/DGAMMA(dof*0.5d0))

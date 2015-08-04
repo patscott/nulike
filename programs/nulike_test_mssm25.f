@@ -56,11 +56,12 @@
       theoryError = 0.05d0
       uselogNorm = .true.
       BGLikePrecompute = .true.
+      threadsafe = .true.
 
       experiment(1) = 'IC-79 SL'
       eventf  = trim(iclike2015)//'IC79_Events_SL_llhInput_60Deg.txt'
       BGf     = trim(iclike2015)//'IC79_Background_distributions_SL.txt'
-      efareaf = 'no-bias'!trim(iclike2015)//'IC79_Effective_Area_SL.txt'
+      efareaf = trim(iclike2015)//'IC79_Effective_Area_SL.txt'
       partiald= trim(iclike2015)//'IC79_Partial_Likelihoods_SL'
       call nulike_init(experiment(1), eventf, BGf, efareaf, partiald, 
      & dummyval, theoryError, uselogNorm, BGLikePrecompute)
@@ -68,7 +69,7 @@
       experiment(2) = 'IC-79 WL'
       eventf  = trim(iclike2015)//'IC79_Events_WL_llhInput_60Deg.txt'
       BGf     = trim(iclike2015)//'IC79_Background_distributions_WL.txt'
-      efareaf = 'no-bias'!trim(iclike2015)//'IC79_Effective_Area_WL.txt'
+      efareaf = trim(iclike2015)//'IC79_Effective_Area_WL.txt'
       partiald= trim(iclike2015)//'IC79_Partial_Likelihoods_WL'
       call nulike_init(experiment(2), eventf, BGf, efareaf, partiald, 
      & dummyval, theoryError, uselogNorm, BGLikePrecompute)
@@ -76,7 +77,7 @@
       experiment(3) = 'IC-79 WH'
       eventf  = trim(iclike2015)//'IC79_Events_WH_llhInput_60Deg.txt'
       BGf     = trim(iclike2015)//'IC79_Background_distributions_WH.txt'
-      efareaf = 'no-bias'!trim(iclike2015)//'IC79_Effective_Area_WH.txt'
+      efareaf = trim(iclike2015)//'IC79_Effective_Area_WH.txt'
       partiald= trim(iclike2015)//'IC79_Partial_Likelihoods_WH'
       call nulike_init(experiment(3), eventf, BGf, efareaf, partiald, 
      & dummyval, theoryError, uselogNorm, BGLikePrecompute)
@@ -204,7 +205,7 @@
           !Use nulike to get signal and background predictions, number of observed events, likelihood and p-value
           call nulike_bounds(experiment(i), wamwimp, annrate, nuyield_test, sigpred(i), bgpred(i), 
      &     totobs(i), lnLike(i), pval(i), likechoice, use_fast_likelihood, pvalFromRef,
-     &     refLike(i), dof, ptr)
+     &     refLike(i), dof, ptr, threadsafe)
 
           if (talky) then
             write(*,*) ' Individual results from ',trim(experiment(i))
