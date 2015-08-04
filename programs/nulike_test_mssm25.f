@@ -35,6 +35,7 @@
       logical uselogNorm
       logical(c_bool) pvalFromRef
       logical(c_bool) use_fast_likelihood
+      logical(c_bool) threadsafe
       logical BGLikePrecompute
       type(c_ptr) ptr
       character (len=nulike_clen) iclike2015
