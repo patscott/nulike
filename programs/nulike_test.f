@@ -61,9 +61,6 @@
 
       !!!!!!!!!!! Common settings for all likelihoods !!!!!!!!!
 
-        ! Set the estimated relative theoretical error in neutrino flux calculation 
-        theoryError = 0.05d0
-
         ! Choose a log-normal or a Gaussian distribution for the systematic error on
         ! the number of neutrino events
         uselogNorm = .true.
@@ -85,7 +82,7 @@
       
         ! Initialise the IceCube data and calculations for IC22. 
         call nulike_init(experiment, eventf, BGf, efareaf, edispf, phi_cut,
-     &   theoryError, uselogNorm, BGLikePrecompute)
+     &   uselogNorm, BGLikePrecompute)
 
         ! Here we use the IC-86 simulation that ships with nulike
         experiment = 'IC-86 (predicted)'
@@ -99,7 +96,7 @@
 
         ! Initialise the IceCube data and calculations for the IC86 prediction. 
         call nulike_init(experiment, eventf, BGf, efareaf, edispf, 
-     &   phi_cut, theoryError, uselogNorm, BGLikePrecompute)
+     &   phi_cut, uselogNorm, BGLikePrecompute)
 
       !!!!!!!!!!!!!!!! 2015 likelihoods !!!!!!!!!!!!!!!!!!!
 
@@ -118,7 +115,7 @@
   
         ! Initialise the IceCube data and calculations for the IC79 SL sample. 
         call nulike_init(experiment, eventf, BGf, efareaf, partiald, 
-     &   phi_cut, theoryError, uselogNorm, BGLikePrecompute)
+     &   phi_cut, uselogNorm, BGLikePrecompute)
   
         ! Here we use the IC-79 WL data that ship with nulike
         experiment = 'IC-79 WL'
@@ -129,7 +126,7 @@
   
         ! Initialise the IceCube data and calculations for the IC79 WL sample. 
         call nulike_init(experiment, eventf, BGf, efareaf, partiald, 
-     &   phi_cut, theoryError, uselogNorm, BGLikePrecompute)
+     &   phi_cut, uselogNorm, BGLikePrecompute)
   
         ! Here we use the IC-79 WH data that ship with nulike
         experiment = 'IC-79 WH'
@@ -140,7 +137,7 @@
   
         ! Initialise the IceCube data and calculations for the IC79 SL sample. 
         call nulike_init(experiment, eventf, BGf, efareaf, partiald,
-     &   phi_cut, theoryError, uselogNorm, BGLikePrecompute)
+     &   phi_cut, uselogNorm, BGLikePrecompute)
 
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       ! 2. DarkSUSY initialisation and model read-in
@@ -221,6 +218,9 @@
         !  See the header of src/nulike_bounds.f for
         !  more detailed explanations of the following options.
 
+        ! Set the estimated relative theoretical error in neutrino flux calculation 
+        theoryError = 5d-2 * merge(1.d0, dsqrt(wamwimp*1.d-2), wamwimp .le. 100.d0)
+
         ! Choose what to include in the actual likelihood calculations.  Note that this
         ! only applies to the likelihood calculation; the p value is always calculated 
         ! considering only the number count, not the spectral or angular information.
@@ -256,7 +256,7 @@
 
         ! Finally use nulike to get signal and background predictions, number of observed events, likelihood and p-value
         call nulike_bounds(experiment, wamwimp, annrate, nuyield_test, sigpred, bgpred, 
-     &   totobs, lnLike, pval, likechoice, use_fast_likelihood, pvalFromRef,
+     &   totobs, lnLike, pval, likechoice, theoryError, use_fast_likelihood, pvalFromRef,
      &   refLike, dof, ptr, threadsafe)
      
         write(*,*) '  Predicted signal events:    ', sigpred

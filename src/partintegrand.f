@@ -53,19 +53,21 @@
         return
       endif
 
-      !Energy dispersion
-      if (eventnum .gt. 0) then
+      twoerrlep2 = 0.d0
+      arg2 = 0.d0
+      if (eventnum .eq. 0) then
+        !Relevant quantities for the angular loss factor
+        errlep = nulike_angres(log10Elep)                                      ! degrees
+        twoerrlep2 = 2.d0*errlep*errlep                                        ! degrees^2
+        arg2 = phi_max*phi_max/twoerrlep2                                      ! dimensionless
+      elseif (eventnum .gt. 0) then
+        !Energy dispersion
         edisp = nulike_edisp(log10Elep, events_ee(eventnum, analysis), 2015)   ! [ee]^-1
         if (edisp .le. epsilon(edisp)) then                                    ! Abort if energy dispersion is
           nulike_partintegrand = 0.d0                                          ! zero.     
           return
         endif
       endif
-
-      !Relevant quantities for the angular loss factor
-      errlep = nulike_angres(log10Elep)                                        ! degrees
-      twoerrlep2 = 2.d0*errlep*errlep                                          ! degrees^2
-      arg2 = phi_max*phi_max/twoerrlep2                                        ! dimensionless
 
       !Cross-sections and densities 
       ptype_ns = ptype + 2*(leptype-1)                                         ! Convert to nusigma internal neutrino number.

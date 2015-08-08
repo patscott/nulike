@@ -35,9 +35,6 @@
 ***                                 reconstructed directions within this 
 ***                                 angle of the solar centre. [degrees]
 ***                      2015 type: ignored  
-***   theoryError       theoretical error to incorporate into likelihood
-***                      and p-value calculations (given as a fractional
-***                      relative error).
 ***   uselogNorm        if false, assume a Gaussian distribution for the
 ***                      PDF of systematic errors (from the effective area/vol
 ***                      and theory errors).  If true, use a log-normal 
@@ -54,8 +51,7 @@
 *****************************************************************************
 
       subroutine nulike_init(analysis_name, eventfile, BGfile, 
-     & effareafile, file4, phi_cut, theoryError, uselogNorm, 
-     & BGLikePrecompute)
+     & effareafile, file4, phi_cut, uselogNorm, BGLikePrecompute)
 
       use iso_c_binding, only: c_ptr
 
@@ -65,7 +61,7 @@
       character (len=nulike_clen) analysis_name, eventfile, BGfile, effareafile, file4
       integer nnchan(max_nHistograms+2), nAnalyses
       integer BGfirst, BGsecond, nulike_amap, nbins, nhist, nEvents_available
-      real*8 phi_cut, theoryError, cosphimax, dummy
+      real*8 phi_cut, cosphimax, dummy
       logical BGLikePrecompute, uselogNorm
       external nulike_amap
       data nAnalyses /0/
@@ -95,9 +91,6 @@
       !systematic errors on the effective area/volume or a log-normal distribution
       sysErrDist_logNorm(analysis) = uselogNorm
  
-      !Set percentage theoretical error
-      theoryErr(analysis) = theoryError
-    
       !Open event file, determine the total number of events and likelihood version
       call nulike_preparse_eventfile(eventfile, nEvents_available, exp_time(analysis), likelihood_version(analysis))
 

@@ -18,13 +18,19 @@
 ***                                (m^-2 GeV^-1 annihilation^-1)
 ***
 ***        liketype      Sets combination of data to use in likelihood
-***                         calculations
+***                      calculations.  Note that liketype = 2 and 3 only
+***                      have any meaning when using the 2012 likelihood.
 ***                        1 => Number of events only
 ***                        2 => Number of events and event arrival angles
 ***                        3 => Number of events and energy estimator (nchan 
 ***                             = number of lit DOMs)
 ***                        4 => Number of events, event arrival angles and 
 ***                             energy estimator
+***
+***        theoryError   theoretical error to incorporate into likelihood
+***                      and p-value calculations (given as a fractional
+***                      relative error).
+***
 ***        fastlike      In the case of liketype=4 with the 2015 likelihood, 
 ***                      do a faster, less accurate calculation of the spectral-angular
 ***                      part of the likelihood.  
@@ -78,8 +84,8 @@
 
       subroutine nulike_bounds(analysis_name_in, mwimp, annrate, 
      & nuyield, Nsignal_predicted, NBG_expected, Ntotal_observed, 
-     & lnlike, pvalue, liketype, fastlike, pvalFromRef, referenceLike,
-     & dof, context, threadsafe) bind(c)
+     & lnlike, pvalue, liketype, theoryError, fastlike, pvalFromRef,
+     & referenceLike, dof, context, threadsafe) bind(c)
 
       use iso_c_binding, only: c_ptr, c_char, c_double, c_int, c_bool
       use omp_lib
@@ -90,7 +96,7 @@
       integer(c_int), intent(inout) :: Ntotal_observed
       integer(c_int), intent(in) :: liketype
       real(c_double), intent(inout) :: Nsignal_predicted, NBG_expected, lnlike, pvalue
-      real(c_double), intent(in) :: referenceLike, dof, mwimp, annrate
+      real(c_double), intent(in) :: referenceLike, dof, mwimp, annrate, theoryError
       logical(c_bool), intent(in) :: fastlike, pvalFromRef, threadsafe
       character(kind=c_char), dimension(nulike_clen), intent(inout) :: analysis_name_in
       type(c_ptr), intent(inout) :: context
@@ -194,7 +200,7 @@
 
       !Calculate the number likelihood
       nLikelihood = nulike_nlike(nEvents(analysis),
-     & theta_tot,theta_S,EAErr(analysis),theoryErr(analysis))
+     & theta_tot,theta_S,EAErr(analysis),theoryError)
 
       if (doProfiling) then
         call system_clock(counted1,countrate)
@@ -299,7 +305,7 @@
 
         !p-value from Poissonian statistics
         if (.not. pvalBGPoisComputed(analysis)) call nulike_bglikeprecomp
-        pvalue = nulike_pval(nEvents(analysis), theta_tot, theta_S)
+        pvalue = nulike_pval(nEvents(analysis), theta_tot, theta_S, theoryError)
         pvalue = pvalue / BGpvalPoissonian(analysis)
         
       endif

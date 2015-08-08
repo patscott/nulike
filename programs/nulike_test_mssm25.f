@@ -54,7 +54,6 @@
 
       ! See the header of src/init.f for detailed explanations of the following options.
       iclike2015 = 'data/IceCube/likelihood2015/'
-      theoryError = 0.05d0
       uselogNorm = .true.
       BGLikePrecompute = .true.
       threadsafe = .true.
@@ -65,7 +64,7 @@
       efareaf = trim(iclike2015)//'IC79_Effective_Area_SL.txt'
       partiald= trim(iclike2015)//'IC79_Partial_Likelihoods_SL'
       call nulike_init(experiment(1), eventf, BGf, efareaf, partiald, 
-     & dummyval, theoryError, uselogNorm, BGLikePrecompute)
+     & dummyval, uselogNorm, BGLikePrecompute)
 
       experiment(2) = 'IC-79 WL'
       eventf  = trim(iclike2015)//'IC79_Events_WL_llhInput_60Deg.txt'
@@ -73,7 +72,7 @@
       efareaf = trim(iclike2015)//'IC79_Effective_Area_WL.txt'
       partiald= trim(iclike2015)//'IC79_Partial_Likelihoods_WL'
       call nulike_init(experiment(2), eventf, BGf, efareaf, partiald, 
-     & dummyval, theoryError, uselogNorm, BGLikePrecompute)
+     & dummyval, uselogNorm, BGLikePrecompute)
 
       experiment(3) = 'IC-79 WH'
       eventf  = trim(iclike2015)//'IC79_Events_WH_llhInput_60Deg.txt'
@@ -81,7 +80,7 @@
       efareaf = trim(iclike2015)//'IC79_Effective_Area_WH.txt'
       partiald= trim(iclike2015)//'IC79_Partial_Likelihoods_WH'
       call nulike_init(experiment(3), eventf, BGf, efareaf, partiald, 
-     & dummyval, theoryError, uselogNorm, BGLikePrecompute)
+     & dummyval, uselogNorm, BGLikePrecompute)
 
       ! Initialise DarkSUSY
       if (.not. talky) then
@@ -153,6 +152,10 @@
         if (talky) write(*,*) '  Neutralino mass = ', wamwimp
         if (talky) write(*,*) '  Annihilation cross-section = ',wasv,' cm^-3 s^-1'
 
+        ! Set the estimated relative theoretical error in neutrino flux calculation 
+        theoryError = 5d-2 * merge(1.d0, dsqrt(wamwimp*1d-2), wamwimp .le. 100.d0)
+        if (talky) write(*,*) '  Theory error = ',theoryError,'%'
+
         ! Calculate relic density.  See DarkSUSY's dstest for details.
         if (talky) write(*,*) 'Calculating omega h^2 with coannihilations...'
         oh2=dsrdomega(1,1,xf,ierr,iwar,nfc)
@@ -205,7 +208,7 @@
         do i = 1, 3
           !Use nulike to get signal and background predictions, number of observed events, likelihood and p-value
           call nulike_bounds(experiment(i), wamwimp, annrate, nuyield_test, sigpred(i), bgpred(i), 
-     &     totobs(i), lnLike(i), pval(i), likechoice, use_fast_likelihood, pvalFromRef,
+     &     totobs(i), lnLike(i), pval(i), likechoice, theoryError, use_fast_likelihood, pvalFromRef,
      &     refLike(i), dof, ptr, threadsafe)
 
           if (talky) then
