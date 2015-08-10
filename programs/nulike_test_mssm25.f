@@ -1,7 +1,8 @@
 ! This program runs the nulike routines for the MSSM-25 benchmarks
 ! discussed in the nulike paper.  Note that it must be used with 
 ! DarkSUSY 5.1.3 or later, as earlier versions contain a bug
-! in dsgive_model25.  Longer explanations are provided in
+! in dsgive_model25, and have poor interpolation routines in neutralino
+! mass and neutrino flux.  Longer explanations are provided in
 ! nulike_test.f.
 !
 ! Author: Pat Scott p.scott@imperial.ac.uk

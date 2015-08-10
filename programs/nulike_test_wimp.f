@@ -38,13 +38,11 @@
       ! Book-keeping
       integer i,j
       logical :: first = .true.
-      real*8, parameter :: dummyval = 0, mwimpmin = 10, mwimpmax = 1000  
+      real*8, parameter :: dummyval = 0, mwimpmin = 10.d0, mwimpmax = 1000  
       !These are the WIMP masses for which DarkSUSY contains WimpSim results; it obtains spectra for other masses by interpolating between these.
-      !real*8, parameter :: chosen_masses(20) = (/10.d0, 25.d0, 50.d0, 80.3d0, 91.2d0, 1.d2, 1.5d2, 1.76d2, 2.d2, 2.5d2, 3.5d2, 5.d2, 7.5d2, 1.d3, 1.5d3, 2.d3, 3.d3, 5.d3, 7.5d3, 1.d4/)
-      real*8, parameter :: chosen_masses(6) = (/1.5d3, 2.d3, 3.d3, 5.d3, 7.5d3, 1.d4/)
+      real*8, parameter :: chosen_masses(20) = (/10.d0, 25.d0, 50.d0, 80.3d0, 91.2d0, 1.d2, 1.5d2, 1.76d2, 2.d2, 2.5d2, 3.5d2, 5.d2, 7.5d2, 1.d3, 1.5d3, 2.d3, 3.d3, 5.d3, 7.5d3, 1.d4/)
       integer, parameter :: mwimp_pts = 100
-      logical, parameter :: talky = .false., chosen_ones_only = .false.
-      
+      logical, parameter :: talky = .false., chosen_ones_only = .true.
 
       ! See the header of src/init.f for detailed explanations of the following options.
       iclike2015 = 'data/IceCube/likelihood2015/'
