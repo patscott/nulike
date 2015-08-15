@@ -120,7 +120,7 @@
       !Open neutrino effective volume file and determine number of bins
       call nulike_preparse_effarea_or_volume(effvolfile, nbins_effvol, density, 2015)
       !Read in the actual effective volume and PSF data.
-      call nulike_sensinit(effvolfile,nbins_effvol)
+      call nulike_sensinit(effvolfile,nbins_effvol,2015)
 
       !Open file of energy estimators, determine how many histograms and how many bins in each histogram.
       call nulike_preparse_energy_dispersion(edispfile, nhist, ncols, ee_min, ee_max, 2015)

@@ -115,7 +115,7 @@
         !Open neutrino effective area file and determine number of bins
         call nulike_preparse_effarea_or_volume(effareafile, nbins, dummy, 2012)
         !Read in the actual effective area and PSF data.
-        call nulike_sensinit(effareafile, nbins)
+        call nulike_sensinit(effareafile, nbins, 2012)
 
         !Open file of nchan response histograms (energy dispersions), determine how many histograms
         !and how many bins in each histogram.

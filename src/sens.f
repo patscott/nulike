@@ -3,8 +3,9 @@
 *** loaded experiment/analysis to either neutrinos or anti-neutrinos.
 ***
 *** Input:  log10E  log(neutrino energy/GeV)
-***         ptype   = 1 neutrinos
-***                 = 2 anti-neutrinos
+***         ptype   = 1 neutrino efefctive area
+***                 = 2 anti-neutrinos effective area
+***                 = 3 CP-invariant effective volume
 *** Output: effective area (m^2) or volume (km^3)
 ***       
 *** Author: Pat Scott (p.scott@imperial.ac.uk)
@@ -31,10 +32,10 @@
 
       log10E_a(1) = log10E
 
-      !Choose relevant species
-      if (ptype .eq. 1) then
+      !Choose relevant species/quantity
+      if (ptype .eq. 1 .or. ptype .eq. 3) then
 
-        !neutrinos
+        !neutrino effective area or CP-invariant effective volume 
         call TSVAL1(nSensBins(analysis),sens_logEcentres(:,analysis),
      &   sens_nu(:,analysis),sens_nuderivs(:,analysis),
      &   sens_nusigma(:,analysis),0,1,log10E_a,nulike_sens_a,IER)

@@ -47,7 +47,7 @@
       log10Elep = dlog10(Elep)                                       
 
       !Effective volume
-      effvol = nulike_sens(log10Elep, ptype)                                   ! km^3
+      effvol = nulike_sens(log10Elep, 3)                                       ! km^3
       if (effvol .le. 0.d0) then                                               ! Abort if effective volume is
         nulike_partintegrand = 0.d0                                            ! zero.      
         return
