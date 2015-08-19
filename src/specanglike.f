@@ -61,7 +61,7 @@
       if (fast_likelihood) then 
         eps =0.3d0
       else
-        eps =0.03d0
+        eps =1d-2
       endif
 
       ! Don't bother with energies above or below which there is no estimate of the effective area
