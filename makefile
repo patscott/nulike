@@ -3,38 +3,44 @@
 # Author: Pat Scott
 # p.scott@imperial.ac.uk
 #
-# This is a pretty simple program, so just change the
-# makefile by hand to suit your system, or call
-# it from another makefile, overriding the variables
-# FF, FOPT and MODULE.
+# This is a pretty simple program, so just change
+# this makefile by hand to suit your system, or 
+# override the variables FF, FOPT and MODULE
+# from the command line.
 #
-# Note that the test program requires DarkSUSY,
+# Note that the test programs require DarkSUSY,
 # and the preparatory program requires nusigma.
 # Just compiling the library requires neither.
+# As with the compiler options, you can modify
+# the DSLIB* and/or NUSIG* variables below 
+# to suit your installation, either by hand here
+# or via the commandline when calling this makefile.
 
 # Define fortran compiler and options: intel
-FF=ifort
-FOPT=-O2 -extend_source # -warn all -check all #(contributed numerical routines cause warnings)
-MODULE=module
+#FF=ifort
+#FOPT=-O2 -extend_source # -warn all -check all #(contributed numerical routines cause warnings)
+#MODULE=module
 # Define fortran compiler and options: gnu
-#FF=gfortran
-#FOPT=-O2 -ffixed-line-length-none  -Wall -fcheck=all #(contributed numerical routines cause warnings)
-#MODULE=J
+FF=gfortran
+FOPT=-O2 -ffixed-line-length-none # -Wall -fcheck=all #(contributed numerical routines cause warnings)
+MODULE=J
 
 # DarkSUSY location, library name and include path
 DSLIBDIR = /home/pat/darksusy-5.1.2/lib
 DSLIBINC = /home/pat/darksusy-5.1.2/include
 DSLIBNAME = darksusy
 
-# nusigma location and library name
+# nusigma location, library name and include path
 NUSIGDIR = ../nusigma-1.17-pyr/lib
 NUSIGINC = ../nusigma-1.17-pyr/inc
 NUSIGNAME = nusigma
 
 # Define library-making options
-RANLIB = ranlib
+RANLIB = ranlib 
 AR = ar
 ARFLAGS = rvs
+
+##### Users should not need to modify anything below this line. #####
 
 # Directories
 INC=include
@@ -118,7 +124,7 @@ nulike_test_wimp : libnulike.a $(PROGS)/nulike_test_wimp.f
 	$(FF) $(FFLAGS) -I$(DSLIBINC) -o $@ $(PROGS)/nulike_test_wimp.f -L$(DSLIBDIR) -l$(DSLIBNAME) -lHB -lFH -L$(LIB) -lnulike
 
 clean : 
-	rm -f $(BUILD)/* tspack.f Key.dat nulike_test nulike_prep
+	rm -f $(BUILD)/* tspack.f Key.dat nulike_prep nulike_test nulike_test_wimp nulike_test_mssm25 
 
 distclean : clean
 	rm -f $(LIB)/libnulike.a $(LIB)/libnulike.so
