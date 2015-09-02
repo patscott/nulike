@@ -22,7 +22,7 @@
 #MODULE=module
 # Define fortran compiler and options: gnu
 FF=gfortran
-FOPT=-O2 -ffixed-line-length-none # -Wall -fcheck=all #(contributed numerical routines cause warnings)
+FOPT=-O2 -ffixed-line-length-none -Wall -fcheck=all #(contributed numerical routines cause warnings)
 MODULE=J
 
 # DarkSUSY location, library name and include path
@@ -39,6 +39,7 @@ NUSIGNAME = nusigma
 RANLIB = ranlib 
 AR = ar
 ARFLAGS = rvs
+SHARFLAGS = -shared -fopenmp
 
 ##### Users should not need to modify anything below this line. #####
 
@@ -109,7 +110,7 @@ libnulike.a : $(CUBPACK_OBJ) $(OBJ)
 	$(AR) $(ARFLAGS) $(LIB)/$@ $(OBJ) $(CUBPACK_OBJ)
 
 libnulike.so : $(CUBPACK_OBJ) $(OBJ)
-	$(FC) -shared -o $(LIB)/$@ $(OBJ) $(CUBPACK_OBJ)
+	$(FC) $(SHARFLAGS) -o $(LIB)/$@ $(OBJ) $(CUBPACK_OBJ)
 
 nulike_prep : libnulike.a $(PROGS)/nulike_prep.f
 	$(FC) $(FFLAGS) -I$(NUSIGINC) -o $@ $(PROGS)/nulike_prep.f -L$(NUSIGDIR) -l$(NUSIGNAME) -L$(LIB) -lnulike -lgfortran
