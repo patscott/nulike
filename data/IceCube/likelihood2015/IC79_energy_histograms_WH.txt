@@ -1,5 +1,5 @@
 #This file contains the following instrument response data for IceCube-79 WH data sample:
-# 1. Histograms of Nchan response distributions for neutrino energy 
+# 1. Histograms of Nchan response distributions for muon energy 
 #    intervals of log10(E) = 0.2;
 #    Nchan values are corrected for the higher photocathode density within DeepCore 
 #
