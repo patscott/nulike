@@ -4,7 +4,7 @@
 *** are to determine the amount of data in each file, and whether nulike
 *** has been correctly configured to store that much data.
 ***
-*** input: 
+*** input:
 ***   analysis_name     a name by which to refer to this particular analysis.
 ***   eventfile         path to the file containing IceCube event data
 ***                      and total exposure time.
@@ -21,36 +21,36 @@
 ***                                 be ignored.
 ***   file4             If the eventfile indicates that the likelihood is
 ***                      2012 type: path to the file containing distributions
-***                                 of the number of DOMs in the IceCube   
-***                                 detector triggered by neutrinos of 
+***                                 of the number of DOMs in the IceCube
+***                                 detector triggered by neutrinos of
 ***                                 different energies.
 ***                      2015 type: path to the folder containing the partial
 ***                                 angular-spectral likelihoods, the
 ***                                 unbiased effective area, the cut angle
-***                                 and all other parameters that they have 
-***                                 been computed with. 
+***                                 and all other parameters that they have
+***                                 been computed with.
 ***   phi_cut           If the eventfile indicates that the likelihood is
-***                      2012 type: cutoff angle; likelihoods and p-values 
-***                                 will be based only on events with  
-***                                 reconstructed directions within this 
+***                      2012 type: cutoff angle; likelihoods and p-values
+***                                 will be based only on events with
+***                                 reconstructed directions within this
 ***                                 angle of the solar centre. [degrees]
-***                      2015 type: ignored  
+***                      2015 type: ignored
 ***   uselogNorm        if false, assume a Gaussian distribution for the
 ***                      PDF of systematic errors (from the effective area/vol
-***                      and theory errors).  If true, use a log-normal 
+***                      and theory errors).  If true, use a log-normal
 ***                      distribution instead.
 ***   BGLikePrecompute  If true, nulike_init precomputes the Possonian p-value
 ***                      for the background estimate to save time. This is
 ***                      later used to calculate the modified frequentist
 ***                      p-value for each model when nulike_bounds is called
-***                      with pvalFromRef = F.     
-***        
+***                      with pvalFromRef = F.
+***
 *** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Mar 20, 2011
 *** Modified: Mar, Jun 2014
 *****************************************************************************
 
-      subroutine nulike_init(analysis_name, eventfile, BGfile, 
+      subroutine nulike_init(analysis_name, eventfile, BGfile,
      & effareafile, file4, phi_cut, uselogNorm, BGLikePrecompute)
 
       use iso_c_binding, only: c_ptr
@@ -71,7 +71,7 @@
       call nulike_credits
 
       !Set the flag indicating that initialisation has been done.
-      if (.not. nulike_init_called) nulike_init_called = .true.      
+      if (.not. nulike_init_called) nulike_init_called = .true.
 
       !Make sure that this analysis is not already loaded.
       analysis = nulike_amap(analysis_name)
@@ -87,14 +87,14 @@
       analysis = nAnalyses
       analysis_name_array(analysis) = trim(analysis_name)
 
-      !Choose whether to have a Gaussian distribution for the assumed PDF of 
+      !Choose whether to have a Gaussian distribution for the assumed PDF of
       !systematic errors on the effective area/volume or a log-normal distribution
       sysErrDist_logNorm(analysis) = uselogNorm
- 
+
       !Open event file, determine the total number of events and likelihood version
       call nulike_preparse_eventfile(eventfile, nEvents_available, exp_time(analysis), likelihood_version(analysis))
 
-      !Open background file, determine numbers of bins for angular 
+      !Open background file, determine numbers of bins for angular
       !and nchan distributions, and which comes first
       call nulike_preparse_bgfile(BGfile, nBinsBGAng(analysis), nBinsBGE(analysis), BGfirst, BGsecond)
 
@@ -119,17 +119,17 @@
 
         !Open file of nchan response histograms (energy dispersions), determine how many histograms
         !and how many bins in each histogram.
-        call nulike_preparse_energy_dispersion(file4, nhist, nnchan, 
+        call nulike_preparse_energy_dispersion(file4, nhist, nnchan,
      &   ee_min(analysis), ee_max(analysis), 2012)
         nnchan_total(analysis) = nint(ee_max(analysis) - ee_max(analysis)) + 1
-      
+
         !Read in the actual background data
         call nulike_bginit(BGfile, nBinsBGAng(analysis), nBinsBGE(analysis), BGfirst, BGsecond, 2012)
 
         !Read in the actual nchan response histograms and rearrange them into energy dispersion estimators
         call nulike_edispinit(file4, nhist, nnchan, ee_min(analysis), 2012)
 
-      !2015 likelihood, as per arXiv:15xx.xxxx (load the precalculated unbiased effective area and partial likelihoods.)
+      !2015 likelihood, as per arXiv:1512.xxxx (load the precalculated unbiased effective area and partial likelihoods.)
       case (2015)
 
         !Keep track of whether a no-bias estimate is being done or not.
@@ -141,7 +141,7 @@
 
         !Read in the simulated effective area and calculate the bias factors
         call nulike_biasinit(effareafile)
-        
+
         !Read in the actual background data
         call nulike_bginit(BGfile, nBinsBGAng(analysis), nBinsBGE(analysis), BGfirst, BGsecond, 2015)
 
@@ -158,7 +158,7 @@
       !Calculate the expected background count.
       call nulike_bgpredinit(cosphimax)
 
-      !Precompute the background p-value (confidence level) for the Poissonian likelihood if requested.  
+      !Precompute the background p-value (confidence level) for the Poissonian likelihood if requested.
       !This is used for calculation of the final p-value for each model if nulike_bounds is called with pvalFromRef = F.
       pvalBGPoisComputed(analysis) = .false.
       if (BGLikePrecompute) call nulike_bglikeprecomp

@@ -1,10 +1,10 @@
-# Makefile for nulike.  
+# Makefile for nulike.
 #
 # Author: Pat Scott
 # p.scott@imperial.ac.uk
 #
 # This is a pretty simple program, so just change
-# this makefile by hand to suit your system, or 
+# this makefile by hand to suit your system, or
 # override the variables FF, FOPT and MODULE
 # from the command line.
 #
@@ -12,9 +12,9 @@
 # and the preparatory program requires nusigma.
 # Just compiling the library requires neither.
 # As with the compiler options, you can modify
-# the DSLIB* and/or NUSIG* variables below 
+# the DSLIB* and/or NUSIG* variables below
 # to suit your installation, either by hand here
-# or via the commandline when calling this makefile.
+# or via the command line when calling this makefile.
 
 # Define fortran compiler and options: intel
 #FF=ifort
@@ -22,7 +22,7 @@
 #MODULE=module
 # Define fortran compiler and options: gnu
 FF=gfortran
-FOPT=-O2 -ffixed-line-length-none -Wall -fcheck=all #(contributed numerical routines cause warnings)
+FOPT=-O2 -ffixed-line-length-none # -Wall -fcheck=all #(contributed numerical routines cause warnings)
 MODULE=J
 
 # DarkSUSY location, library name and include path
@@ -36,7 +36,7 @@ NUSIGINC = ../nusigma-1.17-pyr/inc
 NUSIGNAME = nusigma
 
 # Define library-making options
-RANLIB = ranlib 
+RANLIB = ranlib
 AR = ar
 ARFLAGS = rvs
 SHARFLAGS = -shared -fopenmp
@@ -73,7 +73,7 @@ utils.f partials.f specanglike.f specangintegrand.f specanginit.f \
 tabulated_weight.f preparse_files.f partintegrand.f d1mach.f \
 offctrpsf.f bias.f biasinit.f
 
-OBJ = $(BUILD)/tspack.o $(patsubst %.f90,$(BUILD)/%.o,$(F90SOURCES)) $(patsubst %.f,$(BUILD)/%.o,$(SOURCES)) 
+OBJ = $(BUILD)/tspack.o $(patsubst %.f90,$(BUILD)/%.o,$(F90SOURCES)) $(patsubst %.f,$(BUILD)/%.o,$(SOURCES))
 
 TSPACK_SOURCES = ENDSLP.f SIGS.f SNHCSH.f STORE.f \
 YPCOEF.f YPC1.f YPC1P.f YPC2.f YPC2P.f TSPSI.f \
@@ -124,8 +124,8 @@ nulike_test_mssm25 : libnulike.a $(PROGS)/nulike_test_mssm25.f
 nulike_test_wimp : libnulike.a $(PROGS)/nulike_test_wimp.f
 	$(FF) $(FFLAGS) -I$(DSLIBINC) -o $@ $(PROGS)/nulike_test_wimp.f -L$(DSLIBDIR) -l$(DSLIBNAME) -lHB -lFH -L$(LIB) -lnulike
 
-clean : 
-	rm -f $(BUILD)/* tspack.f Key.dat nulike_prep nulike_test nulike_test_wimp nulike_test_mssm25 
+clean :
+	rm -f $(BUILD)/* tspack.f Key.dat nulike_prep nulike_test nulike_test_wimp nulike_test_mssm25
 
 distclean : clean
 	rm -f $(LIB)/libnulike.a $(LIB)/libnulike.so

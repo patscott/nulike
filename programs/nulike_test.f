@@ -1,4 +1,4 @@
-! This program tests the nulike routines, and is adapted from dstest in 
+! This program tests the nulike routines, and is adapted from dstest in
 ! DarkSUSY.
 !
 ! Author: Pat Scott patscott@phsyics.mcgill.ca
@@ -21,7 +21,7 @@
 
       real*8 oh2,xf,dsrdomega                                    ! relic density
       real*8 sigsip,sigsin,sigsdp,sigsdn                         ! nuclear scattering
-      real*8 dsntcapsuntab, ca                                   ! capture rate 
+      real*8 dsntcapsuntab, ca                                   ! capture rate
       real*8 tt_sun, annrate, nuyield_test                       ! capture rate
       real*8 sigpred, bgpred, lnLike, pval, refLike, dof         ! neutrino likelihood
       real*8 theoryError,phi_cut                                 ! neutrino likelihood
@@ -44,18 +44,18 @@
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       ! Before starting anything, we initialise the neutrino telescope data and
-      ! the nulike routines.  See the header of src/init.f for detailed 
+      ! the nulike routines.  See the header of src/init.f for detailed
       ! explanations of the following options.
 
       ! Choose the data files containing neutrino telescope events, energy dispersion,
-      ! observed background distributions and effective area/median angular 
-      ! resolution.  
+      ! observed background distributions and effective area/median angular
+      ! resolution.
 
       ! The likelihood2012 folder contains data files designed for use with the
-      ! 2012 likelihood (Scott, Savage, Edsjö & IceCube Collaboration 2012, 
+      ! 2012 likelihood (Scott, Savage, Edsjö & IceCube Collaboration 2012,
       ! JCAP 11:057, arXiv:1207.0810).
       ! The likelihood2015 folder contains data files designed for use with the
-      ! 2015 likelihood (IceCube Collaboration 2015, JCAP xx:xxx, arXiv:150x.xxxxx).
+      ! 2015 likelihood (IceCube Collaboration 2016, JCAP xx:xxx, arXiv:1512.xxxxx).
       iclike2012 = 'data/IceCube/likelihood2012/'
       iclike2015 = 'data/IceCube/likelihood2015/'
 
@@ -79,8 +79,8 @@
 
         ! Set the analysis cut in degrees around the solar position for IC22
         phi_cut = 10.d0
-      
-        ! Initialise the IceCube data and calculations for IC22. 
+
+        ! Initialise the IceCube data and calculations for IC22.
         call nulike_init(experiment, eventf, BGf, efareaf, edispf, phi_cut,
      &   uselogNorm, BGLikePrecompute)
 
@@ -94,8 +94,8 @@
         ! Set the analysis cut in degrees around the solar position for the IC86 prediction
         phi_cut = 20.d0
 
-        ! Initialise the IceCube data and calculations for the IC86 prediction. 
-        call nulike_init(experiment, eventf, BGf, efareaf, edispf, 
+        ! Initialise the IceCube data and calculations for the IC86 prediction.
+        call nulike_init(experiment, eventf, BGf, efareaf, edispf,
      &   phi_cut, uselogNorm, BGLikePrecompute)
 
       !!!!!!!!!!!!!!!! 2015 likelihoods !!!!!!!!!!!!!!!!!!!
@@ -103,39 +103,39 @@
         !* edispf is ignored in 2015-type analyses, as only enters in the precomputation of partial likelihoods.
         !* phi_cut is ignored in 2015-type analyses, as it is read in with the partial likelihoods.
         !* efareaf is not strictly needed in 2015-type analyses; you can set it to 'no-bias' to just assume that
-        !  your analysis is bias-free, and ignore the difference between the simulated effective area and the 
+        !  your analysis is bias-free, and ignore the difference between the simulated effective area and the
         !  one nulike obtains from the effective volume when precomputing the partial likelihoods.
-  
+
         ! Here we use the IC-79 SL data that ship with nulike
         experiment = 'IC-79 SL'
         eventf  = trim(iclike2015)//'IC79_Events_SL_llhInput_60Deg.txt'
         BGf     = trim(iclike2015)//'IC79_Background_distributions_SL.txt'
         efareaf = trim(iclike2015)//'IC79_Effective_Area_SL.txt'
         partiald= trim(iclike2015)//'IC79_Partial_Likelihoods_SL'
-  
-        ! Initialise the IceCube data and calculations for the IC79 SL sample. 
-        call nulike_init(experiment, eventf, BGf, efareaf, partiald, 
+
+        ! Initialise the IceCube data and calculations for the IC79 SL sample.
+        call nulike_init(experiment, eventf, BGf, efareaf, partiald,
      &   phi_cut, uselogNorm, BGLikePrecompute)
-  
+
         ! Here we use the IC-79 WL data that ship with nulike
         experiment = 'IC-79 WL'
         eventf  = trim(iclike2015)//'IC79_Events_WL_llhInput_60Deg.txt'
         BGf     = trim(iclike2015)//'IC79_Background_distributions_WL.txt'
         efareaf = trim(iclike2015)//'IC79_Effective_Area_WL.txt'
         partiald= trim(iclike2015)//'IC79_Partial_Likelihoods_WL'
-  
-        ! Initialise the IceCube data and calculations for the IC79 WL sample. 
-        call nulike_init(experiment, eventf, BGf, efareaf, partiald, 
+
+        ! Initialise the IceCube data and calculations for the IC79 WL sample.
+        call nulike_init(experiment, eventf, BGf, efareaf, partiald,
      &   phi_cut, uselogNorm, BGLikePrecompute)
-  
+
         ! Here we use the IC-79 WH data that ship with nulike
         experiment = 'IC-79 WH'
         eventf  = trim(iclike2015)//'IC79_Events_WH_llhInput_60Deg.txt'
         BGf     = trim(iclike2015)//'IC79_Background_distributions_WH.txt'
         efareaf = trim(iclike2015)//'IC79_Effective_Area_WH.txt'
         partiald= trim(iclike2015)//'IC79_Partial_Likelihoods_WH'
-  
-        ! Initialise the IceCube data and calculations for the IC79 SL sample. 
+
+        ! Initialise the IceCube data and calculations for the IC79 SL sample.
         call nulike_init(experiment, eventf, BGf, efareaf, partiald,
      &   phi_cut, uselogNorm, BGLikePrecompute)
 
@@ -170,7 +170,7 @@
           write(*,*)
           write(*,*) 'Model parameters read from file testmodels.mod'
         endif
-        write(*,*) 
+        write(*,*)
         write(*,*) '***** MODEL: ',idtag,' *****'
 
         ! Tone down the output from here on.
@@ -200,9 +200,9 @@
         ! the velocity distribution, sped up by tabulation.
         write(*,*) 'Calculating capture rate in the Sun'
         csu=dsntcapsuntab(wamwimp,sigsip,sigsdp) ! Capture rate (s^-1) (wamwimp = WIMP mass in GeV)
-        ca=wasv/6.6d28*(wamwimp/20.d0)**(3./2.) 
+        ca=wasv/6.6d28*(wamwimp/20.d0)**(3./2.)
         tausu=1.0d0/dsqrt(csu*ca)                ! Equilibration time (s)
-        tt_sun=1.5d17*dsqrt(csu*ca)              
+        tt_sun=1.5d17*dsqrt(csu*ca)
         annrate=csu*0.5d0*tanh(tt_sun)**2        ! Annihiliation rate (s^-1)
         write(*,*) '  Capture rate in the Sun = ',csu,' s^-1'
         write(*,*) '  Annihilation rate in the Sun = ',annrate,' s^-1'
@@ -218,11 +218,11 @@
         !  See the header of src/nulike_bounds.f for
         !  more detailed explanations of the following options.
 
-        ! Set the estimated relative theoretical error in neutrino flux calculation 
+        ! Set the estimated relative theoretical error in neutrino flux calculation
         theoryError = 5d-2 * merge(1.d0, dsqrt(wamwimp*1.d-2), wamwimp .le. 100.d0)
 
         ! Choose what to include in the actual likelihood calculations.  Note that this
-        ! only applies to the likelihood calculation; the p value is always calculated 
+        ! only applies to the likelihood calculation; the p value is always calculated
         ! considering only the number count, not the spectral or angular information.
         ! If you're only interested in p-values, not likelihoods, use likechoice = 1, as
         ! this is the fastest.
@@ -240,37 +240,37 @@
         ! Here we set this to true because (from v5.1.3 onwards) DarkSUSY's yield functions are indeed threadsafe.
         threadsafe = .true.
 
-        ! Choose whether to calculate the p value relative to a reference value of 
+        ! Choose whether to calculate the p value relative to a reference value of
         ! the likelihood or to the background
         pvalFromRef = .false.
 
         ! Set the reference value of ln(Likelihood).  (Ignored if pvalFromRef = F)
         refLike = -500.d0
 
-        ! Set the number of degrees of freedom to use in the p-value calculation 
+        ! Set the number of degrees of freedom to use in the p-value calculation
         ! (Ignored if pvalFromRef = F).
         dof = 8.d0
-   
+
         ! Set callback pointer
         ptr = C_NULL_PTR
 
         ! Finally use nulike to get signal and background predictions, number of observed events, likelihood and p-value
-        call nulike_bounds(experiment, wamwimp, annrate, nuyield_test, sigpred, bgpred, 
+        call nulike_bounds(experiment, wamwimp, annrate, nuyield_test, sigpred, bgpred,
      &   totobs, lnLike, pval, likechoice, theoryError, use_fast_likelihood, pvalFromRef,
      &   refLike, dof, ptr, threadsafe)
-     
+
         write(*,*) '  Predicted signal events:    ', sigpred
         write(*,*) '  Total predicted events:     ', sigpred+bgpred
         write(*,*) '  Observed events:            ', totobs
         write(*,*) '  log-likelihood:             ', lnLike
         write(*,*) '  p-value:                    ', pval
         write(*,*) '  Model ruled out at ', 1.d2-1.d2*pval,'% CL.'
-        
+
       end do
 
       close (11)
       write(*,*)
-      write(*,*) 'The nulike test program completed successfully.'     
+      write(*,*) 'The nulike test program completed successfully.'
       write(*,*)
 
       end program nulike_test
@@ -313,7 +313,7 @@
          enddo
       endif
       ! If nmodel=0, read next model
-      read (lunit,2000,end=1000,err=1000) 
+      read (lunit,2000,end=1000,err=1000)
      &     idtag,mu,m2,ma,tanbe,mqtild,at,ab
       ! modify/set additional parameters
       !  higloop=5  ! 5 = Full FeynHiggs;  6 = FeynHiggsFast
@@ -324,7 +324,7 @@
  1000 continue
       iend=1
       write (*,*) 'End of model file reached.'
-      return 
+      return
 
  3000 continue
       ierr=1

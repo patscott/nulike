@@ -1,4 +1,4 @@
-! This program runs the nulike routines to find limits on 
+! This program runs the nulike routines to find limits on
 ! generic WIMPs, as discussed in the nulike paper. Longer
 ! explanations are provided in nulike_test.f.
 !
@@ -32,16 +32,16 @@
       character (len=nulike_clen) iclike2015
       character (len=nulike_clen) experiment(3), eventf
       character (len=nulike_clen) BGf, partiald, efareaf
-      double precision :: ref_CL = 90.d0                   
+      double precision :: ref_CL = 90.d0
       external diff_CL
       common/wimpcom/ref_CL, theoryError, experiment, threadsafe
       ! Book-keeping
       integer i,j
       logical :: first = .true.
-      real*8, parameter :: dummyval = 0, mwimpmin = 10.d0, mwimpmax = 1000  
+      real*8, parameter :: dummyval = 0, mwimpmin = 10.d0, mwimpmax = 1000
       !These are the WIMP masses for which DarkSUSY contains WimpSim results; it obtains spectra for other masses by interpolating between these.
       real*8, parameter :: chosen_masses(20) = (/10.d0, 25.d0, 50.d0, 80.3d0, 91.2d0, 1.d2, 1.5d2, 1.76d2, 2.d2, 2.5d2, 3.5d2, 5.d2, 7.5d2, 1.d3, 1.5d3, 2.d3, 3.d3, 5.d3, 7.5d3, 1.d4/)
-      integer, parameter :: mwimp_pts = 100
+      integer, parameter :: mwimp_pts = 10
       logical, parameter :: talky = .false., chosen_ones_only = .true.
 
       ! See the header of src/init.f for detailed explanations of the following options.
@@ -55,7 +55,7 @@
       BGf     = trim(iclike2015)//'IC79_Background_distributions_SL.txt'
       efareaf = trim(iclike2015)//'IC79_Effective_Area_SL.txt'
       partiald= trim(iclike2015)//'IC79_Partial_Likelihoods_SL'
-      call nulike_init(experiment(1), eventf, BGf, efareaf, partiald, 
+      call nulike_init(experiment(1), eventf, BGf, efareaf, partiald,
      & dummyval, uselogNorm, BGLikePrecompute)
 
       experiment(2) = 'IC-79 WL'
@@ -63,7 +63,7 @@
       BGf     = trim(iclike2015)//'IC79_Background_distributions_WL.txt'
       efareaf = trim(iclike2015)//'IC79_Effective_Area_WL.txt'
       partiald= trim(iclike2015)//'IC79_Partial_Likelihoods_WL'
-      call nulike_init(experiment(2), eventf, BGf, efareaf, partiald, 
+      call nulike_init(experiment(2), eventf, BGf, efareaf, partiald,
      & dummyval, uselogNorm, BGLikePrecompute)
 
       experiment(3) = 'IC-79 WH'
@@ -71,7 +71,7 @@
       BGf     = trim(iclike2015)//'IC79_Background_distributions_WH.txt'
       efareaf = trim(iclike2015)//'IC79_Effective_Area_WH.txt'
       partiald= trim(iclike2015)//'IC79_Partial_Likelihoods_WH'
-      call nulike_init(experiment(3), eventf, BGf, efareaf, partiald, 
+      call nulike_init(experiment(3), eventf, BGf, efareaf, partiald,
      & dummyval, uselogNorm, BGLikePrecompute)
 
       ! Initialise DarkSUSY
@@ -92,7 +92,7 @@
       wabr(4) = 0.d0        !H3 H3
       wabr(5) = 0.d0        !H1 H3
       wabr(6) = 0.d0        !H2 H3
-      wabr(7) = 0.d0        !H+ H-        
+      wabr(7) = 0.d0        !H+ H-
       wabr(8) = 0.d0        !Z  H1
       wabr(9) = 0.d0        !Z  H2
       wabr(10) = 0.d0       !Z  H3
@@ -122,7 +122,7 @@
       was0br(4,1) = 0.d0    !H3 H3
       was0br(5,1) = 0.d0    !H1 H3
       was0br(6,1) = 0.d0    !H2 H3
-      was0br(7,1) = 0.d0    !H+ H-    
+      was0br(7,1) = 0.d0    !H+ H-
       was0br(8,1) = 0.d0    !Z  H1
       was0br(9,1) = 0.d0    !Z  H2
       was0br(10,1) = 0.d0   !Z  H3
@@ -167,7 +167,7 @@
         ! Set WIMP mass and annihilation cross-section, then write them out
         if (chosen_ones_only) then
           wamwimp = chosen_masses(i)
-        else 
+        else
           wamwimp = 10.**(log10(mwimpmin) + dble(i-1)/dble(mwimp_pts-1)*log10(mwimpmax/mwimpmin))
         endif
         wasv = 3.d-26
@@ -176,19 +176,19 @@
         if (talky) write(*,*) '  Annihilation cross-section = ',wasv,' cm^-3 s^-1'
         if (talky) write(*,*) '  Theory error = ',theoryError,'%'
 
-        ! Calculate the SD proton scattering cross-section as the 90% CL upper limit 
-        if (talky) write (*,*) 'Calculating SD proton scattering cross section...' 
+        ! Calculate the SD proton scattering cross-section as the 90% CL upper limit
+        if (talky) write (*,*) 'Calculating SD proton scattering cross section...'
         sigsdp = 10.d0**zeroin(-45.d0, -30.d0, diff_CL, 1.d-5)
         if (talky) write(*,*) '  sigsdp (pb) = ',sigsdp*1.0d36
-        
+
         ! Recalculate capture and annihlation rates with DarkSUSY, using the
         ! default Gouldian calculation with a numerical integration over
         ! the velocity distribution, sped up by tabulation.
         if (talky) write(*,*) 'Calculating capture rate in the Sun'
         csu=dsntcapsuntab(wamwimp,0.d0,sigsdp)   ! Capture rate (s^-1)
-        ca=wasv/6.6d28*(wamwimp/20.d0)**(3./2.) 
+        ca=wasv/6.6d28*(wamwimp/20.d0)**(3./2.)
         tausu=1.0d0/dsqrt(csu*ca)                ! Equilibration time (s)
-        tt_sun=1.5d17*dsqrt(csu*ca)              
+        tt_sun=1.5d17*dsqrt(csu*ca)
         annrate=csu*0.5d0*tanh(tt_sun)**2        ! Annihiliation rate (s^-1)
 
         if (talky) then
@@ -206,7 +206,7 @@
       enddo
 
       write(*,*)
-      write(*,*) 'The nulike WIMP benchmark tests completed successfully.'     
+      write(*,*) 'The nulike WIMP benchmark tests completed successfully.'
       write(*,*)
 
       end program nulike_test_wimp
@@ -222,10 +222,10 @@
       include 'dsntcom.h'
       include 'dswacom.h'
 
-      real*8 ca, annrate, log10sigma, sigpred, bgpred 
+      real*8 ca, annrate, log10sigma, sigpred, bgpred
       real*8 dsntcapsuntab, tt_sun, nuyield_test, DGAMMA, DGAMIC
       real*8 lnLike(3), pval(3), refLike(3), dof, theoryError
-      double precision :: ref_CL                   
+      double precision :: ref_CL
       integer totobs, likechoice, i
       logical(c_bool) pvalFromRef
       logical(c_bool) use_fast_likelihood
@@ -243,9 +243,9 @@
       ! default Gouldian calculation with a numerical integration over
       ! the velocity distribution, sped up by tabulation.
       csu=dsntcapsuntab(wamwimp,wasigsip,wasigsdp)   ! Capture rate (s^-1)
-      ca=wasv/6.6d28*(wamwimp/20.d0)**(3./2.) 
+      ca=wasv/6.6d28*(wamwimp/20.d0)**(3./2.)
       tausu=1.0d0/dsqrt(csu*ca)                ! Equilibration time (s)
-      tt_sun=1.5d17*dsqrt(csu*ca)              
+      tt_sun=1.5d17*dsqrt(csu*ca)
       annrate=csu*0.5d0*tanh(tt_sun)**2        ! Annihiliation rate (s^-1)
 
       ! See the header of src/nulike_bounds.f for detailed explanations of the following options.
@@ -257,24 +257,24 @@
       !All obtained by setting signal content to zero => total high-scale decoupling.
       if (likechoice .eq. 1) then
         pvalFromRef = .false.
-        refLike(1) = -5.8244 
+        refLike(1) = -5.8244
         refLike(2) = -4.7500
-        refLike(3) = -4.8768      
+        refLike(3) = -4.8768
       else
         refLike(1) =  -5015.6474
-        refLike(2) =  -1813.4503 
-        refLike(3) = -11874.8689        
+        refLike(2) =  -1813.4503
+        refLike(3) = -11874.8689
       endif
 
       do i = 1, 3
         !Use nulike to get signal and background predictions, number of observed events, likelihood and p-value
-        call nulike_bounds(experiment(i), wamwimp, annrate, nuyield_test, sigpred, bgpred, 
+        call nulike_bounds(experiment(i), wamwimp, annrate, nuyield_test, sigpred, bgpred,
      &   totobs, lnLike(i), pval(i), likechoice, theoryError, use_fast_likelihood, pvalFromRef,
      &   refLike(i), dof, ptr, threadsafe)
       enddo
 
       diff_CL = ref_CL - 1.d2*(1.d0-DGAMIC(dof*0.5d0,max(0.d0, sum(refLike-lnLike)))/DGAMMA(dof*0.5d0))
-      
+
       end
 
 

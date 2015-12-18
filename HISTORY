@@ -1,0 +1,11 @@
+HISTORY for nulike
+
+
+---------------- v1.0.0: Dec 18, 2015
+First tagged release.  Features much awesomeness.
+
+
+Full history can be obtained by cloning the nulike git repo with
+  git clone https://github.com/patscott/nulike.git
+then typing
+  git log

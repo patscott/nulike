@@ -11,7 +11,7 @@
 ***         min_ee       smallest value of the energy estimator in the
 ***                       dispersion function data.
 ***         like         likelihood version
-***        
+***
 *** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: April 8, 2011
 *** Modified: Jun 3, 7, 15 2014
@@ -109,14 +109,14 @@
         !up with indexing of nchan values in observed background spectrum.
         nchan_hist2BGoffset(analysis) = -1
         do k = 1, nnchan_total(analysis)
-          if (hist_nchan(1,k,analysis) .eq. BGeedist_ee(1,analysis)) then 
+          if (hist_nchan(1,k,analysis) .eq. BGeedist_ee(1,analysis)) then
             nchan_hist2BGoffset(analysis) = k-1
           endif
         enddo
 
         !Set up interpolation in each nchan across energy histograms for use as energy dispersion estimator
         do i = 1, nnchan_total(analysis)
- 
+
           call TSPSI(nhgms,hist_logEcentres(:,analysis),hist_prob(:,i,analysis),
      &     2,0,.false.,.false.,2*nhgms-2,working,hist_derivs(:,i,analysis),
      &     hist_sigma(:,i,analysis),IER)
@@ -126,9 +126,9 @@
             stop
           endif
 
-        enddo 
+        enddo
 
-      !2015 likelihood, as per arXiv:15xx.xxxxx 
+      !2015 likelihood, as per arXiv:1512.xxxxx
       case (2015)
 
         hist_ee_flip = transpose(hist_ee_temp)

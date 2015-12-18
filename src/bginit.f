@@ -3,22 +3,22 @@
 *** background spectrum and angular distribution, and reads in
 *** the total number of background events.
 ***
-*** input:   filename       name of file containing background 
+*** input:   filename       name of file containing background
 ***                          distributions
 ***          nbins_angular  number of bins for angular distribution
 ***          nbins_ee       number of bins for energy estimator distribution
 ***          first, second  indexes between 1 and 3 indicating
 ***                          the identities of the first and second
-***                          blocks in the file (angular, energy  
+***                          blocks in the file (angular, energy
 ***                          estimator or number of events).
 ***                          See nucommon.h for the key.
-***        
+***
 *** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: April 8, 2011
 *** Modified: Jun 6, 2014
 ***********************************************************************
 
-      subroutine nulike_bginit(filename, nbins_angular, nbins_ee, 
+      subroutine nulike_bginit(filename, nbins_angular, nbins_ee,
      & first, second, like)
 
       use iso_c_binding, only: c_ptr
@@ -83,7 +83,7 @@
           read(lun, *) instring
        enddo
        if (i .ne. 3) read(lun, fmt=*), instring
-      enddo 
+      enddo
 
       close(lun)
 
@@ -94,7 +94,7 @@
       case (2012)
         !If the energy dispersion files don't go high or low enough in nchan
         !to cover the whole tabulated range in the BG file, mark them for extension.
-        if (ee_min(analysis) .gt. BGeedist_ee(1,analysis)) 
+        if (ee_min(analysis) .gt. BGeedist_ee(1,analysis))
      &   ee_min(analysis) = BGeedist_ee(1,analysis)
         if (ee_max(analysis) .lt. BGeedist_ee(nbins_ee,analysis))
      &   ee_max(analysis) = BGeedist_ee(nbins_ee,analysis)
@@ -110,7 +110,7 @@
           call exit(0)
         endif
 
-      !2015 likelihood, as per arXiv:15xx.xxxx (Set up interpolation in distribution of the energy estimator.)
+      !2015 likelihood, as per arXiv:1512.xxxx (Set up interpolation in distribution of the energy estimator.)
       case (2015)
 
         !Set up interpolation in energy distribution.
@@ -118,7 +118,7 @@
      &   2*nbins_ee-2,eeworking,BGeedist_derivs(:,analysis),BGeedist_sigma(:,analysis),IER)
         if (IER .lt. 0) then
           write(*,*) 'TSPSI error from spectral distribution of'
-          write(*,*) 'background in nulike_bginit, code: ', IER 
+          write(*,*) 'background in nulike_bginit, code: ', IER
           stop
         endif
 
@@ -128,22 +128,22 @@
         stop
 
       end select
-      
+
 
       !Set up interpolation in angular distribution
 
       do i = 1, nbins_angular - 1
         !Take bin centres for angular values
-        BGangdist_phi_temp(i) = 0.5d0 * (BGangdist_phi_temp(i) 
+        BGangdist_phi_temp(i) = 0.5d0 * (BGangdist_phi_temp(i)
      &                                + BGangdist_phi_temp(i+1))
       enddo
       !Do the same for the last bin, assuming its upper limit is 180 degrees
-      BGangdist_phi_temp(nbins_angular) = 
+      BGangdist_phi_temp(nbins_angular) =
      & 0.5d0 * (BGangdist_phi_temp(nbins_angular) + 180.d0)
 
       do i = 1, nbins_angular
         !Convert angles to radians and flip em (for fussy interpolator)
-        BGangdist_phi(i,analysis) = 
+        BGangdist_phi(i,analysis) =
      &   BGangdist_phi_temp(nbins_angular+1-i)/180.d0 * pi
         !Convert probabilities from dP/dphi to dP/dcos(phi) and flip em
         BGangdist_prob(i,analysis) = BGangdist_prob_temp(nbins_angular+1-i)/
@@ -165,7 +165,7 @@
       !change introduced by interpolation (typically order 1e-3)
       BGangdist_norm(analysis) = TSINTL (-1.d0,1.d0,nbins_angular,
      & BGangdist_phi(:,analysis),BGangdist_prob(:,analysis),
-     & BGangdist_derivs(:,analysis),BGangdist_sigma(:,analysis),IER)     
+     & BGangdist_derivs(:,analysis),BGangdist_sigma(:,analysis),IER)
       if (IER .lt. 0) then
         write(*,*) 'Error in nulike_bgnit: TSINTL failed with error'
         write(*,*) 'code',IER

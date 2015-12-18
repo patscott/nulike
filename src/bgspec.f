@@ -1,10 +1,10 @@
 ***********************************************************************
 *** nulike_bgspec provides the interpolated probability distribution
-*** function for the energy estimator due to background events. 
+*** function for the energy estimator due to background events.
 ***
 *** Input:	ee	value of the energy estimator (e.g. nchan)
 *** Output:             pdf (units of estimator^-1)
-***       
+***
 *** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Apr 24, 2011
 *** Modified: Jun 6, 2014
@@ -31,7 +31,7 @@
           write(*,*) 'tabulated range: ee=',ee,'.  Quitting...'
           stop
         endif
-  
+
         nchan_index = nint(ee) - nint(ee_min(analysis)) + 1 - nchan_hist2BGoffset(analysis)
         if (BGeedist_ee(nchan_index,analysis) .ne. ee) then
           write(*,*) BGeedist_ee(nchan_index,analysis), ee, nchan_index
@@ -40,7 +40,7 @@
 
         nulike_bgspec = BGeedist_prob(nchan_index,analysis)
 
-      !2015 likelihood, as per arXiv:15xx.xxxxx
+      !2015 likelihood, as per arXiv:1512.xxxxx
       case (2015)
 
         !If the value of the energy estimator is outside the range of this histogram, return zero.

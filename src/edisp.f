@@ -1,12 +1,12 @@
 ***********************************************************************
 *** nulike_edisp provides the interpolated IceCube energy dispersion
 *** estimator for a given incoming neutrino energy and observed
-*** number of hit DOMs. 
+*** number of hit DOMs.
 ***
 *** Input:	log10E	        log(neutrino energy/GeV)
 *** 		ee		value of the energy estimator (e.g. nchan)
 *** Output:                     energy dispersion (units of ee^-1)
-***       
+***
 *** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Apr 24, 2011
 *** Modified: Jun 7, 15 2014
@@ -51,7 +51,7 @@
           nulike_edisp = hist_prob(nHistograms(analysis),nchan_index,analysis)
         endif
 
-      !2015 likelihood, as per arXiv:15xx.xxxxx
+      !2015 likelihood, as per arXiv:1512.xxxxx
       case (2015)
 
         call TSVAL1(nhist,hist_logEnergies,hist_single_ee_prob,

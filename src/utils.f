@@ -1,6 +1,6 @@
 ***********************************************************************
 *** nulike_utils contains various simple utility routines.
-***        
+***
 *** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Jun 15 2014
 ***********************************************************************
@@ -12,13 +12,13 @@
       include 'nucommon.h'
 
       if (credits_rolled) return
-      write(*,*) 
+      write(*,*)
       write(*,*) 'I like, you like...'
       write(*,*) '**********************************************************'
       write(*,*) '*                    nulike '//version//'            *'
       write(*,*) '*               Pat Scott, Chris Savage                  *'
       write(*,*) '*         JCAP (2012) 11:057, arXiv:1207.0810            *'
-      write(*,*) '*         JCAP (2015) xx:xxx, arXiv:150y.yyyyy           *'
+      write(*,*) '*         JCAP (2016) xx:xxx, arXiv:1512.yyyyy           *'
       write(*,*) '**********************************************************'
       credits_rolled = .true.
 

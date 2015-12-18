@@ -1,19 +1,19 @@
 ***********************************************************************
 *** nulike_signal computes the predicted number of neutrino events due
 *** to neutralino annihilation.
-***        
+***
 *** Input:      nuyield         External double function that returns
 ***                             the differential neutrino flux
 ***                             at the detector in units of m^-2 GeV^-1
 ***                             annihilation^-1
 ***             context         A c_ptr passed in to nuyield when it is
 ***                             called
-***             annrate         Annihilation rate (s^-1) 
+***             annrate         Annihilation rate (s^-1)
 ***             logmw           log_10(m_WIMP / GeV)
 ***             like            Likelihood version (2012 or 2015)
 ***
 *** Output:     theta_S         predicted number of signal events.
-*** 
+***
 *** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Apr 22, 2011
 *** Modified: March 6 2014
@@ -36,7 +36,7 @@
       integer like, IER, SRgType
       type(c_ptr) context
       parameter (eps2012 = 1.d-2, eps2015 = 3.d-2, SRgType = Simplex)
-      
+
       interface
         real(c_double) function nuyield(log10E,ptype,context) bind(c)
           use iso_c_binding, only: c_ptr, c_double, c_int
@@ -68,7 +68,7 @@
         nulike_signal = 0.d0
         return
       endif
-      
+
       ! Set the global context pointers unable to be passed through CUBPACK
       context_shared = context
       nuyield_ptr => nuyield
@@ -93,7 +93,7 @@
      &   integral,SAbsErr,IER,MaxPts=5000000,EpsRel=eps2012,Job=2,
      &   EpsAbs=1.d-200,Key=2)
         if (IER .ne. 0) then
-          write(*,*) 'Error raised by CUBATR in nulike_signal: ', IER 
+          write(*,*) 'Error raised by CUBATR in nulike_signal: ', IER
           stop
         endif
         call CUBATR()
@@ -107,31 +107,31 @@
      &   integral,SAbsErr,IER,MaxPts=5000000,EpsRel=eps2012,Job=2,
      &   EpsAbs=1.d-200,Key=2)
         if (IER .ne. 0) then
-          write(*,*) 'Error raised by CUBATR in nulike_signal: ', IER 
+          write(*,*) 'Error raised by CUBATR in nulike_signal: ', IER
           stop
         endif
         call CUBATR()
         theta_Snubar = integral * dlog(10.d0) * exp_time(analysis) * annrate
 
         ! Total
-        nulike_signal = theta_Snu + theta_Snubar 
+        nulike_signal = theta_Snu + theta_Snubar
 
-      !2015 likelihood, as per arXiv:150x.xxxxx
+      !2015 likelihood, as per arXiv:1512.xxxxx
       case (2015)
 
         log10E_lower = precomp_log10E(start_index(analysis),analysis)
         log10E_upper = min(precomp_log10E(nPrecompE(analysis),analysis),logmw)
         if (log10E_lower .ge. log10E_upper) then
           nulike_signal = 0.d0
-        else 
+        else
           eventnumshare(omp_get_thread_num()+1) = 0 ! Set event number to indicate total signal rate calculation (i.e. not an event).
           IER = 0
-          SVertices(1,:) = (/log10E_lower, log10E_upper/) 
+          SVertices(1,:) = (/log10E_lower, log10E_upper/)
           call CUBATR(1,nulike_specangintegrand,SVertices,SRgType,
      &     integral,SAbsErr,IER,MaxPts=5000000,EpsRel=eps2015,Job=2,
      &     EpsAbs=1.d-200,Key=2)
           if (IER .ne. 0) then
-            write(*,*) 'Error raised by CUBATR in nulike_signal: ', IER 
+            write(*,*) 'Error raised by CUBATR in nulike_signal: ', IER
             stop
           endif
           call CUBATR()
