@@ -14,9 +14,9 @@ Nulike is software for including full event-level information in
 likelihood calculations for neutrino telescope searches for dark matter
 annihilation.
 
-Full details can be found in the papers  
-  Scott, Savage, Edsjö & IceCube Collaboration 2012, JCAP 11:057, arXiv:1207.0810  
-  IceCube Collaboration 2016, JCAP xx:xxx, arXiv:1512.xxxxx  
+Full details can be found in the papers:  
+  1. Scott, Savage, Edsjö & IceCube Collaboration 2012, JCAP 11:057, [arXiv:1207.0810](http://arxiv.org/abs/1207.0810)
+  2. IceCube Collaboration 2016, JCAP xx:xxx, [arXiv:1512.xxxxx](http://arxiv.org/abs/1512.xxxxx)
 If you use nulike for preparing a paper, please cite both of these.
 
 
