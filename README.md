@@ -35,8 +35,8 @@ These libraries can then be linked against whatever driver program you
 want to use to provide the neutrino flux at Earth from your favourite
 dark matter model.  I recommend DarkSUSY 5.1.3 (www.darksusy.org) or
 later, but in principle anything that computes a neutrino flux is OK
-(just make sure it is threadsafe if you want to run nulike multi-
-threaded).
+(just make sure it is threadsafe if you want to run nulike
+multi-threaded).
 
 
 Testing
