@@ -55,7 +55,7 @@
       ! 2012 likelihood (Scott, Savage, Edsjö & IceCube Collaboration 2012,
       ! JCAP 11:057, arXiv:1207.0810).
       ! The likelihood2015 folder contains data files designed for use with the
-      ! 2015 likelihood (IceCube Collaboration 2016, JCAP xx:xxx, arXiv:1512.xxxxx).
+      ! 2015 likelihood (IceCube Collaboration 2016, JCAP xx:xxx, arXiv:1601.xxxxx).
       iclike2012 = 'data/IceCube/likelihood2012/'
       iclike2015 = 'data/IceCube/likelihood2015/'
 

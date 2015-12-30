@@ -129,7 +129,7 @@
         !Read in the actual nchan response histograms and rearrange them into energy dispersion estimators
         call nulike_edispinit(file4, nhist, nnchan, ee_min(analysis), 2012)
 
-      !2015 likelihood, as per arXiv:1512.xxxx (load the precalculated unbiased effective area and partial likelihoods.)
+      !2015 likelihood, as per arXiv:1601.xxxx (load the precalculated unbiased effective area and partial likelihoods.)
       case (2015)
 
         !Keep track of whether a no-bias estimate is being done or not.

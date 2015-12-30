@@ -16,7 +16,7 @@ annihilation.
 
 Full details can be found in the papers:  
   1. Scott, Savage, Edsjö & IceCube Collaboration 2012, JCAP 11:057, [arXiv:1207.0810](http://arxiv.org/abs/1207.0810)
-  2. IceCube Collaboration 2016, JCAP xx:xxx, [arXiv:1512.xxxxx](http://arxiv.org/abs/1512.xxxxx)
+  2. IceCube Collaboration 2016, JCAP xx:xxx, [arXiv:1601.xxxxx](http://arxiv.org/abs/1601.xxxxx)
   
 If you use nulike for preparing a paper, please cite both of these.  If you use the 79-string IceCube likelihoods, don't forget to also cite the original IC79 WIMP paper:
   3. IceCube Collaboration 2013, PRL 110:131302, [arXiv:1212.4097](http://arxiv.org/abs/1212.4097)
@@ -72,3 +72,20 @@ and
   ./nulike_prep
 
 to get full usage instructions.
+
+
+
+License
+--
+Copyright (c) 2015, Patrick Scott and Christopher Savage
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

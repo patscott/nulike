@@ -241,7 +241,7 @@
         endif
         specAngLikelihood = angularLikelihood + spectralLikelihood
 
-      !2015 likelihood, as per arXiv:1512.xxxx
+      !2015 likelihood, as per arXiv:1601.xxxx
       case (2015)
         specAngLikelihood = 0.d0
         if (liketype .eq. 4) then

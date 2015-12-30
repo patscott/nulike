@@ -51,7 +51,7 @@
           nulike_edisp = hist_prob(nHistograms(analysis),nchan_index,analysis)
         endif
 
-      !2015 likelihood, as per arXiv:1512.xxxxx
+      !2015 likelihood, as per arXiv:1601.xxxxx
       case (2015)
 
         call TSVAL1(nhist,hist_logEnergies,hist_single_ee_prob,
