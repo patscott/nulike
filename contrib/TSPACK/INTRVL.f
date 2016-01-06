@@ -44,12 +44,14 @@ C
       INTEGER IH, IL, K
       DOUBLE PRECISION TT
 C
-      SAVE IL
-      DATA IL/1/
+C     Commented out for thread safety by Pat Scott Jan 6 2016
+C      SAVE IL
+C      DATA IL/1/
       TT = T
-      IF (IL .GE. 1  .AND.  IL .LT. N) THEN
-        IF (X(IL) .LE. TT  .AND.  TT .LT. X(IL+1)) GO TO 2
-      ENDIF
+C     Commented out for thread safety by Pat Scott Jan 6 2016
+C      IF (IL .GE. 1  .AND.  IL .LT. N) THEN
+C        IF (X(IL) .LE. TT  .AND.  TT .LT. X(IL+1)) GO TO 2
+C      ENDIF
 C
 C Initialize low and high indexes.
 C
