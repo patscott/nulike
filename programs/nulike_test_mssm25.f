@@ -11,7 +11,7 @@
 
       program nulike_test_mssm25
 
-      use iso_c_binding, only: C_NULL_PTR, c_bool, c_ptr
+      use iso_c_binding, only: C_NULL_PTR, c_bool, c_ptr, c_int
 
       implicit none
       !Nulike include
@@ -33,9 +33,9 @@
       real*8 sigpred(3), bgpred(3), lnLike(3), pval(3) 
       real*8 theoryError, refLike(3), dof, DGAMMA, DGAMIC
       integer totobs(3), likechoice
+      integer(c_int) speed
       logical uselogNorm
       logical(c_bool) pvalFromRef
-      logical(c_bool) use_fast_likelihood
       logical(c_bool) threadsafe
       logical BGLikePrecompute
       type(c_ptr) ptr
@@ -188,7 +188,7 @@
         if (talky) write(*,*) '  Annihilation rate in the Sun = ',annrate,' s^-1'
 
         ! See the header of src/nulike_bounds.f for detailed explanations of the following options.
-        use_fast_likelihood = .false.
+        speed = 0
         pvalFromRef = .true.
         dof = 1.0  !Calculate exclusion assuming conditioning on everything except a single parameter (eg mchi).
         ptr = C_NULL_PTR
@@ -209,7 +209,7 @@
         do i = 1, 3
           !Use nulike to get signal and background predictions, number of observed events, likelihood and p-value
           call nulike_bounds(experiment(i), wamwimp, annrate, nuyield_test, sigpred(i), bgpred(i), 
-     &     totobs(i), lnLike(i), pval(i), likechoice, theoryError, use_fast_likelihood, pvalFromRef,
+     &     totobs(i), lnLike(i), pval(i), likechoice, theoryError, speed, pvalFromRef,
      &     refLike(i), dof, ptr, threadsafe)
 
           if (talky) then

@@ -16,7 +16,7 @@ annihilation.
 
 Full details can be found in the papers:  
   1. Scott, Savage, Edsjö & IceCube Collaboration 2012, JCAP 11:057, [arXiv:1207.0810](http://arxiv.org/abs/1207.0810)
-  2. IceCube Collaboration 2016, JCAP xx:xxx, [arXiv:1601.xxxxx](http://arxiv.org/abs/1601.xxxxx)
+  2. IceCube Collaboration 2016, JCAP xx:xxx, [arXiv:1601.00653](http://arxiv.org/abs/1601.00653)
   
 If you use nulike for preparing a paper, please cite both of these.  If you use the 79-string IceCube likelihoods, don't forget to also cite the original IC79 WIMP paper:
   3. IceCube Collaboration 2013, PRL 110:131302, [arXiv:1212.4097](http://arxiv.org/abs/1212.4097)
@@ -54,7 +54,8 @@ demo you want to run, you can do
 
 Please refer to the source code of these examples for descriptions of
 options, etc.  If the output from nulike_test_wimp seems to match the
-contents of [nulike_test_wimp.diffme], then things are working properly.
+contents of [tests/nulike_test_wimp.diffme], then things are working
+properly.
 
 
 Generating partial likelihoods

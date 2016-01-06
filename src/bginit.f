@@ -110,7 +110,7 @@
           call exit(0)
         endif
 
-      !2015 likelihood, as per arXiv:1601.xxxx (Set up interpolation in distribution of the energy estimator.)
+      !2015 likelihood, as per arXiv:1601.00653 (Set up interpolation in distribution of the energy estimator.)
       case (2015)
 
         !Set up interpolation in energy distribution.

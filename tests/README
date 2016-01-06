@@ -1,0 +1,9 @@
+This directory contains the outputs of various runs of the nulike_test_wimp
+program, run with different speed settings.  The diffme file is for speed=0,
+i.e. the slow, accurate mode.  The plot shows how the IC79 tautau limit
+changes as a function of the speed setting.
+
+Which speed setting you should use really depends on your application.
+The results presented in the nulike paper (arxiv:1601.00653) were all done
+with speed = 0.  For most situations though, speed = 1 or speed = 2 is
+probably good enough.

@@ -116,7 +116,7 @@
         ! Total
         nulike_signal = theta_Snu + theta_Snubar
 
-      !2015 likelihood, as per arXiv:1601.xxxxx
+      !2015 likelihood, as per arXiv:1601.00653
       case (2015)
 
         log10E_lower = precomp_log10E(start_index(analysis),analysis)

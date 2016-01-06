@@ -40,7 +40,7 @@
 
         nulike_bgspec = BGeedist_prob(nchan_index,analysis)
 
-      !2015 likelihood, as per arXiv:1601.xxxxx
+      !2015 likelihood, as per arXiv:1601.00653
       case (2015)
 
         !If the value of the energy estimator is outside the range of this histogram, return zero.

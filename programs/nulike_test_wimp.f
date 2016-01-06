@@ -215,7 +215,7 @@
       ! Difference between the sought CL and the actual one for a given sigma_SDp
       real*8 function diff_CL(log10sigma)
 
-      use iso_c_binding, only: C_NULL_PTR, c_bool, c_ptr
+      use iso_c_binding, only: C_NULL_PTR, c_bool, c_ptr, c_int
 
       implicit none
       include 'nulike.h'
@@ -227,8 +227,8 @@
       real*8 lnLike(3), pval(3), refLike(3), dof, theoryError
       double precision :: ref_CL
       integer totobs, likechoice, i
+      integer(c_int) speed
       logical(c_bool) pvalFromRef
-      logical(c_bool) use_fast_likelihood
       logical(c_bool) threadsafe
       character (len=nulike_clen) experiment(3)
       type(c_ptr) ptr
@@ -249,7 +249,7 @@
       annrate=csu*0.5d0*tanh(tt_sun)**2        ! Annihiliation rate (s^-1)
 
       ! See the header of src/nulike_bounds.f for detailed explanations of the following options.
-      use_fast_likelihood = .false.
+      speed = 0
       pvalFromRef = .true.
       dof = 1.0  !Calculate exclusion assuming conditioning on everything except a single parameter (eg sigma_SDp).
       ptr = C_NULL_PTR
@@ -269,7 +269,7 @@
       do i = 1, 3
         !Use nulike to get signal and background predictions, number of observed events, likelihood and p-value
         call nulike_bounds(experiment(i), wamwimp, annrate, nuyield_test, sigpred, bgpred,
-     &   totobs, lnLike(i), pval(i), likechoice, theoryError, use_fast_likelihood, pvalFromRef,
+     &   totobs, lnLike(i), pval(i), likechoice, theoryError, speed, pvalFromRef,
      &   refLike(i), dof, ptr, threadsafe)
       enddo
 

@@ -31,9 +31,31 @@
 ***                      and p-value calculations (given as a fractional
 ***                      relative error).
 ***
-***        fastlike      In the case of liketype=4 with the 2015 likelihood,
-***                      do a faster, less accurate calculation of the spectral-angular
+***        speed         In the case of liketype=4 with the 2015 likelihood,
+***                      take some shortcuts on the spectral-angular
 ***                      part of the likelihood.
+***                      0 => no shortcuts (slow)
+***                           -full integration of partial likelihood (not log) with 1% accuracy
+***                           -neglect signal contribution to spectral-anglular likelihood
+***                            when it cannot be > 1% of the likelihood.
+***                      1 => fast
+***                           -use interpolated likelihood where it does not introduce an
+***                            error of more than 0.1 in final spectral-angular log-likelihood
+***                           -otherwise use full integration of partial likelihood with 30%
+***                            accuracy in likelihood (not log)
+***                           -neglect signal contribution to spectral-anglular likelihood
+***                            when it cannot be > 1% of the likelihood.
+***                      2 => faster
+***                           -use interpolated likelihood where it does not introduce an
+***                            error of more than 1.0 in final spectral-angular log-likelihood
+***                           -otherwise use full integration of partial likelihood with 30%
+***                            accuracy in likelihood (not log)
+***                           -neglect signal contribution to spectral-anglular likelihood
+***                            when it cannot be > 10% of the likelihood.
+***                      3 => fastest
+***                           -always use interpolated likelihood,
+***                           -neglect signal contribution to spectral-anglular likelihood
+***                            when it cannot be > 10% of the likelihood.
 ***
 ***        pvalFromRef   T => calculate the p-value with reference to a user-
 ***                           specified likelihood, assuming that the log-
@@ -84,7 +106,7 @@
 
       subroutine nulike_bounds(analysis_name_in, mwimp, annrate,
      & nuyield, Nsignal_predicted, NBG_expected, Ntotal_observed,
-     & lnlike, pvalue, liketype, theoryError, fastlike, pvalFromRef,
+     & lnlike, pvalue, liketype, theoryError, speed, pvalFromRef,
      & referenceLike, dof, context, threadsafe) bind(c)
 
       use iso_c_binding, only: c_ptr, c_char, c_double, c_int, c_bool
@@ -94,10 +116,10 @@
       include 'nulike_internal.h'
 
       integer(c_int), intent(inout) :: Ntotal_observed
-      integer(c_int), intent(in) :: liketype
+      integer(c_int), intent(in) :: liketype, speed
       real(c_double), intent(inout) :: Nsignal_predicted, NBG_expected, lnlike, pvalue
       real(c_double), intent(in) :: referenceLike, dof, mwimp, annrate, theoryError
-      logical(c_bool), intent(in) :: fastlike, pvalFromRef, threadsafe
+      logical(c_bool), intent(in) :: pvalFromRef, threadsafe
       character(kind=c_char), dimension(nulike_clen), intent(inout) :: analysis_name_in
       type(c_ptr), intent(inout) :: context
 
@@ -252,19 +274,19 @@
             stop
           endif
           specAngLikelihood = nulike_specanglike(1,theta_S, f_S, annrate,
-     &     logmw, sens_logE(1,1,analysis), nuyield, context, fastlike)
+     &     logmw, sens_logE(1,1,analysis), nuyield, context, speed)
           if (threadsafe) then
 !$omp parallel do reduction(+:specAngLikelihood)
             do j = 2, nEvents(analysis)
               specAngLikelihood = specAngLikelihood + nulike_specanglike(j,
      &         theta_S, f_S, annrate, logmw, sens_logE(1,1,analysis),
-     &         nuyield, context, fastlike)
+     &         nuyield, context, speed)
             enddo
           else
             do j = 2, nEvents(analysis)
               specAngLikelihood = specAngLikelihood + nulike_specanglike(j,
      &         theta_S, f_S, annrate, logmw, sens_logE(1,1,analysis),
-     &         nuyield, context, fastlike)
+     &         nuyield, context, speed)
             enddo
           endif
         endif
@@ -311,9 +333,9 @@
       endif
 
       if (doProfiling) then
-        call system_clock(counted2,countrate)
+        call system_clock(counted1,countrate)
         write(*,*) 'Elapsed time on pval calc (s): ',
-     &   real(counted2 - counted1)/real(countrate)
+     &   real(counted1 - counted2)/real(countrate)
       endif
 
 

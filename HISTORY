@@ -1,5 +1,11 @@
 HISTORY for nulike
 
+---------------- v1.0.1: Jan 6, 2016
+* Fixed TSPACK interpolation routines to provide proper thread safety when
+  using the shared library version of the code
+* Added additional speed settings; features a factor of 4-10 speedup in full
+  likelihood calculations for e.g. tautau root-finding example. Models with
+  minimal signal content are now much faster to compute.
 
 ---------------- v1.0.0: Dec 21, 2015
 First tagged release.  Features much awesomeness.

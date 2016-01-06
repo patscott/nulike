@@ -7,7 +7,7 @@
 
       program nulike_test
 
-      use iso_c_binding, only: C_NULL_PTR, c_bool, c_ptr
+      use iso_c_binding, only: C_NULL_PTR, c_bool, c_ptr, c_int
 
       implicit none
       !Nulike include
@@ -26,9 +26,9 @@
       real*8 sigpred, bgpred, lnLike, pval, refLike, dof         ! neutrino likelihood
       real*8 theoryError,phi_cut                                 ! neutrino likelihood
       integer totobs, likechoice                                 ! neutrino likelihood
+      integer(c_int) speed                                       ! neutrino likelihood
       logical uselogNorm                                         ! neutrino likelihood
       logical(c_bool) pvalFromRef                                ! neutrino likelihood
-      logical(c_bool) use_fast_likelihood                        ! neutrino likelihood
       logical(c_bool) threadsafe                                 ! neutrino likelihood
       logical BGLikePrecompute                                   ! neutrino likelihood
       type(c_ptr) ptr                                            ! neutrino likelihood
@@ -55,7 +55,7 @@
       ! 2012 likelihood (Scott, Savage, Edsjö & IceCube Collaboration 2012,
       ! JCAP 11:057, arXiv:1207.0810).
       ! The likelihood2015 folder contains data files designed for use with the
-      ! 2015 likelihood (IceCube Collaboration 2016, JCAP xx:xxx, arXiv:1601.xxxxx).
+      ! 2015 likelihood (IceCube Collaboration 2016, JCAP xx:xxx, arXiv:1601.00653).
       iclike2012 = 'data/IceCube/likelihood2012/'
       iclike2015 = 'data/IceCube/likelihood2015/'
 
@@ -231,9 +231,9 @@
         !likechoice = 3 ! Number of events and energy estimator (for IceCube, this is nchan = number of hit DOMs)
         likechoice = 4  ! Number of events, event arrival angles and energy estimator
 
-        ! Choose whether to do the spectral-angular part of the 2015 likelihood calculation using fast
-        ! interpolation or slower, more accurate, explicit integration.
-        use_fast_likelihood = .true.
+        ! Choose whether to do the spectral-angular part of the 2015 likelihood calculation using various fast
+        ! interpolation settings or slower, accurate, explicit integration.  See src/bounds.f and tests dir for details.
+        speed = 3
 
         ! Tell nulike whether to consider your provided neutrino yield function threadsafe or not.
         ! If this is true, nulike will use openMP to parallelise the spectro-angular likelihoood calculation.
@@ -256,7 +256,7 @@
 
         ! Finally use nulike to get signal and background predictions, number of observed events, likelihood and p-value
         call nulike_bounds(experiment, wamwimp, annrate, nuyield_test, sigpred, bgpred,
-     &   totobs, lnLike, pval, likechoice, theoryError, use_fast_likelihood, pvalFromRef,
+     &   totobs, lnLike, pval, likechoice, theoryError, speed, pvalFromRef,
      &   refLike, dof, ptr, threadsafe)
 
         write(*,*) '  Predicted signal events:    ', sigpred
