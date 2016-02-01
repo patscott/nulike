@@ -1,4 +1,5 @@
       DOUBLE PRECISION FUNCTION STORE (X)
+      USE omp_lib
       DOUBLE PRECISION X
 C
 C***********************************************************
@@ -30,11 +31,15 @@ C               precision word length.
 C
 C Modules required by STORE:  None
 C
+C Modified by Pat Scott Feb 01 2016 to make threadsafe
+C
 C***********************************************************
 C
       DOUBLE PRECISION Y
       COMMON/STCOM/Y
+!$ omp critical      
       Y = X
       STORE = Y
+!$ omp critical end      
       RETURN
       END
