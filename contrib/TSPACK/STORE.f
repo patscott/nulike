@@ -37,9 +37,9 @@ C***********************************************************
 C
       DOUBLE PRECISION Y
       COMMON/STCOM/Y
-!$ omp critical      
+!$omp critical
       Y = X
       STORE = Y
-!$ omp critical end      
+!$omp end critical
       RETURN
       END

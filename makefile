@@ -18,11 +18,11 @@
 
 # Define fortran compiler and options: intel
 #FF=ifort
-#FOPT=-O2 -extend_source # -warn all -check all #(contributed numerical routines cause warnings)
+#FOPT=-O2 -extend_source # -g -warn all -check all #(contributed numerical routines cause warnings)
 #MODULE=module
 # Define fortran compiler and options: gnu
 FF=gfortran
-FOPT=-O2 -ffixed-line-length-none # -Wall -fcheck=all #(contributed numerical routines cause warnings)
+FOPT=-O2 -ffixed-line-length-none # -g -Wall -fcheck=all #(contributed numerical routines cause warnings)
 MODULE=J
 
 # DarkSUSY location, library name and include path
@@ -112,17 +112,20 @@ libnulike.a : $(CUBPACK_OBJ) $(OBJ)
 libnulike.so : $(CUBPACK_OBJ) $(OBJ)
 	$(FC) $(SHARFLAGS) -o $(LIB)/$@ $(OBJ) $(CUBPACK_OBJ)
 
+#Note the link order of the libraries in the following executables! -lnulike must always come before -ldarksusy, 
+#as the nulike versions of the contributed TSPACK routines are threadsafe, whereas DarkSUSY's are not.
+
 nulike_prep : libnulike.a $(PROGS)/nulike_prep.f
-	$(FC) $(FFLAGS) -I$(NUSIGINC) -o $@ $(PROGS)/nulike_prep.f -L$(NUSIGDIR) -l$(NUSIGNAME) -L$(LIB) -lnulike -lgfortran
+	$(FC) $(FFLAGS) -I$(NUSIGINC) -o $@ $(PROGS)/nulike_prep.f -L$(LIB) -lnulike -lgfortran -L$(NUSIGDIR) -l$(NUSIGNAME)
 
 nulike_test : libnulike.a $(PROGS)/nulike_test.f
-	$(FF) $(FFLAGS) -I$(DSLIBINC) -o $@ $(PROGS)/nulike_test.f -L$(DSLIBDIR) -l$(DSLIBNAME) -lHB -lFH -L$(LIB) -lnulike
+	$(FF) $(FFLAGS) -I$(DSLIBINC) -o $@ $(PROGS)/nulike_test.f -L$(LIB) -lnulike -L$(DSLIBDIR) -l$(DSLIBNAME) -lHB -lFH
 
 nulike_test_mssm25 : libnulike.a $(PROGS)/nulike_test_mssm25.f
-	$(FF) $(FFLAGS) -I$(DSLIBINC) -o $@ $(PROGS)/nulike_test_mssm25.f -L$(DSLIBDIR) -l$(DSLIBNAME) -lHB -lFH -L$(LIB) -lnulike
+	$(FF) $(FFLAGS) -I$(DSLIBINC) -o $@ $(PROGS)/nulike_test_mssm25.f -L$(LIB) -lnulike -L$(DSLIBDIR) -l$(DSLIBNAME) -lHB -lFH
 
 nulike_test_wimp : libnulike.a $(PROGS)/nulike_test_wimp.f
-	$(FF) $(FFLAGS) -I$(DSLIBINC) -o $@ $(PROGS)/nulike_test_wimp.f -L$(DSLIBDIR) -l$(DSLIBNAME) -lHB -lFH -L$(LIB) -lnulike
+	$(FF) $(FFLAGS) -I$(DSLIBINC) -o $@ $(PROGS)/nulike_test_wimp.f -L$(LIB) -lnulike -L$(DSLIBDIR) -l$(DSLIBNAME) -lHB -lFH
 
 clean :
 	rm -f $(BUILD)/* tspack.f Key.dat nulike_prep nulike_test nulike_test_wimp nulike_test_mssm25

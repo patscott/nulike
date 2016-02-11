@@ -47,7 +47,7 @@
       integer(c_int), intent(in) :: speed
       type(c_ptr) context
       logical, save :: revert_to_accurate_likelihood
-      external nuyield, TSINTL
+      external nuyield
 
       interface
         function nulike_specangintegrand(NumFun,X) result(Value)
