@@ -1,5 +1,11 @@
 HISTORY for nulike
 
+---------------- v1.0.2: Feb 13, 2015
+* Fixed link order problem with examples, which caused DarkSUSY's version of
+  TSPACK to override nulike's when linking to the (unofficial) shared version of
+  DarkSUSY, and cause crashes due to DarkSUSY's version not being threadsafe.
+* Made some other minor threadsafety fixes in TSPACK
+
 ---------------- v1.0.1: Jan 6, 2016
 * Fixed TSPACK interpolation routines to provide proper thread safety when
   using the shared library version of the code
