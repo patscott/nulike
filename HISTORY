@@ -1,6 +1,10 @@
 HISTORY for nulike
 
----------------- v1.0.2: Feb 13, 2015
+---------------- v1.0.3: May 25, 2016
+* Added data files corresponding to curves shown in Fig 7 of arXiv:1601.00653.
+* Updated JCAP journal reference for arXiv:1601.00653.
+
+---------------- v1.0.2: Feb 13, 2016
 * Fixed link order problem with examples, which caused DarkSUSY's version of
   TSPACK to override nulike's when linking to the (unofficial) shared version of
   DarkSUSY, and cause crashes due to DarkSUSY's version not being threadsafe.
