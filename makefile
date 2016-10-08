@@ -109,7 +109,7 @@ $(BUILD)/tspack.o : $(TSPACK_FULL_SOURCES)
 libnulike.a : $(OBJ) $(CUBPACK_OBJ)
 	$(AR) $(ARFLAGS) $(LIB)/$@ $(OBJ) $(CUBPACK_OBJ)
 
-libnulike.so : $(OBJ)$(CUBPACK_OBJ)
+libnulike.so : $(OBJ) $(CUBPACK_OBJ)
 	$(FC) $(SHARFLAGS) -o $(LIB)/$@ $(OBJ) $(CUBPACK_OBJ)
 
 #Note the link order of the libraries in the following executables! -lnulike must always come before -ldarksusy,
