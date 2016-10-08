@@ -106,13 +106,13 @@ $(BUILD)/tspack.o : $(TSPACK_FULL_SOURCES)
 	$(FC) $(FFLAGS) -c tspack.f -o $(BUILD)/tspack.o
 	rm tspack.f
 
-libnulike.a : $(OBJ) 
+libnulike.a : $(OBJ) $(CUBPACK_OBJ)
 	$(AR) $(ARFLAGS) $(LIB)/$@ $(OBJ) $(CUBPACK_OBJ)
 
-libnulike.so : $(OBJ)
+libnulike.so : $(OBJ)$(CUBPACK_OBJ)
 	$(FC) $(SHARFLAGS) -o $(LIB)/$@ $(OBJ) $(CUBPACK_OBJ)
 
-#Note the link order of the libraries in the following executables! -lnulike must always come before -ldarksusy, 
+#Note the link order of the libraries in the following executables! -lnulike must always come before -ldarksusy,
 #as the nulike versions of the contributed TSPACK routines are threadsafe, whereas DarkSUSY's are not.
 
 nulike_prep : libnulike.a $(PROGS)/nulike_prep.f
