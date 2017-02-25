@@ -38,7 +38,7 @@
       parameter (eps2012 = 1.d-2, eps2015 = 3.d-2, SRgType = Simplex)
 
       interface
-        real(c_double) function nuyield(log10E,ptype,context) bind(c)
+        real(c_double) function nuyield(log10E,ptype,context)
           use iso_c_binding, only: c_ptr, c_double, c_int
           implicit none
           real(c_double), intent(in) :: log10E

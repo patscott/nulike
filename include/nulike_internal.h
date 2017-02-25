@@ -19,14 +19,14 @@
       logical sysErrDist_logNorm(max_analyses)
       logical no_bias(max_analyses)
       real*8 phi_max_deg(max_analyses)
-      real*8 exp_time(max_analyses), theoryErr(max_analyses) 
+      real*8 exp_time(max_analyses), theoryErr(max_analyses)
       real*8 theta_BG(max_analyses)
 
       integer nSensBins(max_analyses), nBiasBins(max_analyses)
       integer nBinsBGAng(max_analyses), nBinsBGE(max_analyses)
       integer nEvents(max_analyses)
       integer nHistograms(max_analyses), nnchan_total(max_analyses)
-      real*8  ee_min(max_analyses), ee_max(max_analyses) 
+      real*8  ee_min(max_analyses), ee_max(max_analyses)
 
       real*8 sens_logE(2,max_nSensBins+1,max_analyses)
       real*8 sens_logEcentres(max_nSensBins+1,max_analyses)
@@ -94,7 +94,7 @@
 
       type(c_ptr) context_shared
 
-      abstract interface 
+      abstract interface
         real(c_double) function nuyield_signature(log10E,ptype,context)
           use iso_c_binding, only: c_ptr, c_double, c_int
           implicit none
@@ -105,7 +105,7 @@
       end interface
       procedure (nuyield_signature), pointer :: nuyield_ptr
 
-      common /nulike_comm/ context_shared, nuyield_ptr, 
+      common /nulike_comm/ context_shared, nuyield_ptr,
      & events_nchan, events_cosphi,
      & events_cosphiErr, sens_logE,sens_nu,theta_BG, BGeedist_prob,
      & sens_logEcentres, sens_nuderivs, sens_nubarderivs,
@@ -113,14 +113,14 @@
      & sens_AngRessigma, BGangdist_derivs, BGangdist_sigma,
      & BGangdist_phi, BGangdist_prob, BGeedist_ee,
      & phi_max_deg, theoryErr, BGpvalPoissonian, BGangdist_norm,
-     & sens_AngRes, exp_time, thetashare, annrateshare, 
+     & sens_AngRes, exp_time, thetashare, annrateshare,
      & BGangdist_conenorm, hist_LogE, hist_logEcentres, hist_nchan,
      & hist_prob, hist_derivs, hist_sigma, sens_nubar,sens_syserr,
      & sens_staterr, precomp_log10E, precomp_weights, precomp_derivs,
-     & precomp_sigma, precompEAnoL_weights, precompEAnoL_derivs, 
-     & precompEAnoL_sigma, precompEA_weights, precompEA_derivs, 
-     & precompEA_sigma, bias_logE, bias_logEcentres, bias_nu, 
-     & bias_nubar, bias_nuderivs, bias_nubarderivs, bias_nusigma, 
+     & precomp_sigma, precompEAnoL_weights, precompEAnoL_derivs,
+     & precompEAnoL_sigma, precompEA_weights, precompEA_derivs,
+     & precompEA_sigma, bias_logE, bias_logEcentres, bias_nu,
+     & bias_nubar, bias_nuderivs, bias_nubarderivs, bias_nusigma,
      & bias_nubarsigma, ee_min, ee_max, nchanshare,
      & BGeedist_derivs, BGeedist_sigma,
      & nBinsBGE, nBinsBGAng, nEvents, start_index, start_index_noL,
@@ -131,9 +131,9 @@
       save /nulike_comm/
 
       ! This parameter will be initialized in a block data routine
-      ! (see flagblocks.f).  The external line below ensures the 
+      ! (see flagblocks.f).  The external line below ensures the
       ! block data routine is loaded at compile time.
-      logical nulike_init_called     
+      logical nulike_init_called
       common /nulike_init_flag/ nulike_init_called
       save /nulike_init_flag/
       external nulike_init_flagblock

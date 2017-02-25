@@ -1,11 +1,11 @@
 ***********************************************************************
-*** nulike_anglike returns the contribution of a single event to the 
+*** nulike_anglike returns the contribution of a single event to the
 *** unbinned likelihood, based on the reconstructed angle between
 *** its arrival direction in the detector and the direction of the Sun.
 *** This routine is used only with the 2012 likelihood.
 ***
 *** input:  cosphi     cos(reconstructed angle from solar position)
-***         parabsigma paraboloid (or other) sigma corresponding to 
+***         parabsigma paraboloid (or other) sigma corresponding to
 ***                    1 sigma angular error when considering a single
 ***                    dimension of a 2D Gaussian PDF (i.e. 39,3% C.L.,
 ***                    not 68%). (degrees)
@@ -14,7 +14,7 @@
 ***                    expected to be due to signal rather than back-
 ***                    ground.
 *** output:            ln(Likelihood / degrees^-1)
-***       
+***
 *** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: May 6, 2011
 *** Modified: Jun 3, 6 2014
@@ -38,7 +38,7 @@
       endif
 
       !Calculate the signal part of the likelihood
-      signalpartiallike = f_S*nulike_psf(acos(cosphi)*180.d0/pi, 
+      signalpartiallike = f_S*nulike_psf(acos(cosphi)*180.d0/pi,
      & 0.d0, parabsigma)
 
       !Calculate the background part of the likelihood
