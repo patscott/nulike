@@ -92,19 +92,71 @@ default: libnulike.a
 
 all : libnulike.a libnulike.so nulike_prep nulike_test nulike_test_mssm25 nulike_test_wimp
 
-$(BUILD)/%.o : $(SRC)/%.f $(INC_DEP) $(CUBPACK_OBJ)
-	$(FC) $(FFLAGS) -c $< -o $@
-
-$(BUILD)/%.o : $(SRC)/%.f90 $(INC_DEP) $(CUBPACK_OBJ)
-	$(FC) $(FFLAGS) -c $< -o $@
-
-$(BUILD)/%.o : $(CUBPACK)/src/%.f90
-	$(FC) $(FFLAGS) -c $< -o $@
 
 $(BUILD)/tspack.o : $(TSPACK_FULL_SOURCES)
 	cat $(TSPACK_FULL_SOURCES) > tspack.f
 	$(FC) $(FFLAGS) -c tspack.f -o $(BUILD)/tspack.o
 	rm tspack.f
+
+
+$(BUILD)/buckley.o : $(CUBPACK)/src/buckley.f90
+	$(FC) $(FFLAGS) -c $< -o $@
+
+$(BUILD)/error_handline.o : $(CUBPACK)/src/error_handline.f90
+	$(FC) $(FFLAGS) -c $< -o $@
+
+$(BUILD)/%.o : $(CUBPACK)/src/%.f90 $(BUILD)/buckley.o
+	$(FC) $(FFLAGS) -c $< -o $@
+
+$(BUILD)/divide.o : $(CUBPACK)/src/divide.f90 $(BUILD)/buckley.o $(BUILD)/internal_types.o
+	$(FC) $(FFLAGS) -c $< -o $@
+
+$(BUILD)/check.o : $(CUBPACK)/src/check.f90 $(BUILD)/buckley.o $(BUILD)/internal_types.o
+	$(FC) $(FFLAGS) -c $< -o $@
+
+$(BUILD)/rule_general.o : $(CUBPACK)/src/rule_general.f90 $(BUILD)/buckley.o $(BUILD)/internal_types.o $(BUILD)/rule_1.o $(BUILD)/rule_t2.o $(BUILD)/rule_t3.o $(BUILD)/rule_tn.o $(BUILD)/rule_c2.o $(BUILD)/rule_c3.o $(BUILD)/rule_cn.o
+	$(FC) $(FFLAGS) -c $< -o $@
+
+$(BUILD)/region_processor.o : $(CUBPACK)/src/region_processor.f90 $(BUILD)/buckley.o $(BUILD)/internal_types.o $(BUILD)/rule_general.o $(BUILD)/divide.o
+	$(FC) $(FFLAGS) -c $< -o $@
+
+$(BUILD)/global_all.o : $(CUBPACK)/src/global_all.f90 $(BUILD)/buckley.o $(BUILD)/internal_types.o $(BUILD)/region_processor.o $(BUILD)/volume.o $(BUILD)/ds_routines.o
+	$(FC) $(FFLAGS) -c $< -o $@
+
+$(BUILD)/cui.o : $(CUBPACK)/src/cui.f90 $(BUILD)/buckley.o $(BUILD)/ds_routines.o $(BUILD)/rule_general.o $(BUILD)/global_all.o $(BUILD)/internal_types.o $(BUILD)/check.o $(BUILD)/error_handling.o
+	$(FC) $(FFLAGS) -c $< -o $@
+
+$(BUILD)/cons.o : $(SRC)/cons.f90 $(INC_DEP)
+	$(FC) $(FFLAGS) -c $< -o $@
+
+
+$(BUILD)/partials.o : $(SRC)/partials.f $(INC_DEP) $(BUILD)/buckley.o $(BUILD)/cui.o
+	$(FC) $(FFLAGS) -c $< -o $@
+
+$(BUILD)/signal.o : $(SRC)/signal.f $(INC_DEP) $(BUILD)/buckley.o $(BUILD)/cui.o
+	$(FC) $(FFLAGS) -c $< -o $@
+
+$(BUILD)/specanglike.o : $(SRC)/specanglike.f $(INC_DEP) $(BUILD)/buckley.o $(BUILD)/cui.o
+	$(FC) $(FFLAGS) -c $< -o $@
+
+$(BUILD)/speclike.o : $(SRC)/speclike.f $(INC_DEP) $(BUILD)/buckley.o $(BUILD)/cui.o
+	$(FC) $(FFLAGS) -c $< -o $@
+
+$(BUILD)/incgam.o : $(SRC)/incgam.f90 $(INC_DEP) $(BUILD)/cons.o
+	$(FC) $(FFLAGS) -c $< -o $@
+
+$(BUILD)/marcumq.o : $(SRC)/marcumq.f90 $(INC_DEP) $(BUILD)/incgam.o
+	$(FC) $(FFLAGS) -c $< -o $@
+
+$(BUILD)/offctrpsf.o : $(SRC)/offctrpsf.f $(INC_DEP) $(BUILD)/marcumq.o
+	$(FC) $(FFLAGS) -c $< -o $@
+
+$(BUILD)/partintegrand.o : $(SRC)/partintegrand.f $(INC_DEP) $(BUILD)/marcumq.o
+	$(FC) $(FFLAGS) -c $< -o $@
+
+$(BUILD)/%.o : $(SRC)/%.f $(INC_DEP)
+	$(FC) $(FFLAGS) -c $< -o $@
+
 
 libnulike.a : $(CUBPACK_OBJ) $(OBJ)
 	$(AR) $(ARFLAGS) $(LIB)/$@ $(OBJ) $(CUBPACK_OBJ)
