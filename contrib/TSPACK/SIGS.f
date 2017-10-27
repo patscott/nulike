@@ -243,7 +243,7 @@ C The following lines added by Pat Scott Jan 31 2008
           RTOL = RTOL * 2.D0
           WRITE(*,*) 'WARNING: RTOL in SIGS doubled to aid convergence'
         ENDIF
-        IF (NIT .EQ. NITMAX) THEN 
+        IF (NIT .EQ. NITMAX) THEN
           WRITE(*,*) 'Error: SIGS did not converge'
           GO TO 9
         ENDIF
@@ -289,10 +289,14 @@ C   Top of loop:  compute the change in SIG by linear
 C     interpolation.
 C
     4   DSIG = -F*DSIG/(F-F0)
+C   Modified by Pat Scott Oct 27 2017, to prevent 4-6 infinite loop due to roundoff error on Xenon Phi
+        IF ( ABS(DSIG) .GT. ABS(DMAX)  .OR.
+     .       DSIG*DMAX .GT. 0. ) THEN
+          F0 = FNEG
+          DSIG = -F*DMAX/(F-F0)
+        ENDIF
         IF (LUN .GE. 0) WRITE (LUN,120) DSIG
   120   FORMAT (5X,'MONOTONICITY -- DSIG = ',D15.8)
-        IF ( ABS(DSIG) .GT. ABS(DMAX)  .OR.
-     .       DSIG*DMAX .GT. 0. ) GO TO 6
 C
 C   Restrict the step-size such that abs(DSIG) .GE. STOL/2.
 C     Note that DSIG and DMAX have opposite signs.
@@ -304,6 +308,10 @@ C   Update SIG, F0, and F.
 C
         SIG = SIG + DSIG
         F0 = F
+
+C   Added by Pat Scott Oct 2017, to prevent F=NaN and SIG<0 due to roundoff error on Xenon Phi
+        IF (SIG .LE. 0.D0) GO TO 7
+
         IF (SIG .LE. .5D0) THEN
 C
 C   Use approximations to the hyperbolic functions designed

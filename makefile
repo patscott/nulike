@@ -26,13 +26,13 @@ FOPT=-O2 -ffixed-line-length-none # -g -Wall -fcheck=all #(contributed numerical
 MODULE=J
 
 # DarkSUSY location, library name and include path
-DSLIBDIR = /home/pat/darksusy-5.1.3/lib
-DSLIBINC = /home/pat/darksusy-5.1.3/include
+DSLIBDIR = ../darksusy-5.1.3/lib
+DSLIBINC = ../darksusy-5.1.3/include
 DSLIBNAME = darksusy
 
 # nusigma location, library name and include path
-NUSIGDIR = ../nusigma-1.17-pyr/lib
-NUSIGINC = ../nusigma-1.17-pyr/inc
+NUSIGDIR = ../nusigma-1.18-pyr/lib
+NUSIGINC = ../nusigma-1.18-pyr/inc
 NUSIGNAME = nusigma
 
 # Define library-making options

@@ -1,5 +1,9 @@
 HISTORY for nulike
 
+---------------- v1.0.6: Oct 27, 2017
+* Patched TSPACK to fix numerical instabilities causing nulike to hang with fast=3
+  on Intel Knight's Landing (Xeon Phi x200) processors.
+
 ---------------- v1.0.5: June 9, 2017
 * Updated build system to allow building in parallel with make -jN.
 
