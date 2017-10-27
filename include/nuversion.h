@@ -5,6 +5,6 @@
 !  author: Pat Scott (p.scott@imperial.ac.uk), Jan 3, 2015
 
       character (len=17) version
-      parameter(version = '1.0.5            ') ! Pad it with spaces at the end if < 17 characters
+      parameter(version = '1.0.6            ') ! Pad it with spaces at the end if < 17 characters
 
 
