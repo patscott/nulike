@@ -41,7 +41,11 @@
           character*2 interaction
         end function func
       end interface
-      procedure (func), pointer :: dsdxdy_ptr
+      type dsdxdy_ptr_container
+        SEQUENCE
+        procedure (func), pointer, nopass :: f
+      end type dsdxdy_ptr_container
+      type (dsdxdy_ptr_container) :: dsdxdy_ptr
 
       common /nu_prep_comm/ hist_ee_flip, hist_prob_flip,
      & hist_derivs_flip, hist_sigma_flip, hist_single_ee_prob,
