@@ -71,7 +71,7 @@
 
       ! Set the global context pointers unable to be passed through CUBPACK
       context_shared = context
-      nuyield_ptr => nuyield
+      nuyield_ptr%f => nuyield
 
       ! Switch according to likelihood version.
       select case (like)

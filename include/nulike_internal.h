@@ -103,7 +103,11 @@
           type(c_ptr), intent(inout) :: context
         end function nuyield_signature
       end interface
-      procedure (nuyield_signature), pointer :: nuyield_ptr
+      type nuyield_ptr_container
+        SEQUENCE
+        procedure (nuyield_signature), pointer, nopass :: f
+      end type nuyield_ptr_container
+      type (nuyield_ptr_container) :: nuyield_ptr
 
       common /nulike_comm/ context_shared, nuyield_ptr,
      & events_nchan, events_cosphi,

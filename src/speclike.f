@@ -1,5 +1,5 @@
 ***********************************************************************
-*** nulike_speclike returns the contribution of a single event to the 
+*** nulike_speclike returns the contribution of a single event to the
 *** unbinned likelihood, based on the number of hit DOMs and the
 *** theoretical energy spectrum of incoming neutrinos.
 *** This routine is used only with the 2012 likelihood.
@@ -10,22 +10,22 @@
 ***         f_S        signal fraction; percentage of predicted counts
 ***                     expected to be due to signal rather than back-
 ***                     ground.
-***         annrate    Annihilation rate (s^-1) 
+***         annrate    Annihilation rate (s^-1)
 ***         logmw      log_10(m_WIMP / GeV)
 ***         reset      Reset cached spectral likelihoods (these allow reuse
 ***                     for multiple events with the same spectral data).
 ***         logEmin    log10(Emin/GeV), where Emin is the lower energy
-***                     boundary of the analysis energy range  
+***                     boundary of the analysis energy range
 ***         logEmax    log10(Emax/GeV), where Emax is the upper energy
 ***                     boundary of the analysis energy range
 ***         nuyield    external double function that returns
 ***                     the differential neutrino flux
-***                     at the detector in units of m^-2 GeV^-1 
+***                     at the detector in units of m^-2 GeV^-1
 ***                     annihilation^-1
 ***         context    A c_ptr passed in to nuyield when it is called
 ***
 *** output:            ln(Likelihood / chan^-1)
-***       
+***
 *** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Apr 22, 2011
 *** Modified: March 6, 2014
@@ -41,7 +41,7 @@
 
       implicit none
       include 'nulike_internal.h'
-     
+
       logical reset, savedSpecLikeFlags(nchan_maxallowed)
       real*8 nchan, theta_S, f_S, annrate, upperLimit
       real*8 signalpartiallike, bgpartiallike, integral, nulike_bgspec
@@ -67,9 +67,9 @@
       thetashare = theta_S
       annrateshare = annrate
       context_shared = context
-      nuyield_ptr => nuyield
+      nuyield_ptr%f => nuyield
 
-      if (nchan_int .gt. nchan_maxallowed) 
+      if (nchan_int .gt. nchan_maxallowed)
      & stop 'nchan > nchan_maxallowed in nulike_speclike'
 
       !Reset saved spectral likelihoods if requested
@@ -86,7 +86,7 @@
         return
 
       endif
-         
+
       if (theta_S .ne. 0.d0 .and. logmw .gt. logEmin) then
 
         if (logmw .lt. logEmax) then
@@ -101,7 +101,7 @@
         call CUBATR(1,nulike_specintegrand,SVertices,SRgType,
      &   integral,SAbsErr,IER,MaxPts=5000000,EpsRel=eps,Job=2,Key=2)
         if (IER .ne. 0) then
-          write(*,*) 'Error raised by CUBATR in nulike_speclike: ', IER 
+          write(*,*) 'Error raised by CUBATR in nulike_speclike: ', IER
           stop
         endif
         call CUBATR()
@@ -110,7 +110,7 @@
 
         integral = 0.d0
 
-      endif    
+      endif
 
       signalpartiallike = f_S * integral * dlog(10.d0)
 

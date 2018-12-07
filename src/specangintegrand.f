@@ -7,9 +7,9 @@
 ***
 *** Input:        NumFun         =1
 ***               X(1)           log10(neutrino energy/GeV)
-*** Hidden input: nuyield_ptr    external double function that returns
+*** Hidden input: nuyield_ptr%f   external double function that returns
 ***                               the differential neutrino flux
-***                               at the detector in units of m^-2 
+***                               at the detector in units of m^-2
 ***                               GeV^-1 annihilation^-1
 ***               eventnumshare  the unique index number of this event
 ***                               (indexed by the thread number)
@@ -21,7 +21,7 @@
 ***                                               chan^-1 degrees^-1 )
 ***
 *** Note that the factor of ln(10) in the logarithmic integral has
-*** been left for post-multiplication in order to increase efficiency.      
+*** been left for post-multiplication in order to increase efficiency.
 ***
 *** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Jun 8, 2014
@@ -47,8 +47,8 @@
       w2 = nulike_tabulated_weight(X(1),2,eventnumshare(thread))
 
       !Scale neutrino and anti-neutrino yields by saved weights.
-      Value(1) = nuyield_ptr(X(1),1,context_shared)*nulike_bias(X(1),1)*w1 +
-     &           nuyield_ptr(X(1),2,context_shared)*nulike_bias(X(1),2)*w2
+      Value(1) = nuyield_ptr%f(X(1),1,context_shared)*nulike_bias(X(1),1)*w1 +
+     &           nuyield_ptr%f(X(1),2,context_shared)*nulike_bias(X(1),2)*w2
 
       !Weight by E to give full integrand
       Value(1) = Value(1) * 10.d0**X(1)

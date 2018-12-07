@@ -1,7 +1,7 @@
 ***********************************************************************
-*** nulike_specanglike returns the contribution of a single event to the 
-*** unbinned likelihood, based on values of the arrival direction and 
-*** the energy estimator for the event, as well as the theoretical 
+*** nulike_specanglike returns the contribution of a single event to the
+*** unbinned likelihood, based on values of the arrival direction and
+*** the energy estimator for the event, as well as the theoretical
 *** energy spectrum of incoming neutrinos.
 *** This routine is used only with the 2015 likelihood.
 ***
@@ -11,13 +11,13 @@
 ***         f_S          signal fraction; percentage of predicted counts
 ***                       expected to be due to signal rather than back-
 ***                       ground.
-***         annrate      Annihilation rate (s^-1) 
+***         annrate      Annihilation rate (s^-1)
 ***         logmw        log_10(m_WIMP / GeV)
 ***         logEmin      log_10(Emin/GeV), where Emin is the lower energy
-***                       boundary of the analysis energy range  
+***                       boundary of the analysis energy range
 ***
 *** output:              ln(Likelihood / chan^-1)
-***       
+***
 *** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Jun 8, 2014
 ***********************************************************************
@@ -74,7 +74,7 @@
         write(*,*) 'Error in nulike_specanglike: unrecognised speed: ', speed
         stop
       end select
-      
+
       ! Don't bother with energies above or below which there is no estimate of the effective area
       logEmin_true = max(precomp_log10E(1,analysis),logEmin)
       logEmax_true = min(precomp_log10E(nPrecompE(analysis),analysis),logmw)
@@ -84,8 +84,8 @@
         ! Reset the likelihood accuracy flag
         revert_to_accurate_likelihood = .false.
         ! Set the global context pointers unable to be passed through CUBPACK
-        context_shared = context 
-        nuyield_ptr => nuyield
+        context_shared = context
+        nuyield_ptr%f => nuyield
       endif
 
       ! Retrieve the event info
@@ -99,7 +99,7 @@
       if (logEmin_true .gt. logEmax_true) then
 
         sigpartial = 0.d0
-        
+
       else
 
         ! If the signal fraction is big enough to impact the likelihood, go ahead.
@@ -110,19 +110,19 @@
 
           ! Do the likelihood calculation using a fast interpolation
           if (speed .gt. 0 .and. .not. revert_to_accurate_likelihood) then
-    
+
             yvals = 0.d0
             do i = 1, nPrecompE(analysis)
               log10E = precomp_log10E(i,analysis)
-              do ptype = 1,2     
+              do ptype = 1,2
                 weight = precomp_weights(i,event_number,ptype,analysis)
                 if (weight - logZero .gt. epsilon(logZero)) then
                   yvals(i) = yvals(i) + nuyield(log10E,ptype,context) * 10.d0**weight
                 endif
-              enddo          
+              enddo
               yvals(i) = yvals(i) * 10.d0**log10E
             enddo
-      
+
             !Set up interpolation in spectral-angular likelihood for this event
             call TSPSI(nPrecompE(analysis),precomp_log10E(:,analysis),yvals,
      &       1,0,.false.,.false.,2*nPrecompE(analysis)-2,working,yderivs,
@@ -131,8 +131,8 @@
               write(*,*) 'Error in nulike_specanglike: TSPSI failed with error'
               write(*,*) 'code',IER,' in setting up neutrino effective area.'
               stop
-            endif   
-      
+            endif
+
             !Use the interpolant to calculate the integral
             sigpartial = TSINTL(logEmin_true,logEmax_true,nPrecompE(analysis),
      &       precomp_log10E(:,analysis),yvals,yderivs,sigma,IER)
@@ -141,46 +141,46 @@
               write(*,*) 'code',IER,' in setting up neutrino effective area.'
               stop
             endif
-  
+
           else
-           
+
             sigpartial = 0.d0
-  
+
           endif
-                      
+
           ! Do the likelihood calculation using a proper integration
           if (speed == 0 .or.
-     &        revert_to_accurate_likelihood .or. 
+     &        revert_to_accurate_likelihood .or.
      &        (event_number == 1 .and. speed .ne. 3)) then
-       
+
             eventnumshare(omp_get_thread_num()+1) = event_number
             IER = 0
             SVertices(1,:) = (/logEmin_true, logEmax_true/)
             call CUBATR(1,nulike_specangintegrand,SVertices,SRgType,
      &       sigpartial_accurate,SAbsErr,IER,EpsAbs=effZero,MaxPts=5000000,EpsRel=eps,Job=2,Key=2)
             if (IER .ne. 0) then
-              write(*,*) 'Error raised by CUBATR in nulike_specanglike: ', IER 
+              write(*,*) 'Error raised by CUBATR in nulike_specanglike: ', IER
               stop
             endif
             call CUBATR()
-  
+
           else
-  
+
             sigpartial_accurate = 0.d0
-  
+
           endif
-  
+
           ! Revert to the accurate likelihood for this model if speed = 1 or 2 and the fast likelihood
           ! is too far off for the first event.
           if (event_number == 1 .and. speed .ne. 0 .and. speed .ne. 3) then
             measure = f_S * nEvents(analysis) * abs(log(sigpartial) - log(sigpartial_accurate))
             if (measure .gt. 10.d0*thresh) revert_to_accurate_likelihood = .true.
           endif
-  
+
           if (theta_S .gt. epsilon(theta_S)) then
-            if (revert_to_accurate_likelihood .or. speed .eq. 0) sigpartial = sigpartial_accurate  
+            if (revert_to_accurate_likelihood .or. speed .eq. 0) sigpartial = sigpartial_accurate
             sigpartial = exp_time(analysis) / theta_S * annrate * dlog(10.d0) * sigpartial
-          else 
+          else
             sigpartial = 0.d0
           endif
 
@@ -195,11 +195,11 @@
 
       ! Combine background and signal components
       nulike_specanglike = f_S * sigpartial + (1.d0-f_S) * bgpartial
-      
+
       ! Take ln of total likelihood
       if (nulike_specanglike .le. effZero) then
         nulike_specanglike = logZero
-      else 
+      else
         nulike_specanglike = log(nulike_specanglike)
       endif
 
