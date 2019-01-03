@@ -1,4 +1,6 @@
 HISTORY for nulike
+---------------- v1.0.7: Jan 3, 2018
+* Fixed incompatibility with gfortran8.
 
 ---------------- v1.0.6: Oct 27, 2017
 * Patched TSPACK to fix numerical instabilities causing nulike to hang with fast=3
