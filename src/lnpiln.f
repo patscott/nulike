@@ -1,6 +1,6 @@
 !=======================================================================
 ! LN(Poisson Integral) for Log-Normal systematic uncertainty
-! 
+!
 ! The logarithm of a Poissonian likelihood marginalized over a
 ! systematic uncertainty in the average expected number of signal
 ! events (e.g. from a systematic uncertainty in the detector
@@ -14,7 +14,7 @@
 !                         (\theta_b + \epsilon\theta_s)^n
 !                         e^{-(\theta_b + \epsilon\theta_s)}
 !                         / (\epsilon n!)
-! 
+!
 ! Inputs:
 !     n         Number of observed events
 !     thetab    Average number of background events
@@ -26,43 +26,43 @@
 !               is not technically the s.d. of the distribution,
 !               although it approaches the s.d. as sigma becomes much
 !               smaller than the average.
-! 
+!
 ! For further details, see:
 !   * Conrad, Botner, Hallgren & Perez de los Heros, Phys. Rev. D 67,
 !     012002 (2003) [arXiv:hep-ex/0202013].
 !   * Scott et al., JCAP 1001, 031 (2010) [arXiv:0909.3300
 !     [astro-ph.CO]].
-! 
+!
 ! This routine uses a either a conditioned numerical integration or an
 ! analytically integrated Taylor series to perform the calculation
 ! quickly.  It has not been thoroughly tested for extreme cases in
 ! the parameters (lnpin is fairly robust in this respect); however,
 ! it works well for "reasonable" parameter values.
-! 
-! 
+!
+!
 !    Created by Chris Savage (savage@fysik.su.se)
 !    2011/06/02
-! 
+!
 !=======================================================================
-! 
+!
       REAL*8 FUNCTION nulike_lnpiln(n,thetab,thetas,sigma)
       IMPLICIT NONE
       INTEGER n
       REAL*8 thetab,thetas,sigma
-      
+
       ! Checks --------------------------------------------
       IF ((n .LT. 0) .OR. (thetab .LT. 0d0)
      &    .OR. (thetas .LT. 0d0) .OR. (sigma .LT. 0d0)) THEN
         WRITE(*,*) 'ERROR: nulike_lnpiln called with negative argument'
         STOP
       END IF
-      
+
       ! Special cases -------------------------------------
       ! Before attempting to do a numerical integration, we first
       ! handle some special cases:
       !    thetas = 0
       !    sigma  = 0
-      
+
       ! Special case: thetas = 0
       ! The integration drops out and we have a strictly Poisson
       ! probability with average thetab
@@ -70,7 +70,7 @@
         nulike_lnpiln = lnpoisson(n,thetab)
         RETURN
       END IF
-      
+
       ! Special case: sigma = 0
       ! The integration drops out and we have a strictly Poisson
       ! probability with average thetab+thetas
@@ -78,24 +78,24 @@
         nulike_lnpiln = lnpoisson(n,thetab+thetas)
         RETURN
       END IF
-      
+
       ! General case ---------------------------------------
       ! For the general case, we will do a numerical integration.
       nulike_lnpiln = nintegrate(n,thetab,thetas,sigma)
-      
-      
+
+
       CONTAINS
-      
+
       ! ----------------------------------------------------------------
       ! Subroutine to calculate the logarithm of a Poisson probability:
       !    P(n|theta) = theta^n EXP(-theta) / n!
-      ! 
+      !
       REAL*8 FUNCTION lnpoisson(n,theta)
       IMPLICIT NONE
       INTEGER n
       REAL*8 theta
       REAL*8 lngamma
-      
+
       ! Special case: theta = 0
       !    P(0|0) = 1
       !    P(n|0) = 0   [n > 0]
@@ -107,23 +107,23 @@
         END IF
         RETURN
       END IF
-      
+
       ! Special case: n = 0
       !    P(0|theta) = EXP(-theta)
       IF (n .EQ. 0) THEN
         lnpoisson = -theta
         RETURN
       END IF
-      
+
       ! General case
       lnpoisson = n*LOG(theta) - theta - lngamma(n+1d0)
-      
+
       END FUNCTION lnpoisson
-      
-      
+
+
       ! ----------------------------------------------------------------
       ! Function to calculate the integral numerically.
-      ! 
+      !
       ! To obtain a better form for numerical integration, we choose
       ! a more suitable integration variable.  First, write the
       ! integral as:
@@ -147,42 +147,42 @@
       ! so, to first order, the integration is now approximately a
       ! gaussian integration with unit variance.  The quantity Iu
       ! should be of order 1.
-      ! 
+      !
       ! NOTE: This routine has not been checked for proper handling
       !       under extreme cases (very large and/or very small
       !       parameters).
-      ! 
+      !
       REAL*8 FUNCTION nintegrate(n,thetab,thetas,sigma)
       IMPLICIT NONE
       INTEGER n
       REAL*8 thetab,thetas,sigma
       REAL*8 y0,g0,sigmau,expy,kappa,rho,lnC,lnIu
-      
+
       ! NOTE: this routine should not be called for any of these cases:
       !   *) thetas = 0
       !   *) sigma  = 0
       ! These cases should be checked for before calling this function.
-      
+
       ! Find the maximum of g(y) and the corresponding y0, g(y0),
       ! and sigmau
       CALL find_maximum(n,thetab,thetas,sigma,y0,g0,sigmau)
-      
+
       ! Useful quantities
       expy  = EXP(y0)
       kappa = thetas*expy
       rho   = kappa / (thetab+kappa)    ! also expy / (r+expy)
-      
+
       ! Now we determine:
       !   Iu = 1/sqrt{2\pi} \int_u0^\infty e^{f(u)}
       ! which is a well-behaved integral which can be evaluated
       ! numerically.
-      ! 
+      !
       ! With the above definitions,
       !   f(u) = -u^2/2 - kappa [e^(dy) - 1 - dy - dy^2/2]
       !          + n [ln(1+rho*(e^dy-1)) - rho*dy - rho*(1-rho)/2 dy^2]
       ! where dy = sigmau*u.  Note that, due to canceling, the terms in
       ! brackets are each of order u^3.
-      ! 
+      !
       ! If kappa, n and sigmau are sufficiently small, we can simply
       ! expand the non- u^2 part of the exponential in u and
       ! perform the integral term by term.  These integrals have
@@ -205,14 +205,14 @@
       ELSE
         lnIu = nintegrate_lnIu(sigmau,n,rho,kappa)
       END IF
-      
+
       ! Put everything together, divided as follows:
       !   I = [sigmau/sigma] [e^{g(eps0)}] [Iu]
       !           C            e^g0         Iu
       ! Take log of above terms.
       lnC  = LOG(sigmau/sigma)
       nintegrate = lnC + g0 + lnIu
-      
+
       ! TESTING
       !lnIu1 = nintegrate_lnIu(sigmau,n,rho,kappa)
       !lnIu2 = expand_lnIu(sigmau,n,rho,kappa)
@@ -221,7 +221,7 @@
       !&    ((n*rho*(1-rho*(3-2*rho))-kappa)*sigmau**3)**6,
       !&    lnIu1,lnIu2,EXP(lnC+g0+lnIu1),EXP(lnC+g0+lnIu2),
       !&    EXP(lnIu2-lnIu1)-1d0
-      
+
       END FUNCTION nintegrate
 
 
@@ -233,7 +233,7 @@
       !          + n [ln(1+rho*(e^dy-1)) - rho*dy - rho*(1-rho)/2 dy^2]
       ! where dy = sigmau*u.  Note that, due to canceling, the terms in
       ! brackets are each of order u^3.
-      ! 
+      !
       ! To a rough approximation, this is a Gaussian integration and
       ! should be of O(1); in many (most?) cases, this integral is
       ! actually very close to 1 (within 1% or better).  We break the
@@ -243,15 +243,15 @@
       ! The methods here are partly based on the techniques found in
       ! Numerical recipes (in particular, see the "Quadrature by
       ! Variable Transformation" section).
-      ! 
+      !
       ! The result is nearly always accurate to at least 10 significant
       ! digits, but is usually more accurate than that.  In some cases,
       ! it is accurate to nearly full double precision.
-      ! 
+      !
       ! NOTE: This routine has not been checked for proper handling
       !       under extreme cases (very large and/or very small
       !       parameters).
-      ! 
+      !
       ! NOTE2: The nearly unit value obtained for this integral
       !        suggests there might be a power expansion in the
       !        non-quadratic part of the exponential, i.e.:
@@ -262,7 +262,7 @@
       !        yield the value for the integral much more rapidly than
       !        the numerical integration done here.  This expansion
       !        has been implemented in the expand_lnIu routine below.
-      ! 
+      !
       REAL*8 FUNCTION nintegrate_lnIu(sigmau,n,rho,kappa)
       IMPLICIT NONE
       INTEGER n
@@ -279,9 +279,9 @@
       ! so this can be set close to full double precision.
       REAL*8 reltol,stepreltol
       PARAMETER(reltol=1d-15)
-      
+
       !WRITE(*,'(A,G,I,2(G))') 'iIu arguments:',sigmau,n,rho,kappa
-      
+
       ! The allowed difference between two loop iterations of the
       ! integration routine below at which the tolerance condition
       ! is considered met.  For well behaved functions, this type
@@ -294,15 +294,15 @@
       ! error is coming from previous iteration, while the current
       ! iteration should be at the desired tolerance).
       stepreltol = MAX(SQRT(reltol),1d-15)
-      
+
       ! If the routine does not quite follow the "significant digits
       ! double every loop" behavior, we can use a more conservative
       ! difference between loops.
       !stepreltol = MAX(reltol**0.67,1d-15)
-      
+
       ! Via comparison with Mathematica, accuracy does not appear to
       ! improve when setting stepreltol better than sqrt(reltol).
-      
+
       ! For the case n=0, we use rho=0 below, which disables
       ! calculation of an irrelevant term
       IF (n .EQ. 0) THEN
@@ -310,7 +310,7 @@
       ELSE
         rho0 = rho
       END IF
-      
+
       ! Numerical integral over (-\infty,0] ----------------
       ! We use the transformation (see e.g. Numerical Recipes):
       !   u     = - e^{t - e^{-t}}
@@ -319,7 +319,7 @@
       ! The following has the limits of integration reversed, so
       ! we need to change the sign afterwards.
       tmax = 5d0
-      
+
       ! Trapezoidal rule over 3 points with integrand zero
       ! at t = +/- tmax
       I1prev = 0d0
@@ -331,7 +331,7 @@
      &                + n*lnexpdiff2(rho0,sigmau*u)
       sum = EXP(f)*dudt
       I1 = h * sum
-      
+
       ! Double number of intervals until we reach desired tolerance
       DO K = 2, KMAX
         Nintervals1 = 2*Nintervals1
@@ -361,14 +361,14 @@
       ! region.
       I1 = -I1
       !WRITE(*,*) 'I1inf: ',Nintervals1,I1
-      
+
       ! Numerical integral over [0,\infty) -----------------
       ! We use the transformation (see e.g. Numerical Recipes):
       !   u     = e^{t - e^{-t}}
       !   du/dt = e^{t - e^{-t}} * (1 + e^{-t})
       !         = u * (1 + e^{-t})
       tmax = 5d0
-      
+
       ! Trapezoidal rule over 3 points with integrand zero
       ! at t = +/- tmax
       I2prev = 0d0
@@ -380,7 +380,7 @@
      &                + n*lnexpdiff2(rho0,sigmau*u)
       sum = EXP(f)*dudt
       I2 = h * sum
-      
+
       ! Double number of intervals until we reach desired tolerance
       DO K = 2, KMAX
         Nintervals2 = 2*Nintervals2
@@ -407,15 +407,15 @@
         IF (ABS(I2-I2prev) .LE. stepreltol*ABS(I2)) EXIT
       END DO
       !WRITE(*,*) 'I2inf: ',Nintervals2,I2
-      
+
       ! Full integral --------------------------------------
       nintegrate_lnIu = LOG((I1+I2) / SQRT2PI)
-      
+
       !WRITE(*,*) 'Iu:    ',Nintervals1+Nintervals2,I1+I2,(I1+I2)/SQRT2PI
-      
+
       END FUNCTION nintegrate_lnIu
 
-      
+
       ! ----------------------------------------------------------------
       ! Function to calculate the following integral and
       ! return its logarithm:
@@ -427,7 +427,7 @@
       ! series and evaluating the integrals analytically.  A very large
       ! number (> 1d100) indicates this series did not converge to a
       ! reasonable precision.
-      ! 
+      !
       ! NOTE: This routine is only for small values of sigmau, rho,
       !       and/or kappa (for convergence).  The exact value of
       !       "small" is not well-defined, but:
@@ -444,7 +444,7 @@
       !       is much better than 1d-10 but, in cases where it is not,
       !       the numerical integral also appears to have reduced
       !       precision.
-      ! 
+      !
       REAL*8 FUNCTION expand_lnIu(sigmau,n,rho,kappa)
       IMPLICIT NONE
       INTEGER n
@@ -499,9 +499,9 @@
      &          33094020960000d0,-70309810771200d0,105006251750400d0,
      &        -110055327782400d0, 79332244992000d0,-37486665216000d0,
      &          10461394944000d0, -1307674368000d0 /
-      
+
       !WRITE(*,'(A,G,I,2(G))') 'eIu arguments:',sigmau,n,rho,kappa
-      
+
       ! The exponential argument can be written as:
       !   f(u) = -u^2 + \Sum_{k=3}^\infty b_k u^k
       !   b_k = (n*rho P_{k-1}.W{k-l} - kappa) sigmau^k / k!
@@ -522,18 +522,18 @@
       !   C_1 = 0
       !   C_{k+2} = (k+1)*C_k
       ! From the above, only the even terms contribute to the integral.
-      
+
       ! Convergence:
       ! Terms in the expansion are decreasing in general, but not
       ! monotonically!  Care should thus be taken at which points to
       ! check for convergence.
-      
+
       ! Special case: no expansion
       IF ((n .EQ. 0) .AND. (kappa .EQ. 0d0)) THEN
         expand_lnIu = 0d0
         RETURN
       END IF
-      
+
       ! Calculate exponential argument expansion coefficients
       P(0) = 1d0
       P(1) = rho
@@ -546,55 +546,55 @@
         b(K) = (n*rho*DOT_PRODUCT(P(0:K-1),W(0:K-1,K-1)) - kappa )
      &         * sigmauk / kfact
       END DO
-      
+
       ! Now sum over terms in expansion
       ! k = 0
       Ck  = 1d0
       sum = 1d0
-      
+
       ! k = 2 (not present in expansion)
       !Ck  = (2-1)*Ck
-      
+
       ! k = 4
       Ck   = (4-1)*Ck
       term = b(4) * Ck
       sum  = sum + term
-      
+
       ! k = 6
       Ck   = (6-1)*Ck
       term = (b(6) + 0.5d0*b(3)**2) * Ck
       sum  = sum + term
-      
+
       ! Check if converged here
       IF (ABS(term) .LT. 1d-16*sum) THEN
         expand_lnIu = LOG(sum)
         RETURN
       END IF
-      
+
       ! k = 8
       Ck   = (8-1)*Ck
       term = (b(8) + b(3)*b(5) + 0.5d0*b(4)**2) * Ck
       sum  = sum + term
-      
+
       ! k = 10
       Ck   = (10-1)*Ck
       term = (b(10) + b(3)*b(7) + b(4)*b(6) + 0.5d0*b(5)**2
      &        + 0.5d0*b(3)**2*b(4)) * Ck
       sum  = sum + term
-      
+
       ! k = 12
       Ck   = (12-1)*Ck
       term = (b(12) + b(3)*b(9) + b(4)*b(8) + b(5)*b(7) + 0.5d0*b(6)**2
      &        + 0.5d0*b(3)**2*b(6) + b(3)*b(4)*b(5) + (1d0/6d0)*b(4)**3
      &        + (1d0/24d0)*b(3)**4) * Ck
       sum  = sum + term
-      
+
       ! Check if converged here
       IF (ABS(term) .LT. 1d-16*sum) THEN
         expand_lnIu = LOG(sum)
         RETURN
       END IF
-      
+
       ! k = 14
       Ck   = (14-1)*Ck
       term = (b(14) + b(3)*b(11) + b(4)*b(10) + b(5)*b(9) + b(6)*b(8)
@@ -604,7 +604,7 @@
      &        + (1d0/6d0)*b(3)**3*b(5) + 0.25d0*b(3)**2*b(4)**2
      &       ) * Ck
       sum  = sum + term
-      
+
       ! k = 16
       Ck   = (16-1)*Ck
       term = (b(16) + b(3)*b(13) + b(4)*b(12) + b(5)*b(11) + b(6)*b(10)
@@ -619,7 +619,7 @@
      &        + (1d0/24d0)*b(3)**4*b(4)
      &       ) * Ck
       sum  = sum + term
-      
+
       ! Remaining terms are of 18th order.  Hopefully, this is
       ! sufficient.  A guesstimate for the error is:
       !   (MAX[kappa,n*rho]*sigmau^3)^6
@@ -630,12 +630,12 @@
         expand_lnIu = HUGE(1d0)
         RETURN
       END IF
-      
+
       expand_lnIu = LOG(sum)
-      
+
       END FUNCTION expand_lnIu
-      
-      
+
+
       ! ----------------------------------------------------------------
       ! Routine to find the location y=y0 and value g0=g(y0) of the
       ! global maximum of the  integrand e^g(y) for the integral in the
@@ -652,14 +652,14 @@
       !   r      = beta/alpha
       ! The routine also returns:
       !   sigmau =  1 / [-g''(y0)]^{1/2}
-      ! 
+      !
       ! The maximum occurs at one of the zeros of:
       !   f(y) = -sigma^2 g'(y)
       !        = y + alpha*e^y - eta*e^y/(r+e^y)
       ! While there is typically only one zero, there can be up to
       ! three for some choices of parameters, such as (1+r)*alpha <<
       ! eta; care is taken here to find the highest (global) maximum.
-      ! 
+      !
       SUBROUTINE find_maximum(n,thetab,thetas,sigma,y0,g0,sigmau)
       IMPLICIT NONE
       INTEGER n
@@ -673,16 +673,16 @@
       REAL*8 lngamma,lambertw,lambertwln
       PARAMETER(C1=(-0.5d0,0.86602540378443865d0),
      &          C2=(-0.5d0,-0.86602540378443865d0))
-      
+
       !WRITE(*,'(A,I,3(G))') 'findmax arguments: ',n,thetab,thetas,sigma
-      
+
       ! Define several useful quantities
       sigma2 = sigma**2
       alpha  = sigma2*thetas
       beta   = sigma2*thetab
       eta    = sigma2*n
       r      = thetab/thetas
-      
+
       ! ---------------------------------------
       ! Special case: thetab=0
       IF (thetab .EQ. 0d0) THEN
@@ -693,14 +693,14 @@
         !A  = alpha * EXP(eta)
         !z0 = lambertw(A)
         lnA = eta + LOG(alpha)
-        z0  = lambertwln(lnA)  
+        z0  = lambertwln(lnA)
         y0     = eta - z0
         sigmau = sigma / SQRT(1+z0)
         g0     = y0*(1-0.5d0*y0)/sigma2 + n*(LOG(thetas)+y0-1)
      &            - lngamma(n+1d0)
         RETURN
-      END IF 
-      
+      END IF
+
       ! ---------------------------------------
       ! Special case: n=0
       IF (n .EQ. 0) THEN
@@ -710,7 +710,7 @@
         g0     = y0*(1-0.5d0*y0)/sigma2 - thetab  - lngamma(n+1d0)
         RETURN
       END IF
-      
+
       ! ---------------------------------------
       ! Special case: thetab+thetas=n
       IF (thetab+thetas .EQ. n) THEN
@@ -720,18 +720,18 @@
      &            - lngamma(n+1d0)
         RETURN
       END IF
-      
+
       ! ---------------------------------------
       ! General case
       ! We use a numerical search here.
-      
+
       ! There are contributions to g(y) from a Gaussian and Poisson
       ! component.  Each component has a peak; the sum may have a
       ! single peak or two distinguishable peaks.  In any case, the
       ! peak(s) in g(y) should lie between the centers of the
       ! individual Gaussian and Poisson peaks, so we can use their
       ! locations as boundaries for the numerical search.
-      ! 
+      !
       ! Gaussian peaks at y=0.
       yG = 0d0
       ! Poisson peaks at thetab + thetas*e^y = n.
@@ -741,11 +741,11 @@
       ELSE
         yP = - lambertw(alpha)
       END IF
-      
+
       ! Global boundaries for search
       ymin = MIN(yG,yP)
       ymax = MAX(yG,yP)
-      
+
       ! If there is more than one extremum in g(y), they must be
       ! separated by points where g''(y)=0 (or f'(y)=0).  We will
       ! then check for the number of real roots of f'(y), which is
@@ -757,13 +757,13 @@
       p  = - (3*beta*eta + (1-beta)**2) / (3*alpha**2)
       q  = (2*(1-beta)**3 + 9*beta*eta*(1+2*beta)) / (27*alpha**3)
       D  = 0.25d0*q**2 + (1d0/27d0)*p**3
-      
+
       ! We set up intervals to search, ensuring at most one extremum
       ! in each interval.
       Nintervals = 1
       yarr(0) = ymin
       yarr(1) = ymax
-      
+
       ! For D>0, there is one real root of the cubic equation in terms
       ! of x, while for D<0, there are three real roots.  Since x=e^y,
       ! only positive roots are relevant here.  Due to the nature of
@@ -801,16 +801,16 @@
           END IF
         END DO
       END IF
-      
+
       DO I=0,Nintervals
         ytmp = yarr(I)
         expy = EXP(ytmp)
         farr(I) = ytmp - eta*expy/(r+expy) + alpha*expy
       END DO
-      
+
       g0 = -HUGE(1d0)
       found = .FALSE.
-      
+
       ! Find potential maxima within each interval
       DO I=1,Nintervals
         ! Interval contains minimum or no extremum
@@ -835,7 +835,7 @@
           g0 = gtmp
         END IF
       END DO
-      
+
       ! If we haven't found a zero, try again over the whole interval
       ! with larger boundaries.
       IF (.NOT. found) THEN
@@ -846,7 +846,7 @@
      &           / sigma2
      &         - lngamma(n+1d0)
       END IF
-      
+
       ! Failed to find any maximum.
       ! This should not happen with the above algorithms except for
       ! possible finite precision effects at various boundaries,
@@ -858,12 +858,12 @@
      &   sigmau
         STOP('Please report this to Chris Savage (chris@savage.name)')
       END IF
-      
+
       ! Now calculate other quantites at y0.
       expy   = EXP(y0)
       g2     = - (1d0 - eta*r*expy/(r+expy)**2 + alpha*expy) / sigma2
       sigmau = 1d0 / SQRT(-g2)
-      
+
       END SUBROUTINE find_maximum
 
 
@@ -881,10 +881,10 @@
       ! Newton/Halley method.  The flag "found" indicates if a zero was
       ! found to within a reasonable tolerance within a reasonable
       ! number of iterations.
-      ! 
+      !
       ! Note that f(y) = -sigma^2 g'(y) so that this function finds
       ! extrema of g(y).
-      ! 
+      !
       SUBROUTINE find_zero(alpha,r,eta,yi,ymin,ymax,y0,found)
       IMPLICIT NONE
       REAL*8 alpha,r,eta,yi,ymin,ymax,y0
@@ -892,15 +892,13 @@
       REAL*8 expy,f0,f1,f2,deltay,ya,yb,fa,fb,y_prev,f_prev
       INTEGER K,MAX_ITERATIONS,MAX_BISECTIONS
       PARAMETER(MAX_ITERATIONS=8,MAX_BISECTIONS=40)
-      INTEGER NDEBUG
-      PARAMETER(NDEBUG=100)
-      
+
       !WRITE(*,'(A,6(G))') 'findzero arguments:',alpha,r,eta,yi,ymin,ymax
-      
+
       found = .FALSE.
       deltay = HUGE(1d0)
       y0 = yi
-      
+
       ! Bracketing -----------------------------
       ! We bracket the zero of f(y) between [ya,yb].
       ya   = ymin
@@ -909,7 +907,7 @@
       yb   = ymax
       expy = EXP(yb)
       fb   = yb - eta*expy/(r+expy) + alpha*expy
-      
+
       ! Newton/Halley's method -----------------
       ! Convergence for this technique appears to be very rapid for
       ! the vast majority of cases, often reaching as close to the
@@ -964,7 +962,7 @@
         !WRITE(*,'(A,I3,6(G))') ' DEBUG N/H:',K,y0,deltay,ya,yb,fa,fb
       END DO
       !WRITE(*,'(A,I3,6(G))') ' DEBUG N/H:',K,y0,deltay,ya,yb,fa,fb
-      
+
       ! Bisection ------------------------------
       ! If the maximum was not found, there is either a numerical
       ! issue or convergence failed.  One (not uncommon) numerical
@@ -996,12 +994,12 @@
         !WRITE(*,'(A,I3,6(G))') ' DEBUG BIS:',K,y0,deltay,ya,yb,fa,fb
       END DO
       !WRITE(*,'(A,I3,6(G))') ' DEBUG BIS:',K,y0,deltay,ya,yb,fa,fb
-      
+
       ! Checks ---------------------------------
       ! Loosen the tolerance at this point rather than generate an
       ! error if it looks like we are at least close.
       IF (ABS(deltay) .LT. 1d6*EPSILON(y0)*ABS(y0)) found=.TRUE.
-      
+
       END SUBROUTINE find_zero
 
 
@@ -1010,23 +1008,23 @@
       !   e^z - 1
       ! Small z must be handled carefully as 1 is the first term in
       ! the expansion of e^z about zero.
-      ! 
+      !
       ! Precision is ~ 2*EPSILON.
-      ! 
+      !
       REAL*8 FUNCTION expdiff0(z)
       IMPLICIT NONE
       REAL*8 z,zabs
       INTEGER k,klast
-      
+
       ! If z is not too small, we can just evaluate explicitly.
       ! Precision in this range is ~ few*EPSILON.
       IF ((z .LT. -0.5d0) .OR. (z .GT. 0.5d0)) THEN
         expdiff0 = EXP(z) - 1d0
         RETURN
       END IF
-      
+
       zabs = ABS(z)
-      
+
       ! We will use an expansion about zero, canceling the leading
       ! term.  We keep terms in the expansion up to x^klast/klast!.
       ! klast is chosen below to ensure double precision (within
@@ -1035,7 +1033,7 @@
       ! The precision is approximately:
       !     x^{klast} / (klast+1)!
       ! where klast is the last term in the sum.
-      
+
       IF (zabs .LT. 2.5d-4) THEN
         klast = 4
       ELSE IF (zabs .LT. 0.043d0) THEN
@@ -1045,13 +1043,13 @@
       ELSE
         klast = 16
       END IF
-      
+
       ! Use expansion about zero
       expdiff0 = z / klast
       DO k = klast-1,1,-1
         expdiff0 = z * (1 + expdiff0) / k
       END DO
-      
+
       END FUNCTION expdiff0
 
 
@@ -1061,23 +1059,23 @@
       ! Small z must be handled carefully as the three terms on the
       ! right correspond to the first three terms of the expansion
       ! of e^z about zero.
-      ! 
+      !
       ! Precision is ~ 10*EPSILON.
-      ! 
+      !
       REAL*8 FUNCTION expdiff2(z)
       IMPLICIT NONE
       REAL*8 z,zabs
       INTEGER k,klast
-      
+
       ! If z is not too small, we can just evaluate explicitly.
       ! Precision in this range is within ~ 10*EPSILON.
       IF ((z .LT. -0.7d0) .OR. (z .GT. 1.0d0)) THEN
         expdiff2 = EXP(z) - (1 + z + 0.5d0*z**2)
         RETURN
       END IF
-      
+
       zabs = ABS(z)
-      
+
       ! We will use an expansion about zero, canceling the leading
       ! terms.  We keep terms in the expansion up to x^klast/klast!.
       ! klast is chosen below to ensure near double precision (within
@@ -1086,7 +1084,7 @@
       ! The precision is approximately:
       !     6*x^{klast-2} / (klast+1)!
       ! where klast is the last term in the sum.
-      
+
       IF (zabs .LT. 7d-4) THEN
         klast = 6
       ELSE IF (zabs .LT. 0.08d0) THEN
@@ -1098,14 +1096,14 @@
       ELSE
         klast = 22
       END IF
-      
+
       ! Use expansion about zero
       expdiff2 = z / klast
       DO k = klast-1,3,-1
         expdiff2 = z * (1 + expdiff2) / k
       END DO
       expdiff2 = z**2 * expdiff2 / 2
-      
+
       END FUNCTION expdiff2
 
 
@@ -1114,23 +1112,23 @@
       !   (e^z - 1)^2 - z^2
       ! Small z must be handled carefully as the first three terms
       ! of the expansion about zero cancel.
-      ! 
+      !
       ! Precision is ~ 10*EPSILON.
-      ! 
+      !
       REAL*8 FUNCTION expdiffsq(z)
       IMPLICIT NONE
       REAL*8 z,zabs
       INTEGER k,klast,twok
-      
+
       ! If z is not too small, we can just evaluate explicitly.
       ! Precision in this range is ~ few*EPSILON.
       IF ((z .LT. -0.5d0) .OR. (z .GT. 0.5d0)) THEN
         expdiffsq = (EXP(z)-1)**2 - z**2
         RETURN
       END IF
-      
+
       zabs = ABS(z)
-      
+
       ! We will use an expansion about zero, canceling the leading
       ! terms.  We keep terms in the expansion up to x^klast/klast!.
       ! klast is chosen below to ensure double precision (within
@@ -1139,7 +1137,7 @@
       ! The precision is approximately:
       !     (2^{klast+1}-2)*x^{klast-2} / (klast+1)!
       ! where klast is the last term in the sum.
-      
+
       IF (zabs .LT. 4d-4) THEN
         klast = 6
       ELSE IF (zabs .LT. 0.06d0) THEN
@@ -1149,7 +1147,7 @@
       ELSE
         klast = 18
       END IF
-      
+
       ! Use expansion about zero
       twok = 2**klast
       expdiffsq = (twok-2) * z / klast
@@ -1158,7 +1156,7 @@
         expdiffsq = z * ((twok-2) + expdiffsq) / k
       END DO
       expdiffsq = z**2 * expdiffsq / 2
-      
+
       END FUNCTION expdiffsq
 
 
@@ -1168,22 +1166,22 @@
       ! Small z must be handled carefully.  Note the expansion has
       ! no 0th order term, so this is equivalent to the difference
       ! with the 0th order expansion of ln(1+z), hence the name.
-      ! 
+      !
       ! Precision is ~ 100*EPSILON.
-      ! 
+      !
       REAL*8 FUNCTION lndiff0(z)
       IMPLICIT NONE
       REAL*8 z,zabs,zk
       INTEGER k,klast
-      
+
       zabs = ABS(z)
-      
+
       ! If z is not too small, we can just evaluate explicitly
       IF (zabs .GT. 0.01d0) THEN
         lndiff0 = LOG(1+z)
         RETURN
       END IF
-      
+
       ! We will use an expansion about zero, keeping terms in the
       ! expansion up to x^klast/klast.
       ! klast is chosen below to give almost double precision.
@@ -1193,7 +1191,7 @@
       ! The precision is approximately:
       !     x^klast / (klast+1)
       ! where klast is the last term in the sum.
-      
+
       IF (zabs .LT. 1d-4) THEN
         klast = 4
       ELSE
@@ -1201,7 +1199,7 @@
       END IF
       ! Go to klast=12 for |z| < 0.05
       ! Go to klast=16 for |z| < 0.1
-      
+
       ! Use expansion about zero
       zk      = z
       lndiff0 = zk
@@ -1209,7 +1207,7 @@
         zk      = -z*zk
         lndiff0 = lndiff0 + zk/k
       END DO
-      
+
       END FUNCTION lndiff0
 
 
@@ -1219,28 +1217,28 @@
       ! Small z must be handled carefully as the two terms on the
       ! right correspond to the first two terms of the expansion
       ! of ln(1+z) about zero.
-      ! 
+      !
       ! Precision is ~ 100*EPSILON.
-      ! 
+      !
       REAL*8 FUNCTION lndiff2(z)
       IMPLICIT NONE
       REAL*8 z,zabs,zk
       INTEGER k,klast
-      
+
       ! Special case
       IF (z .LE. -1d0) THEN
         lndiff2 = -HUGE(lndiff2)
         RETURN
       END IF
-      
+
       zabs = ABS(z)
-      
+
       ! If z is not too small, we can just evaluate explicitly
       IF (zabs .GT. 0.2d0) THEN
         lndiff2 = LOG(1+z) - z*(1 - 0.5d0*z)
         RETURN
       END IF
-      
+
       ! We will use an expansion about zero, canceling the leading
       ! terms.  We keep terms in the expansion up to x^klast/klast.
       ! klast is chosen below to give almost double precision.
@@ -1250,7 +1248,7 @@
       ! The precision is approximately:
       !     3*x^{klast-2} / (klast+1)
       ! where klast is the last term in the sum.
-      
+
       IF (zabs .LT. 1d-4) THEN
         klast = 6
       ELSE IF (zabs .LT. 0.01d0) THEN
@@ -1262,7 +1260,7 @@
       ELSE
         klast = 22
       END IF
-      
+
       ! Use expansion about zero
       zk      = z**3
       lndiff2 = zk/3
@@ -1270,7 +1268,7 @@
         zk      = -z*zk
         lndiff2 = lndiff2 + zk/k
       END DO
-      
+
       END FUNCTION lndiff2
 
 
@@ -1280,36 +1278,36 @@
       ! Small z must be handled carefully as the two terms on the
       ! right correspond to the first two terms of the expansion
       ! of the ln term about zero.
-      ! 
+      !
       ! Precision is ~ 100*EPSILON.
-      ! 
+      !
       REAL*8 FUNCTION lnexpdiff2(rho,z)
       IMPLICIT NONE
       REAL*8 rho,z,v
-      
+
       ! Special case
       IF (rho .EQ. 0d0) THEN
         lnexpdiff2 = 0d0
         RETURN
       END IF
-      
+
       ! Large z case:
       !   ln(1+rho*(e^z-1)) -> ln(rho+e^-z) + z
       IF (z .GT. 100) THEN
         lnexpdiff2 = LOG(rho+EXP(-z)) + (1-rho)*z*(1-0.5d0*rho*z)
         RETURN
       END IF
-      
+
       ! Useful quantity
       v = rho*expdiff0(z)
-      
+
       ! If v not too small (implies z not small), we should evaluate
       ! explicitly
       IF (ABS(v) .GT. 1d0) THEN
         lnexpdiff2 = LOG(1+v) - rho*z*(1+0.5d0*(1-rho)*z)
         RETURN
       END IF
-      
+
       ! With v=rho*(e^z-1), we can rewrite the desired quantity as:
       !   ln(1+v) - rho*z - rho*(1-rho) z^2 / 2
       !       = ln(1+v) - v + v^2/2
@@ -1317,7 +1315,7 @@
       !         - rho^2/2 [(e^z-1)^2 - z^2]
       ! where each line is of order z^3.
       lnexpdiff2 = lndiff2(v) + rho*(expdiff2(z)-0.5d0*rho*expdiffsq(z))
-      
+
       END FUNCTION lnexpdiff2
 
       END FUNCTION
