@@ -1,7 +1,7 @@
 
  I like, you like...
  **********************************************************
- *                    nulike 1.0.8                        *
+ *                    nulike 1.0.9                        *
  *               Pat Scott, Chris Savage                  *
  *         JCAP (2012) 11:057, arXiv:1207.0810            *
  *         JCAP (2016) 04:022, arXiv:1601.00653           *
@@ -11,20 +11,20 @@
  Initialisation of nulike analysis 'IC-79 WH' complete.
  *********************************************************
  *** Welcome to DarkSUSY version                       ***
- *** darksusy-5.1.3                                              ***
+ *** 5.1.3                                             ***
  *********************************************************
   
  Initializing DarkSUSY...
  WARNING in dspbset: using halo model nfwsm       
  for the setup. If you change halo model, make sure
  to call dspbset again.
- dsntsunread: Opening file /home/pat/darksusy-5.1.3/share/DarkSUSY/bs05op.dat                                                                                                                                                      
- dsntsunread: Opening file /home/pat/darksusy-5.1.3/share/DarkSUSY/nele_bs05op.dat                                                                                                                                                 
+ dsntsunread: Opening file /home/pat/gambit/Backends/installed/darksusy/5.1.3/share/DarkSUSY/bs05op.dat                                                                                                                            
+ dsntsunread: Opening file /home/pat/gambit/Backends/installed/darksusy/5.1.3/share/DarkSUSY/nele_bs05op.dat                                                                                                                       
  dsntsunread: tabulating potential inside the Sun...
    ...done
  dsntsunread: tabulating column density inside the Sun...
    ...done
- dsreadnuclides: reading /home/pat/darksusy-5.1.3/share/DarkSUSY/nuclides.dat
+ dsreadnuclides: reading /home/pat/gambit/Backends/installed/darksusy/5.1.3/share/DarkSUSY/nuclides.dat
 
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  ~                                                        ~
@@ -50,7 +50,7 @@
        (see arXiv:1101.0593 and ref. therein)
 
  Initialization of DarkSUSY complete.
- dsntctabread: Opening file /home/pat/darksusy-5.1.3/share/DarkSUSY/ctab-su-0.00-gauss.dat                                                                                                                                          
+ dsntctabread: Opening file /home/pat/gambit/Backends/installed/darksusy/5.1.3/share/DarkSUSY/ctab-su-0.00-gauss.dat                                                                                                                
 Loading WIMP annihilation yield for kind =  2 and type =   3
     ...done
 Loading WIMP annihilation yield for kind =  2 and type =   4
@@ -58,24 +58,24 @@ Loading WIMP annihilation yield for kind =  2 and type =   4
  #mWIMP (GeV)   sigmav (cm^-3 s^-1) sig_SDp (cm^2) C (s^-1)   A (s^-1)
  0.10000000E+02 0.30000000E-25 0.35097018E-35 0.33087201E+29 0.16543600E+29
  0.25000000E+02 0.30000000E-25 0.31556926E-38 0.85885812E+25 0.42942906E+25
- 0.50000000E+02 0.30000000E-25 0.53592434E-39 0.46853999E+24 0.23427000E+24
- 0.80300000E+02 0.30000000E-25 0.26036341E-39 0.97095607E+23 0.48547804E+23
+ 0.50000000E+02 0.30000000E-25 0.53592435E-39 0.46854000E+24 0.23427000E+24
+ 0.80300000E+02 0.30000000E-25 0.26036341E-39 0.97095607E+23 0.48547803E+23
  0.91200000E+02 0.30000000E-25 0.21369747E-39 0.62928996E+23 0.31464498E+23
  0.10000000E+03 0.30000000E-25 0.18575224E-39 0.46036812E+23 0.23018406E+23
  0.15000000E+03 0.30000000E-25 0.85972008E-40 0.98552564E+22 0.49276282E+22
  0.17600000E+03 0.30000000E-25 0.62006214E-40 0.52225046E+22 0.26112523E+22
  0.20000000E+03 0.30000000E-25 0.49153070E-40 0.32311567E+22 0.16155783E+22
- 0.25000000E+03 0.30000000E-25 0.35608299E-40 0.15151081E+22 0.75755403E+21
- 0.35000000E+03 0.30000000E-25 0.27476071E-40 0.60406467E+21 0.30203234E+21
+ 0.25000000E+03 0.30000000E-25 0.35608299E-40 0.15151080E+22 0.75755402E+21
+ 0.35000000E+03 0.30000000E-25 0.27476070E-40 0.60406467E+21 0.30203233E+21
  0.50000000E+03 0.30000000E-25 0.27422803E-40 0.29817393E+21 0.14908697E+21
- 0.75000000E+03 0.30000000E-25 0.34742794E-40 0.16908916E+21 0.84544578E+20
+ 0.75000000E+03 0.30000000E-25 0.34742795E-40 0.16908916E+21 0.84544579E+20
  0.10000000E+04 0.30000000E-25 0.47352546E-40 0.13008586E+21 0.65042932E+20
  0.15000000E+04 0.30000000E-25 0.84280687E-40 0.10326114E+21 0.51630572E+20
  0.20000000E+04 0.30000000E-25 0.13645060E-39 0.94201357E+20 0.47100679E+20
  0.30000000E+04 0.30000000E-25 0.28531719E-39 0.87694025E+20 0.43847013E+20
- 0.50000000E+04 0.30000000E-25 0.74998653E-39 0.83097849E+20 0.41548925E+20
+ 0.50000000E+04 0.30000000E-25 0.74998652E-39 0.83097849E+20 0.41548924E+20
  0.75000000E+04 0.30000000E-25 0.16040451E-38 0.79043346E+20 0.39521673E+20
- 0.10000000E+05 0.30000000E-25 0.26877736E-38 0.74525795E+20 0.37262897E+20
+ 0.10000000E+05 0.30000000E-25 0.26877736E-38 0.74525794E+20 0.37262897E+20
 
  The nulike WIMP benchmark tests completed successfully.
 
