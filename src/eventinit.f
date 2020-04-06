@@ -3,9 +3,9 @@
 ***
 *** input:   filename     name of file containing all event data
 ***          totalevents  total number of events contained in file
-***          cosphimin    cosine(cutoff angle above which events will 
+***          cosphimin    cosine(cutoff angle above which events will
 ***                       be ignored)
-***        
+***
 *** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: April 8, 2011
 *** Modified: March 5, June 15 2014
@@ -33,7 +33,7 @@
       !Skip over header lines
       instring = '#'
       do while (instring(1:1) .eq. '#' .or. instring .eq. '[t]' .or. instring .eq. '[v]')
-        read(lun, fmt='(A3)'), instring
+        read(lun, fmt='(A3)') instring
       enddo
 
       !Read in events
@@ -50,7 +50,7 @@
           if (cutevents .gt. max_nEvents) then
             write(*,*) 'Chosen angular cut includes more'
             write(*,*) 'events than nulike has been configured to '
-            write(*,*) 'handle.  Increase max_nEvents in nuconst.h and' 
+            write(*,*) 'handle.  Increase max_nEvents in nuconst.h and'
             write(*,*) 'recompile.  You may need to reduce max_analyses'
             write(*,*) 'to do this.'
             stop

@@ -209,7 +209,7 @@
       !Skip header
       instring = '#'
       do while (instring(1:1) .eq. '#' .or. instring(2:2) .eq. '#')
-        read(lun, fmt='(A100)'), instring
+        read(lun, fmt='(A100)') instring
       enddo
       read(instring, fmt=*) nEvents2, nEnergies2, phi_cut2, logE_min2, logE_max2
       if (nEvents .ne. nEvents2 .or. nEnergies .ne. nEnergies2 .or. phi_cut .ne. phi_cut2

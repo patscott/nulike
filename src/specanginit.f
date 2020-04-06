@@ -5,11 +5,11 @@
 *** This routine is used only with the 2015 likelihood.
 ***
 *** input:  dirname      name of directory containig partial likelihoods.
-***         nevents      number of events for which partial likelihoods 
+***         nevents      number of events for which partial likelihoods
 ***                       are to be read in.
 ***         nenergies    number of energies for which partial likelihoods
 ***                       are to be read in for each event.
-***        
+***
 *** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Jun 15 2014
 ***********************************************************************
@@ -25,7 +25,7 @@
       character (len=6) eventstring, evnmshrfmt
       character (len=100) instring
       integer n_events, n_energies, i, IER
-      real*8 phi_cut, logE_min, logE_max 
+      real*8 phi_cut, logE_min, logE_max
       real*8 working(2*max_nPrecompE-2)
 
       interface
@@ -42,24 +42,24 @@
       !Skip header
       instring = '#'
       do while (instring(1:1) .eq. '#' .or. instring(2:2) .eq. '#')
-        read(lun, fmt='(A100)'), instring
+        read(lun, fmt='(A100)') instring
       enddo
       read(instring, fmt=*) n_events, n_energies, phi_cut, logE_min, logE_max, EAErr(analysis)
       close(lun)
 
       !Use the tabulation bounds in energy to reconstruct the energies
-      forall(i=1:n_energies) precomp_log10E(i,analysis) = 
+      forall(i=1:n_energies) precomp_log10E(i,analysis) =
      & logE_min + dble(i-1)/dble(n_energies-1) * (logE_max - logE_min)
 
       !Open and read in from the unbiased effective area files.
-      precompEA_weights(1:n_energies,:,analysis) = 
+      precompEA_weights(1:n_energies,:,analysis) =
      & nulike_read_weights(lun, trim(dirname)//'/unbiased_effective_area.dat', n_energies)
-      precompEAnoL_weights(1:n_energies,:,analysis) = 
+      precompEAnoL_weights(1:n_energies,:,analysis) =
      & nulike_read_weights(lun, trim(dirname)//'/unbiased_effective_area_noL.dat', n_energies)
 
       !Determine the index at which the unbiased effective area actually starts
       i = 1
-      do 
+      do
         if (precompEA_weights(i,1,analysis) .gt. 0.99d0*logZero .or.
      &      precompEA_weights(i,2,analysis) .gt. 0.99d0*logZero) then
           start_index(analysis) = i
@@ -96,7 +96,7 @@
 
       !Determine the index at which the unbiased effective area without L actually starts
       i = 1
-      do 
+      do
         if (precompEAnoL_weights(i,1,analysis) .gt. 0.99d0*logZero .or.
      &      precompEAnoL_weights(i,2,analysis) .gt. 0.99d0*logZero) then
           start_index_noL(analysis) = i
@@ -138,7 +138,7 @@
 
         !Open and read in from the event file
         write(eventstring,fmt=evnmshrfmt(i)) i
-        precomp_weights(1:n_energies,i,:,analysis) = 
+        precomp_weights(1:n_energies,i,:,analysis) =
      &   nulike_read_weights(lun, trim(dirname)//'/partlike_event'//trim(eventstring)//'.dat', n_energies)
 
         !Prime the interpolator for the neutrino partial likelihood of this event
@@ -165,8 +165,8 @@
 
       end subroutine nulike_specanginit
 
- 
-      !Does the reading-in of the weights from a binary file created by nulike_partials  
+
+      !Does the reading-in of the weights from a binary file created by nulike_partials
       function nulike_read_weights(local_lun, filename, n_energies)
 
       use iso_c_binding, only: c_ptr
@@ -177,7 +177,7 @@
       character (len=*) filename
       integer local_lun, n_energies
 
-      open(local_lun, file=filename, form='unformatted', 
+      open(local_lun, file=filename, form='unformatted',
      & action='READ', status='OLD', recl=n_energies*2*8)
       read(local_lun) nulike_read_weights
       close(local_lun)

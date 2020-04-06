@@ -1,13 +1,13 @@
 ***********************************************************************
-*** nulike_biasinit initialises the energy-dependent analysis bias 
-*** factor, using the precomputed unbiased effective area and the 
-*** input effective area file. 
+*** nulike_biasinit initialises the energy-dependent analysis bias
+*** factor, using the precomputed unbiased effective area and the
+*** input effective area file.
 ***
 *** This routine is used only with the 2015 likelihood.
 ***
 *** input:  filename  name effective area file, or 'no-bias' if a zero-
 ***         bias calculation is to be done.
-***        
+***
 *** Author: Pat Scott (p.scott@imperial.ac.uk)
 *** Date: Jul 27 2015
 ***********************************************************************
@@ -42,12 +42,12 @@
       !Skip header
       instring = '#'
       do while (instring .eq. '#')
-        read(lun, fmt='(A1)'), instring
+        read(lun, fmt='(A1)') instring
       enddo
       !Skip density block if it exists
       if (instring .eq. 'r') then
-        read(lun, fmt='(A1)'), instring
-        read(lun, fmt='(A1)'), instring
+        read(lun, fmt='(A1)') instring
+        read(lun, fmt='(A1)') instring
       endif
 
       !Read in effective neutrino and anti-neutrino areas, uncertainties on eff areas and angular
@@ -60,15 +60,15 @@
         read(lun, *) instring, biased_sens_syserr(i,analysis), biased_sens_staterr(i,analysis)
         read(lun, *) instring, dummy
         if (instring(1:1) .ne. '#') read(lun, fmt='(A1)') instring
-        if (i .ne. nbins + 1) read(lun, fmt='(A1)'), instring
+        if (i .ne. nbins + 1) read(lun, fmt='(A1)') instring
 
-        !Convert to log(GeV) scale 
+        !Convert to log(GeV) scale
         bias_logE(1,i,analysis) = dlog10(bias_logE(1,i,analysis))
         bias_logE(2,i,analysis) = dlog10(bias_logE(2,i,analysis))
 
         !Find log-weighted bin centres
         bias_logEcentres(i,analysis) = 0.5d0*(bias_logE(1,i,analysis)+bias_logE(2,i,analysis))
-        
+
         !Call interpolator to get unbiased, non angularly-corrected effective areas for this energy
         temp1(1) = bias_logEcentres(i,analysis)
         do ptype = 1, 2
@@ -101,22 +101,22 @@
       bias_logEcentres(1,analysis) = bias_logE(1,2,analysis)
       bias_nu(1,analysis) = 0.d0
       bias_nubar(i,analysis) = 0.d0
-      !Set the first entry to have the same errors as the first bin.      
+      !Set the first entry to have the same errors as the first bin.
       biased_sens_syserr(1,analysis) = biased_sens_syserr(2,analysis)
       biased_sens_staterr(1,analysis) = biased_sens_staterr(2,analysis)
-      !Set the entries above the uppermost bin to have the same errors as the edge bins.      
+      !Set the entries above the uppermost bin to have the same errors as the edge bins.
       if (nbins .lt. max_nBiasBins) then
         biased_sens_syserr(nbins+2:,analysis) = biased_sens_syserr(nbins+1,analysis)
         biased_sens_staterr(nbins+2:,analysis) = biased_sens_staterr(nbins+1,analysis)
       endif
 
-      !Calculate the percentage total systematic error from the effective 
+      !Calculate the percentage total systematic error from the effective
       !area estimation in each bin, as the quadrature sum of the true
       !systematic and the Monte Carlo statistical error.  (Both contributions
-      !have the character of a pure systematic when considered in the 
+      !have the character of a pure systematic when considered in the
       !context of using a fixed effective area/volume to do an analysis of real events.)
-      totalSystematic = dsqrt(biased_sens_syserr(:,analysis)**2 + 
-     & biased_sens_staterr(:,analysis)**2) * 0.01d0      
+      totalSystematic = dsqrt(biased_sens_syserr(:,analysis)**2 +
+     & biased_sens_staterr(:,analysis)**2) * 0.01d0
       !Overwrite the value read in from the partial likelihood auxiliarly file, based on the
       !effective volume (i.e. prefer the error on the effective area error if using bias factors).
       EAErr(analysis) = maxval(totalSystematic)

@@ -49,7 +49,7 @@
       !Skip over header
       instring = '#'
       do while (instring .eq. '#')
-        read(lun, fmt='(A1)'), instring
+        read(lun, fmt='(A1)') instring
       enddo
 
       !Read actual data
@@ -58,7 +58,7 @@
         hist_logEcentres(i,analysis) = 0.5d0*(hist_logE(1,i,analysis)+
      &   hist_logE(2,i,analysis))
         do j = 1, nbins_ee(i)
-          read(lun, *), instring, dummyint,
+          read(lun, *) instring, dummyint,
      &     hist_ee_temp(i,j), hist_prob_temp(i,j)
         enddo
         read(lun,*) instring

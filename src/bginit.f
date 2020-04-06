@@ -82,7 +82,7 @@
           endif
           read(lun, *) instring
        enddo
-       if (i .ne. 3) read(lun, fmt=*), instring
+       if (i .ne. 3) read(lun, fmt=*) instring
       enddo
 
       close(lun)
