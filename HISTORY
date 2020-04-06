@@ -1,4 +1,8 @@
 HISTORY for nulike
+---------------- v1.0.9: Apr 7, 2020
+* Fixed bug appearing for very small thetas in lnpiln.
+* Fixed warnings triggered with gcc 9.2
+
 ---------------- v1.0.8: Dec 5, 2019
 * Fixed incompatibility with Release mode in recent cmake versions.
 
