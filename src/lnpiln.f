@@ -163,9 +163,15 @@
       !   *) sigma  = 0
       ! These cases should be checked for before calling this function.
 
-      ! Find the maximum of g(y) and the corresponding y0, g(y0),
-      ! and sigmau
-      CALL find_maximum(n,thetab,thetas,sigma,y0,g0,sigmau)
+      ! Attempt to find the maximum of g(y) and the corresponding y0, g(y0),
+      ! and sigmau.
+      IF (.NOT. find_maximum(n,thetab,thetas,sigma,y0,g0,sigmau)) THEN
+        ! If attempting to find the maximum fails silently, this indicates
+        ! that thetas is approximately zero and we should fall back to the
+        ! standard Poisson case.
+        nintegrate = lnpoisson(n,thetab)
+        RETURN
+      ENDIF
 
       ! Useful quantities
       expy  = EXP(y0)
@@ -639,7 +645,7 @@
       ! ----------------------------------------------------------------
       ! Routine to find the location y=y0 and value g0=g(y0) of the
       ! global maximum of the  integrand e^g(y) for the integral in the
-      !nintegrate routine as described above, with:
+      ! nintegrate routine as described above, with:
       !   g(y) = n ln(thetab+thetas*e^y) - ln(n!) - (thetab+thetas*e^y)
       !            - y^2/(2*sigma^2)
       !        = -1/sigma^2 [y^2/2 + alpha*(r+e^y) - eta*ln(r+e^y)
@@ -660,7 +666,10 @@
       ! three for some choices of parameters, such as (1+r)*alpha <<
       ! eta; care is taken here to find the highest (global) maximum.
       !
-      SUBROUTINE find_maximum(n,thetab,thetas,sigma,y0,g0,sigmau)
+      ! Function returns true if and only if it successfully found the
+      ! maximum; return value of false indicates that thetas ~ 0 to
+      ! within the usable precision of this function.
+      LOGICAL FUNCTION find_maximum(n,thetab,thetas,sigma,y0,g0,sigmau)
       IMPLICIT NONE
       INTEGER n
       REAL*8 thetab,thetas,sigma,y0,g0,sigmau
@@ -673,6 +682,9 @@
       REAL*8 lngamma,lambertw,lambertwln
       PARAMETER(C1=(-0.5d0,0.86602540378443865d0),
      &          C2=(-0.5d0,-0.86602540378443865d0))
+
+      ! This is only set true when the function terminates successfully
+      find_maximum = .false.
 
       !WRITE(*,'(A,I,3(G))') 'findmax arguments: ',n,thetab,thetas,sigma
 
@@ -756,6 +768,12 @@
       tc = (1+2*beta) / (3*alpha)
       p  = - (3*beta*eta + (1-beta)**2) / (3*alpha**2)
       q  = (2*(1-beta)**3 + 9*beta*eta*(1+2*beta)) / (27*alpha**3)
+
+      ! Bail out here if any of these quantities is infinite, indicating
+      ! that thetas is too small for the calculation to proceed (i.e. ~0).
+      IF (ANY((/ABS(tc),ABS(p),ABS(q),ABS(0.25d0*q**2),ABS((1d0/27d0)*p**3)/).gt.HUGE(tc))) RETURN
+
+      ! Now that we know D is not going to be NaN, we can proceed.
       D  = 0.25d0*q**2 + (1d0/27d0)*p**3
 
       ! We set up intervals to search, ensuring at most one extremum
@@ -864,7 +882,9 @@
       g2     = - (1d0 - eta*r*expy/(r+expy)**2 + alpha*expy) / sigma2
       sigmau = 1d0 / SQRT(-g2)
 
-      END SUBROUTINE find_maximum
+      find_maximum = .true.
+
+      END FUNCTION find_maximum
 
 
       ! ----------------------------------------------------------------
